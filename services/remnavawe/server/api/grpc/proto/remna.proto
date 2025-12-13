@@ -1,0 +1,39 @@
+syntax = "proto3";
+package remna;
+option go_package = "/remna";
+
+import "google/protobuf/timestamp.proto";
+
+message PingRequest{}
+
+message PingResponse{
+    string status = 1;
+}
+
+message GetUserRequest{
+    string username = 1;
+}
+
+message CreateUserRequest{
+    string username = 1;
+    string email = 2;
+    string tgid = 3;
+    string plan = 4;
+}
+
+message UserResponse{
+    string uuid = 1;
+    string username = 2;
+    string tgid = 3;
+    string email = 4;
+    repeated string internal_squads = 5;
+    google.protobuf.Timestamp expiry_time = 6;
+    string sub_url = 7;
+}
+
+service RemnaService{
+    rpc PingRemna (PingRequest) returns (PingResponse);
+    rpc GetUser (GetUserRequest) returns (UserResponse);
+    rpc CreateUser (CreateUserRequest) returns(UserResponse);
+}
+
