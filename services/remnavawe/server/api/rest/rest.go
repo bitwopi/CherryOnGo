@@ -41,9 +41,9 @@ func NewAPIServer(config *config.Config) *APIServer {
 func (s *APIServer) Start() error {
 	// Implementation to start the REST API server
 	s.configureRouter()
-	s.Logger.Info("Starting REST API server", zap.String("bind_url", s.Config.BindUrl))
+	s.Logger.Info("Starting REST API server", zap.String("bind_url", s.Config.RESTBindUrl))
 	// Here you would typically start the HTTP server
-	return http.ListenAndServe(s.Config.BindUrl, s.router)
+	return http.ListenAndServe(s.Config.RESTBindUrl, s.router)
 }
 
 func (s *APIServer) configureRouter() {

@@ -7,7 +7,8 @@ import (
 )
 
 type Config struct {
-	BindUrl     string
+	RESTBindUrl string
+	GRPCBindUrl string
 	RemnaAPIKey string
 	RemnaURL    string
 }
@@ -17,9 +18,13 @@ func NewConfig() *Config {
 	if err != nil {
 		panic("Error loading .env file")
 	}
-	bindUrl := os.Getenv("REMNAVAWE_REST_BIND_URL")
-	if len(bindUrl) == 0 {
-		bindUrl = ":8080"
+	rBindUrl := os.Getenv("REMNAVAWE_REST_BIND_URL")
+	if len(rBindUrl) == 0 {
+		rBindUrl = ":8080"
+	}
+	gBindUrl := os.Getenv("REMNAVAWE_GRPC_BIND_URL")
+	if len(gBindUrl) == 0 {
+		gBindUrl = ":8080"
 	}
 	remnaAPIKey := os.Getenv("REMNAVAWE_API_KEY")
 	if len(remnaAPIKey) == 0 {
@@ -30,7 +35,8 @@ func NewConfig() *Config {
 		remnaURL = ""
 	}
 	return &Config{
-		BindUrl:     bindUrl,
+		RESTBindUrl: rBindUrl,
+		GRPCBindUrl: gBindUrl,
 		RemnaAPIKey: remnaAPIKey,
 		RemnaURL:    remnaURL,
 	}
