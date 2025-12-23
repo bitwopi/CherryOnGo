@@ -1,0 +1,41 @@
+syntax = "proto3";
+package users;
+option go_package = "/users";
+
+message AuthRequest{
+    string login = 1;
+    string password = 2;
+}
+
+message SignUpResponse{
+    string status = 1;
+    string error = 2;
+}
+
+message RefreshRequest{
+    string refresh_token = 1;
+}
+
+message JWTResponse{
+    string access_token = 1;
+    string refresh_token = 2;
+}
+
+message GetUserRequest{
+    string user_uuid = 1;
+}
+
+
+message UserResponse {
+    string email = 1;
+    bool active = 2;
+    bool has_referral = 3;
+    bool trial = 4; 
+}
+
+service UserService{
+    rpc SignUpUser (AuthRequest) returns (SignUpResponse);
+    rpc AuthUser (AuthRequest) returns (JWTResponse);
+    rpc RefreshJWT (RefreshRequest) returns (JWTResponse);
+    rpc GetUserData (GetUserRequest) returns (UserResponse);
+}
