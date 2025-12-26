@@ -1,7 +1,8 @@
-package suites
+package suite
 
 import (
 	"context"
+	"os"
 	"testing"
 	"users/config"
 	pb "users/server/api/grpc/user"
@@ -26,7 +27,11 @@ func New(t *testing.T) (context.Context, *Suite) {
 	t.Helper()
 	t.Parallel()
 
-	cfg := config.MustLoad("/home/antisperma/Desktop/CherryOnGo/services/users/config/local.yaml")
+	rootPath, err := os.Getwd()
+	if err != nil {
+		t.Fatalf("failed to get root path: %v", err)
+	}
+	cfg := config.MustLoad(rootPath + "/../config/local.yaml")
 	ctx, cancel := context.WithTimeout(context.Background(), cfg.GRPC.Timeout)
 
 	t.Cleanup(func() {

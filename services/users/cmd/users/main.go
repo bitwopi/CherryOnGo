@@ -1,12 +1,17 @@
 package main
 
 import (
+	"os"
 	"users/config"
 	"users/server/api/grpc"
 )
 
 func main() {
-	cfg := config.MustLoad("/home/antisperma/Desktop/CherryOnGo/services/users/config/local.yaml")
+	rootPath, err := os.Getwd()
+	if err != nil {
+		panic("failed to get root path")
+	}
+	cfg := config.MustLoad(rootPath + "/config/local.yaml")
 	server := grpc.NewServer(
 		cfg.DSN,
 		cfg.JWTSecret,
