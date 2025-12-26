@@ -2,7 +2,7 @@ package tests
 
 import (
 	"testing"
-	users "users/server/api/grpc/user"
+	users "users/server/api/grpc/users"
 	suites "users/tests/suite"
 
 	"github.com/brianvoe/gofakeit/v7"

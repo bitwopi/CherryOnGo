@@ -5,7 +5,7 @@ import (
 	"os"
 	"testing"
 	"users/config"
-	pb "users/server/api/grpc/user"
+	pb "users/server/api/grpc/users"
 	jwtmanager "users/server/jwt_manager"
 
 	"google.golang.org/grpc"

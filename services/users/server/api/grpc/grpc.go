@@ -5,7 +5,7 @@ import (
 	"log"
 	"net"
 	"time"
-	pb "users/server/api/grpc/user"
+	pb "users/server/api/grpc/users"
 	"users/server/db"
 	jwtmanager "users/server/jwt_manager"
 	redismanager "users/server/redis_manager"
@@ -17,7 +17,7 @@ import (
 
 type Server struct {
 	pgManager    *db.PgManager
-	jstManager   *jwtmanager.JWTManager
+	jwtManager   *jwtmanager.JWTManager
 	redisManager *redismanager.RedisManager
 	sessionTTL   time.Duration
 	jwtTTL       time.Duration
@@ -42,7 +42,7 @@ func NewServer(
 	rm := redismanager.NewRedisManager(redisAddr, "", redisDB)
 	return &Server{
 		pgManager:    pg,
-		jstManager:   jm,
+		jwtManager:   jm,
 		redisManager: rm,
 		sessionTTL:   sessionTTL,
 		jwtTTL:       jwtTTL,
@@ -90,11 +90,11 @@ func (s *Server) AuthUser(ctx context.Context, req *pb.AuthRequest) (*pb.JWTResp
 	if err := s.pgManager.CheckPassword(req.Login, req.Password); err != nil {
 		return nil, status.Error(codes.Unauthenticated, "invalid password")
 	}
-	jwt, err := s.jstManager.NewJWT(user.UUID, s.jwtTTL)
+	jwt, err := s.jwtManager.NewJWT(user.UUID, s.jwtTTL)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "failed to create JWT: %v", err)
 	}
-	refreshToken := s.jstManager.NewRefreshToken()
+	refreshToken := s.jwtManager.NewRefreshToken()
 	if _, err := s.redisManager.CreateSession(jwt, refreshToken, user.UUID, s.sessionTTL); err != nil {
 		return nil, status.Errorf(codes.Internal, "failed to create session: %v", err)
 	}
@@ -111,19 +111,22 @@ func (s *Server) RefreshJWT(ctx context.Context, req *pb.RefreshRequest) (*pb.JW
 	}
 	session, err := s.redisManager.GetSession(req.RefreshToken)
 	if err != nil {
-		return nil, status.Errorf(codes.Internal, "failed to get session: %v", err)
+		return nil, status.Errorf(codes.Unauthenticated, "failed to get session: %v", err)
 	}
 	if session == nil {
 		return nil, status.Error(codes.NotFound, "session not found")
 	}
-	newJWT, err := s.jstManager.NewJWT(session.UserID, s.jwtTTL)
+	if session.ExpiresAt.Before(time.Now()) {
+		return nil, status.Error(codes.Unauthenticated, "refresh token expired")
+	}
+	newJWT, err := s.jwtManager.NewJWT(session.UserID, s.jwtTTL)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "failed to create new JWT: %v", err)
 	}
 	if err := s.redisManager.DeleteSession(req.RefreshToken); err != nil {
 		return nil, status.Errorf(codes.Internal, "failed to delete old session: %v", err)
 	}
-	refreshToken := s.jstManager.NewRefreshToken()
+	refreshToken := s.jwtManager.NewRefreshToken()
 	if _, err := s.redisManager.CreateSession(newJWT, refreshToken, session.UserID, s.sessionTTL); err != nil {
 		return nil, status.Errorf(codes.Internal, "failed to create session: %v", err)
 	}
