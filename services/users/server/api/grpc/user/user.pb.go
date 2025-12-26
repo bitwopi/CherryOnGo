@@ -9,7 +9,6 @@ package users
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
-	_ "google.golang.org/protobuf/types/known/timestamppb"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
@@ -77,7 +76,7 @@ func (x *AuthRequest) GetPassword() string {
 type SignUpResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Status        string                 `protobuf:"bytes,1,opt,name=status,proto3" json:"status,omitempty"`
-	Error         string                 `protobuf:"bytes,2,opt,name=error,proto3" json:"error,omitempty"`
+	UserUuid      string                 `protobuf:"bytes,2,opt,name=user_uuid,json=userUuid,proto3" json:"user_uuid,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -119,9 +118,9 @@ func (x *SignUpResponse) GetStatus() string {
 	return ""
 }
 
-func (x *SignUpResponse) GetError() string {
+func (x *SignUpResponse) GetUserUuid() string {
 	if x != nil {
-		return x.Error
+		return x.UserUuid
 	}
 	return ""
 }
@@ -339,13 +338,13 @@ var File_user_proto protoreflect.FileDescriptor
 const file_user_proto_rawDesc = "" +
 	"\n" +
 	"\n" +
-	"user.proto\x12\x05users\x1a\x1fgoogle/protobuf/timestamp.proto\"?\n" +
+	"user.proto\x12\x05users\"?\n" +
 	"\vAuthRequest\x12\x14\n" +
 	"\x05login\x18\x01 \x01(\tR\x05login\x12\x1a\n" +
-	"\bpassword\x18\x02 \x01(\tR\bpassword\">\n" +
+	"\bpassword\x18\x02 \x01(\tR\bpassword\"E\n" +
 	"\x0eSignUpResponse\x12\x16\n" +
-	"\x06status\x18\x01 \x01(\tR\x06status\x12\x14\n" +
-	"\x05error\x18\x02 \x01(\tR\x05error\"5\n" +
+	"\x06status\x18\x01 \x01(\tR\x06status\x12\x1b\n" +
+	"\tuser_uuid\x18\x02 \x01(\tR\buserUuid\"5\n" +
 	"\x0eRefreshRequest\x12#\n" +
 	"\rrefresh_token\x18\x01 \x01(\tR\frefreshToken\"U\n" +
 	"\vJWTResponse\x12!\n" +

@@ -21,7 +21,7 @@ type TokenSession struct {
 	ExpiresAt    time.Time     `redis:"expires_at"`
 }
 
-func NewRDB(addr string, pass string, dbnum int) *RedisManager {
+func NewRedisManager(addr string, pass string, dbnum int) *RedisManager {
 	ctx := context.Background()
 	client := redis.NewClient(&redis.Options{
 		Addr:     addr,
@@ -63,4 +63,13 @@ func (m *RedisManager) GetSession(rToken string) (*TokenSession, error) {
 		return nil, err
 	}
 	return &session, nil
+}
+
+func (m *RedisManager) DeleteSession(rToken string) error {
+	key := fmt.Sprintf("session:%s", rToken)
+	ctx := context.Background()
+	if err := m.client.Del(ctx, key).Err(); err != nil {
+		return err
+	}
+	return nil
 }

@@ -9,7 +9,7 @@ message AuthRequest{
 
 message SignUpResponse{
     string status = 1;
-    string error = 2;
+    string user_uuid = 2;
 }
 
 message RefreshRequest{

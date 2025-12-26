@@ -2,6 +2,7 @@ package db
 
 import (
 	"fmt"
+	"log"
 
 	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
@@ -30,12 +31,19 @@ func NewManager(dsn string) (*PgManager, error) {
 	return &PgManager{db: conn}, nil
 }
 
-func (m *PgManager) CreateUser(email string, password string, tgID int64, referral string) error {
+func (m *PgManager) Migrate() {
+	err := m.db.AutoMigrate(&User{})
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
+func (m *PgManager) CreateUser(email string, password string, tgID int64, referral string) (string, error) {
 	passwordHash, err := bcrypt.GenerateFromPassword(
 		[]byte(password),
 		bcrypt.DefaultCost)
 	if err != nil {
-		return fmt.Errorf("failed on create password hash: %v", err)
+		return "", fmt.Errorf("failed on create password hash: %v", err)
 	}
 	user := User{
 		UUID:     uuid.NewString(),
@@ -50,10 +58,10 @@ func (m *PgManager) CreateUser(email string, password string, tgID int64, referr
 	}
 	err = m.db.Create(&user).Error
 	if err != nil {
-		return fmt.Errorf("can't create user: %v", err)
+		return "", fmt.Errorf("can't create user: %v", err)
 	}
 
-	return nil
+	return user.UUID, err
 }
 
 func (m *PgManager) CheckPassword(email string, password string) error {

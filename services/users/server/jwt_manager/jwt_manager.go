@@ -28,7 +28,7 @@ func (m *JWTManager) NewJWT(userID string, ttl time.Duration) (string, error) {
 		Subject:   userID,
 		ExpiresAt: jwt.NewNumericDate(time.Now().Add(ttl)),
 	})
-	return token.SignedString(m.signingKey)
+	return token.SignedString([]byte(m.signingKey))
 }
 
 func (m *JWTManager) NewRefreshToken() string {
@@ -40,7 +40,7 @@ func (m *JWTManager) ParseJWT(tokenString string) (*jwt.RegisteredClaims, error)
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, errors.New("unexpected singning method")
 		}
-		return m.signingKey, nil
+		return []byte(m.signingKey), nil
 	})
 
 	if err != nil {
@@ -48,8 +48,9 @@ func (m *JWTManager) ParseJWT(tokenString string) (*jwt.RegisteredClaims, error)
 	}
 
 	claims, ok := token.Claims.(*jwt.RegisteredClaims)
-	if !ok || token.Valid {
-		return nil, errors.New("invalid token")
+	if !ok {
+		return nil, errors.New("claims type mismatch")
 	}
+
 	return claims, nil
 }
