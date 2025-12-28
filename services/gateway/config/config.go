@@ -11,7 +11,7 @@ type Config struct {
 	Env             string        `yaml:"env" env-deafault:"local"`
 	GRPC            GRPCConfig    `yaml:"grpc" env-required:"true"`
 	REST            RESTConfig    `yaml:"rest" env-required:"true"`
-	RefreshTokenTTL time.Duration `yaml:"refresh_token_ttl" env-deafault:"30d"`
+	RefreshTokenTTL time.Duration `yaml:"refresh_token_ttl" env-deafault:"730h"`
 	JWTSecret       string        `yaml:"jwt_secret" env-required:"true"`
 }
 
