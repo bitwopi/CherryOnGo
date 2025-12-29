@@ -62,17 +62,33 @@ func (r *Server) Start(bindURL string) error {
 	return server.Serve(lis)
 }
 
-func (s *Server) SignUpUser(ctx context.Context, req *pb.AuthRequest) (*pb.SignUpResponse, error) {
+func (s *Server) SignUpUser(ctx context.Context, req *pb.AuthRequest) (*pb.JWTResponse, error) {
 	if req.Login == "" || req.Password == "" {
 		return nil, status.Error(codes.InvalidArgument, "empty login or password")
 	}
-	userUUID, err := s.pgManager.CreateUser(req.Login, req.Password, 0, "")
+	userUUID, err := s.pgManager.CreateUser(
+		&req.Login,
+		&req.Password,
+		nil,
+		nil,
+		nil,
+		nil,
+		nil,
+	)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "failed to create user: %v", err)
 	}
-	return &pb.SignUpResponse{
-		Status:   "user created",
-		UserUuid: userUUID,
+	jwt, err := s.jwtManager.NewJWT(userUUID, s.jwtTTL)
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to create JWT: %v", err)
+	}
+	refreshToken := s.jwtManager.NewRefreshToken()
+	if _, err := s.redisManager.CreateSession(jwt, refreshToken, userUUID, s.sessionTTL); err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to create session: %v", err)
+	}
+	return &pb.JWTResponse{
+		AccessToken:  jwt,
+		RefreshToken: refreshToken,
 	}, nil
 }
 
@@ -98,7 +114,6 @@ func (s *Server) AuthUser(ctx context.Context, req *pb.AuthRequest) (*pb.JWTResp
 	if _, err := s.redisManager.CreateSession(jwt, refreshToken, user.UUID, s.sessionTTL); err != nil {
 		return nil, status.Errorf(codes.Internal, "failed to create session: %v", err)
 	}
-	log.Println(jwt)
 	return &pb.JWTResponse{
 		AccessToken:  jwt,
 		RefreshToken: refreshToken,
@@ -138,4 +153,49 @@ func (s *Server) RefreshJWT(ctx context.Context, req *pb.RefreshRequest) (*pb.JW
 
 func (s *Server) GetUserData(ctx context.Context, req *pb.GetUserRequest) (*pb.UserResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetUserData not implemented")
+}
+
+func (s *Server) TgOAuth(ctx context.Context, req *pb.UserRequest) (*pb.JWTResponse, error) {
+	user, err := s.pgManager.GetUserByTgID(req.TgId)
+	var userUUID string
+	if err != nil {
+		userUUID, err = s.pgManager.CreateUser(
+			nil,
+			nil,
+			&req.TgId,
+			nil,
+			&req.Username,
+			&req.FirstName,
+			&req.PhotoUrl,
+		)
+		if err != nil {
+			return nil, status.Errorf(codes.Internal, "failed to create user: %v", err)
+		}
+		jwt, err := s.jwtManager.NewJWT(userUUID, s.jwtTTL)
+		if err != nil {
+			return nil, status.Errorf(codes.Internal, "failed to create JWT: %v", err)
+		}
+		refreshToken := s.jwtManager.NewRefreshToken()
+		if _, err := s.redisManager.CreateSession(jwt, refreshToken, userUUID, s.sessionTTL); err != nil {
+			return nil, status.Errorf(codes.Internal, "failed to create session: %v", err)
+		}
+		return &pb.JWTResponse{
+			AccessToken:  jwt,
+			RefreshToken: refreshToken,
+		}, nil
+	} else {
+		jwt, err := s.jwtManager.NewJWT(user.UUID, s.jwtTTL)
+		if err != nil {
+			return nil, status.Errorf(codes.Internal, "failed to create JWT: %v", err)
+		}
+		refreshToken := s.jwtManager.NewRefreshToken()
+		if _, err := s.redisManager.CreateSession(jwt, refreshToken, user.UUID, s.sessionTTL); err != nil {
+			return nil, status.Errorf(codes.Internal, "failed to create session: %v", err)
+		}
+		return &pb.JWTResponse{
+			AccessToken:  jwt,
+			RefreshToken: refreshToken,
+		}, nil
+	}
+
 }

@@ -13,6 +13,7 @@ type Config struct {
 	REST            RESTConfig    `yaml:"rest" env-required:"true"`
 	RefreshTokenTTL time.Duration `yaml:"refresh_token_ttl" env-deafault:"730h"`
 	JWTSecret       string        `yaml:"jwt_secret" env-required:"true"`
+	BotToken        string        `yaml:"bot_token" env-required:"true"`
 }
 
 type GRPCConfig struct {

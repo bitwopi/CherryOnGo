@@ -23,16 +23,18 @@ const (
 	UserService_AuthUser_FullMethodName    = "/users.UserService/AuthUser"
 	UserService_RefreshJWT_FullMethodName  = "/users.UserService/RefreshJWT"
 	UserService_GetUserData_FullMethodName = "/users.UserService/GetUserData"
+	UserService_TgOAuth_FullMethodName     = "/users.UserService/TgOAuth"
 )
 
 // UserServiceClient is the client API for UserService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type UserServiceClient interface {
-	SignUpUser(ctx context.Context, in *AuthRequest, opts ...grpc.CallOption) (*SignUpResponse, error)
+	SignUpUser(ctx context.Context, in *AuthRequest, opts ...grpc.CallOption) (*JWTResponse, error)
 	AuthUser(ctx context.Context, in *AuthRequest, opts ...grpc.CallOption) (*JWTResponse, error)
 	RefreshJWT(ctx context.Context, in *RefreshRequest, opts ...grpc.CallOption) (*JWTResponse, error)
 	GetUserData(ctx context.Context, in *GetUserRequest, opts ...grpc.CallOption) (*UserResponse, error)
+	TgOAuth(ctx context.Context, in *UserRequest, opts ...grpc.CallOption) (*JWTResponse, error)
 }
 
 type userServiceClient struct {
@@ -43,9 +45,9 @@ func NewUserServiceClient(cc grpc.ClientConnInterface) UserServiceClient {
 	return &userServiceClient{cc}
 }
 
-func (c *userServiceClient) SignUpUser(ctx context.Context, in *AuthRequest, opts ...grpc.CallOption) (*SignUpResponse, error) {
+func (c *userServiceClient) SignUpUser(ctx context.Context, in *AuthRequest, opts ...grpc.CallOption) (*JWTResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(SignUpResponse)
+	out := new(JWTResponse)
 	err := c.cc.Invoke(ctx, UserService_SignUpUser_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -83,14 +85,25 @@ func (c *userServiceClient) GetUserData(ctx context.Context, in *GetUserRequest,
 	return out, nil
 }
 
+func (c *userServiceClient) TgOAuth(ctx context.Context, in *UserRequest, opts ...grpc.CallOption) (*JWTResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(JWTResponse)
+	err := c.cc.Invoke(ctx, UserService_TgOAuth_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UserServiceServer is the server API for UserService service.
 // All implementations must embed UnimplementedUserServiceServer
 // for forward compatibility.
 type UserServiceServer interface {
-	SignUpUser(context.Context, *AuthRequest) (*SignUpResponse, error)
+	SignUpUser(context.Context, *AuthRequest) (*JWTResponse, error)
 	AuthUser(context.Context, *AuthRequest) (*JWTResponse, error)
 	RefreshJWT(context.Context, *RefreshRequest) (*JWTResponse, error)
 	GetUserData(context.Context, *GetUserRequest) (*UserResponse, error)
+	TgOAuth(context.Context, *UserRequest) (*JWTResponse, error)
 	mustEmbedUnimplementedUserServiceServer()
 }
 
@@ -101,7 +114,7 @@ type UserServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedUserServiceServer struct{}
 
-func (UnimplementedUserServiceServer) SignUpUser(context.Context, *AuthRequest) (*SignUpResponse, error) {
+func (UnimplementedUserServiceServer) SignUpUser(context.Context, *AuthRequest) (*JWTResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method SignUpUser not implemented")
 }
 func (UnimplementedUserServiceServer) AuthUser(context.Context, *AuthRequest) (*JWTResponse, error) {
@@ -112,6 +125,9 @@ func (UnimplementedUserServiceServer) RefreshJWT(context.Context, *RefreshReques
 }
 func (UnimplementedUserServiceServer) GetUserData(context.Context, *GetUserRequest) (*UserResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetUserData not implemented")
+}
+func (UnimplementedUserServiceServer) TgOAuth(context.Context, *UserRequest) (*JWTResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method TgOAuth not implemented")
 }
 func (UnimplementedUserServiceServer) mustEmbedUnimplementedUserServiceServer() {}
 func (UnimplementedUserServiceServer) testEmbeddedByValue()                     {}
@@ -206,6 +222,24 @@ func _UserService_GetUserData_Handler(srv interface{}, ctx context.Context, dec 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _UserService_TgOAuth_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UserRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).TgOAuth(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UserService_TgOAuth_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).TgOAuth(ctx, req.(*UserRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // UserService_ServiceDesc is the grpc.ServiceDesc for UserService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -228,6 +262,10 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetUserData",
 			Handler:    _UserService_GetUserData_Handler,
+		},
+		{
+			MethodName: "TgOAuth",
+			Handler:    _UserService_TgOAuth_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

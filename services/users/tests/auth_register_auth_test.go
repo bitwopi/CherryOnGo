@@ -26,16 +26,16 @@ func TestSignUpSignInRefreshPositive(t *testing.T) {
 
 	regResponse, err := st.UserClient.SignUpUser(ctx, authRequest)
 	require.NoError(t, err)
-	assert.Equal(t, "user created", regResponse.Status)
+	_, err = st.JWTManager.ParseJWT(regResponse.AccessToken)
+	assert.NoError(t, err)
 
 	authResponse, err := st.UserClient.AuthUser(ctx, authRequest)
 	require.NoError(t, err)
 	assert.NotEmpty(t, authResponse.AccessToken)
 	assert.NotEmpty(t, authResponse.RefreshToken)
 
-	parsedToken, err := st.JWTManager.ParseJWT(authResponse.AccessToken)
+	_, err = st.JWTManager.ParseJWT(authResponse.AccessToken)
 	assert.NoError(t, err)
-	assert.Equal(t, regResponse.UserUuid, parsedToken.Subject)
 
 	refreshResponse, err := st.UserClient.RefreshJWT(
 		ctx,

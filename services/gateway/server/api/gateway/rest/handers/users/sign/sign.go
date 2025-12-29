@@ -13,12 +13,7 @@ type Request struct {
 	Password string `json:"password"`
 }
 
-type RegResponse struct {
-	UserUUID string `json:"user_uuid"`
-	Status   string `json:"status"`
-}
-
-type AuthResponse struct {
+type Response struct {
 	JWT string `json:"jwt"`
 }
 
@@ -46,7 +41,7 @@ func Auth(log *zap.Logger, client *userclient.UserGRPCClient) http.HandlerFunc {
 			SameSite: http.SameSiteLaxMode,
 		})
 
-		render.JSON(w, r, AuthResponse{
+		render.JSON(w, r, Response{
 			JWT: resp.AccessToken,
 		})
 
@@ -67,9 +62,18 @@ func SignUp(log *zap.Logger, client *userclient.UserGRPCClient) http.HandlerFunc
 			return
 		}
 
-		render.JSON(w, r, RegResponse{
-			UserUUID: resp.UserUuid,
-			Status:   resp.Status,
+		http.SetCookie(w, &http.Cookie{
+			Name:     "refresh_token",
+			Value:    resp.RefreshToken,
+			Path:     "/",
+			HttpOnly: true,
+			//TODO: set to true in production
+			Secure:   false,
+			SameSite: http.SameSiteLaxMode,
+		})
+
+		render.JSON(w, r, Response{
+			JWT: resp.AccessToken,
 		})
 	}
 }

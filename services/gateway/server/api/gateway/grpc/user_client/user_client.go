@@ -47,7 +47,7 @@ func (c *UserGRPCClient) Close() error {
 	return c.conn.Close()
 }
 
-func (c *UserGRPCClient) SignUpUser(login string, password string) (*pb.SignUpResponse, error) {
+func (c *UserGRPCClient) SignUpUser(login string, password string) (*pb.JWTResponse, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), c.timeout)
 	defer cancel()
 	req := &pb.AuthRequest{
@@ -83,6 +83,23 @@ func (c *UserGRPCClient) RefreshJWT(refreshToken string) (*pb.JWTResponse, error
 		RefreshToken: refreshToken,
 	}
 	resp, err := c.client.RefreshJWT(ctx, req)
+	if err != nil {
+		return nil, err
+	}
+
+	return resp, nil
+}
+
+func (c *UserGRPCClient) TgOAuth(tgID int64, firstName string, photoURL string, username string) (*pb.JWTResponse, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), c.timeout)
+	defer cancel()
+	req := &pb.UserRequest{
+		TgId:      tgID,
+		FirstName: firstName,
+		PhotoUrl:  photoURL,
+		Username:  username,
+	}
+	resp, err := c.client.TgOAuth(ctx, req)
 	if err != nil {
 		return nil, err
 	}

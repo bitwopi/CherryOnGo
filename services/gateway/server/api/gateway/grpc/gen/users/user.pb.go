@@ -73,58 +73,6 @@ func (x *AuthRequest) GetPassword() string {
 	return ""
 }
 
-type SignUpResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Status        string                 `protobuf:"bytes,1,opt,name=status,proto3" json:"status,omitempty"`
-	UserUuid      string                 `protobuf:"bytes,2,opt,name=user_uuid,json=userUuid,proto3" json:"user_uuid,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *SignUpResponse) Reset() {
-	*x = SignUpResponse{}
-	mi := &file_user_proto_msgTypes[1]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *SignUpResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*SignUpResponse) ProtoMessage() {}
-
-func (x *SignUpResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_user_proto_msgTypes[1]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use SignUpResponse.ProtoReflect.Descriptor instead.
-func (*SignUpResponse) Descriptor() ([]byte, []int) {
-	return file_user_proto_rawDescGZIP(), []int{1}
-}
-
-func (x *SignUpResponse) GetStatus() string {
-	if x != nil {
-		return x.Status
-	}
-	return ""
-}
-
-func (x *SignUpResponse) GetUserUuid() string {
-	if x != nil {
-		return x.UserUuid
-	}
-	return ""
-}
-
 type RefreshRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	RefreshToken  string                 `protobuf:"bytes,1,opt,name=refresh_token,json=refreshToken,proto3" json:"refresh_token,omitempty"`
@@ -134,7 +82,7 @@ type RefreshRequest struct {
 
 func (x *RefreshRequest) Reset() {
 	*x = RefreshRequest{}
-	mi := &file_user_proto_msgTypes[2]
+	mi := &file_user_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -146,7 +94,7 @@ func (x *RefreshRequest) String() string {
 func (*RefreshRequest) ProtoMessage() {}
 
 func (x *RefreshRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_user_proto_msgTypes[2]
+	mi := &file_user_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -159,7 +107,7 @@ func (x *RefreshRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RefreshRequest.ProtoReflect.Descriptor instead.
 func (*RefreshRequest) Descriptor() ([]byte, []int) {
-	return file_user_proto_rawDescGZIP(), []int{2}
+	return file_user_proto_rawDescGZIP(), []int{1}
 }
 
 func (x *RefreshRequest) GetRefreshToken() string {
@@ -179,7 +127,7 @@ type JWTResponse struct {
 
 func (x *JWTResponse) Reset() {
 	*x = JWTResponse{}
-	mi := &file_user_proto_msgTypes[3]
+	mi := &file_user_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -191,7 +139,7 @@ func (x *JWTResponse) String() string {
 func (*JWTResponse) ProtoMessage() {}
 
 func (x *JWTResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_user_proto_msgTypes[3]
+	mi := &file_user_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -204,7 +152,7 @@ func (x *JWTResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use JWTResponse.ProtoReflect.Descriptor instead.
 func (*JWTResponse) Descriptor() ([]byte, []int) {
-	return file_user_proto_rawDescGZIP(), []int{3}
+	return file_user_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *JWTResponse) GetAccessToken() string {
@@ -230,7 +178,7 @@ type GetUserRequest struct {
 
 func (x *GetUserRequest) Reset() {
 	*x = GetUserRequest{}
-	mi := &file_user_proto_msgTypes[4]
+	mi := &file_user_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -242,7 +190,7 @@ func (x *GetUserRequest) String() string {
 func (*GetUserRequest) ProtoMessage() {}
 
 func (x *GetUserRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_user_proto_msgTypes[4]
+	mi := &file_user_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -255,12 +203,80 @@ func (x *GetUserRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetUserRequest.ProtoReflect.Descriptor instead.
 func (*GetUserRequest) Descriptor() ([]byte, []int) {
-	return file_user_proto_rawDescGZIP(), []int{4}
+	return file_user_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *GetUserRequest) GetUserUuid() string {
 	if x != nil {
 		return x.UserUuid
+	}
+	return ""
+}
+
+type UserRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	TgId          int64                  `protobuf:"varint,1,opt,name=tg_id,json=tgId,proto3" json:"tg_id,omitempty"`
+	FirstName     string                 `protobuf:"bytes,2,opt,name=first_name,json=firstName,proto3" json:"first_name,omitempty"`
+	PhotoUrl      string                 `protobuf:"bytes,3,opt,name=photo_url,json=photoUrl,proto3" json:"photo_url,omitempty"`
+	Username      string                 `protobuf:"bytes,4,opt,name=username,proto3" json:"username,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *UserRequest) Reset() {
+	*x = UserRequest{}
+	mi := &file_user_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UserRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UserRequest) ProtoMessage() {}
+
+func (x *UserRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_user_proto_msgTypes[4]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UserRequest.ProtoReflect.Descriptor instead.
+func (*UserRequest) Descriptor() ([]byte, []int) {
+	return file_user_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *UserRequest) GetTgId() int64 {
+	if x != nil {
+		return x.TgId
+	}
+	return 0
+}
+
+func (x *UserRequest) GetFirstName() string {
+	if x != nil {
+		return x.FirstName
+	}
+	return ""
+}
+
+func (x *UserRequest) GetPhotoUrl() string {
+	if x != nil {
+		return x.PhotoUrl
+	}
+	return ""
+}
+
+func (x *UserRequest) GetUsername() string {
+	if x != nil {
+		return x.Username
 	}
 	return ""
 }
@@ -341,29 +357,33 @@ const file_user_proto_rawDesc = "" +
 	"user.proto\x12\x05users\"?\n" +
 	"\vAuthRequest\x12\x14\n" +
 	"\x05login\x18\x01 \x01(\tR\x05login\x12\x1a\n" +
-	"\bpassword\x18\x02 \x01(\tR\bpassword\"E\n" +
-	"\x0eSignUpResponse\x12\x16\n" +
-	"\x06status\x18\x01 \x01(\tR\x06status\x12\x1b\n" +
-	"\tuser_uuid\x18\x02 \x01(\tR\buserUuid\"5\n" +
+	"\bpassword\x18\x02 \x01(\tR\bpassword\"5\n" +
 	"\x0eRefreshRequest\x12#\n" +
 	"\rrefresh_token\x18\x01 \x01(\tR\frefreshToken\"U\n" +
 	"\vJWTResponse\x12!\n" +
 	"\faccess_token\x18\x01 \x01(\tR\vaccessToken\x12#\n" +
 	"\rrefresh_token\x18\x02 \x01(\tR\frefreshToken\"-\n" +
 	"\x0eGetUserRequest\x12\x1b\n" +
-	"\tuser_uuid\x18\x01 \x01(\tR\buserUuid\"u\n" +
+	"\tuser_uuid\x18\x01 \x01(\tR\buserUuid\"z\n" +
+	"\vUserRequest\x12\x13\n" +
+	"\x05tg_id\x18\x01 \x01(\x03R\x04tgId\x12\x1d\n" +
+	"\n" +
+	"first_name\x18\x02 \x01(\tR\tfirstName\x12\x1b\n" +
+	"\tphoto_url\x18\x03 \x01(\tR\bphotoUrl\x12\x1a\n" +
+	"\busername\x18\x04 \x01(\tR\busername\"u\n" +
 	"\fUserResponse\x12\x14\n" +
 	"\x05email\x18\x01 \x01(\tR\x05email\x12\x16\n" +
 	"\x06active\x18\x02 \x01(\bR\x06active\x12!\n" +
 	"\fhas_referral\x18\x03 \x01(\bR\vhasReferral\x12\x14\n" +
-	"\x05trial\x18\x04 \x01(\bR\x05trial2\xee\x01\n" +
-	"\vUserService\x127\n" +
+	"\x05trial\x18\x04 \x01(\bR\x05trial2\x9e\x02\n" +
+	"\vUserService\x124\n" +
 	"\n" +
-	"SignUpUser\x12\x12.users.AuthRequest\x1a\x15.users.SignUpResponse\x122\n" +
+	"SignUpUser\x12\x12.users.AuthRequest\x1a\x12.users.JWTResponse\x122\n" +
 	"\bAuthUser\x12\x12.users.AuthRequest\x1a\x12.users.JWTResponse\x127\n" +
 	"\n" +
 	"RefreshJWT\x12\x15.users.RefreshRequest\x1a\x12.users.JWTResponse\x129\n" +
-	"\vGetUserData\x12\x15.users.GetUserRequest\x1a\x13.users.UserResponseB\bZ\x06/usersb\x06proto3"
+	"\vGetUserData\x12\x15.users.GetUserRequest\x1a\x13.users.UserResponse\x121\n" +
+	"\aTgOAuth\x12\x12.users.UserRequest\x1a\x12.users.JWTResponseB\bZ\x06/usersb\x06proto3"
 
 var (
 	file_user_proto_rawDescOnce sync.Once
@@ -380,23 +400,25 @@ func file_user_proto_rawDescGZIP() []byte {
 var file_user_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
 var file_user_proto_goTypes = []any{
 	(*AuthRequest)(nil),    // 0: users.AuthRequest
-	(*SignUpResponse)(nil), // 1: users.SignUpResponse
-	(*RefreshRequest)(nil), // 2: users.RefreshRequest
-	(*JWTResponse)(nil),    // 3: users.JWTResponse
-	(*GetUserRequest)(nil), // 4: users.GetUserRequest
+	(*RefreshRequest)(nil), // 1: users.RefreshRequest
+	(*JWTResponse)(nil),    // 2: users.JWTResponse
+	(*GetUserRequest)(nil), // 3: users.GetUserRequest
+	(*UserRequest)(nil),    // 4: users.UserRequest
 	(*UserResponse)(nil),   // 5: users.UserResponse
 }
 var file_user_proto_depIdxs = []int32{
 	0, // 0: users.UserService.SignUpUser:input_type -> users.AuthRequest
 	0, // 1: users.UserService.AuthUser:input_type -> users.AuthRequest
-	2, // 2: users.UserService.RefreshJWT:input_type -> users.RefreshRequest
-	4, // 3: users.UserService.GetUserData:input_type -> users.GetUserRequest
-	1, // 4: users.UserService.SignUpUser:output_type -> users.SignUpResponse
-	3, // 5: users.UserService.AuthUser:output_type -> users.JWTResponse
-	3, // 6: users.UserService.RefreshJWT:output_type -> users.JWTResponse
-	5, // 7: users.UserService.GetUserData:output_type -> users.UserResponse
-	4, // [4:8] is the sub-list for method output_type
-	0, // [0:4] is the sub-list for method input_type
+	1, // 2: users.UserService.RefreshJWT:input_type -> users.RefreshRequest
+	3, // 3: users.UserService.GetUserData:input_type -> users.GetUserRequest
+	4, // 4: users.UserService.TgOAuth:input_type -> users.UserRequest
+	2, // 5: users.UserService.SignUpUser:output_type -> users.JWTResponse
+	2, // 6: users.UserService.AuthUser:output_type -> users.JWTResponse
+	2, // 7: users.UserService.RefreshJWT:output_type -> users.JWTResponse
+	5, // 8: users.UserService.GetUserData:output_type -> users.UserResponse
+	2, // 9: users.UserService.TgOAuth:output_type -> users.JWTResponse
+	5, // [5:10] is the sub-list for method output_type
+	0, // [0:5] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
 	0, // [0:0] is the sub-list for extension extendee
 	0, // [0:0] is the sub-list for field type_name

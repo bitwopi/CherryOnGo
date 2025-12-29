@@ -11,7 +11,7 @@ import (
 )
 
 type DBManager interface {
-	CreateUser(email string, password string, tgID int64, referral string) error
+	CreateUser(email *string, password *string, tgID *int64, referral *string) error
 	GetUserByEmail(email string) (*User, error)
 	GetUserByUUID(uuid string) (*User, error)
 	GetUserByTgID(tgID int64) (*User, error)
@@ -38,25 +38,32 @@ func (m *PgManager) Migrate() {
 	}
 }
 
-func (m *PgManager) CreateUser(email string, password string, tgID int64, referral string) (string, error) {
-	passwordHash, err := bcrypt.GenerateFromPassword(
-		[]byte(password),
-		bcrypt.DefaultCost)
-	if err != nil {
-		return "", fmt.Errorf("failed on create password hash: %v", err)
-	}
+func (m *PgManager) CreateUser(
+	email *string,
+	password *string,
+	tgID *int64,
+	referral *string,
+	username *string,
+	firsName *string,
+	photoURL *string) (string, error) {
 	user := User{
-		UUID:     uuid.NewString(),
-		Email:    email,
-		Password: string(passwordHash),
+		UUID:         uuid.NewString(),
+		Email:        email,
+		TgID:         tgID,
+		ReferralUUID: referral,
 	}
-	if tgID > 0 {
-		user.TgID = tgID
+	if password != nil {
+		passwordHash, err := bcrypt.GenerateFromPassword(
+			[]byte(*password),
+			bcrypt.DefaultCost)
+		if err != nil {
+			return "", fmt.Errorf("failed on create password hash: %v", err)
+		}
+		pass := string(passwordHash)
+		user.Password = &pass
 	}
-	if len(referral) == 36 {
-		user.ReferralUUID = referral
-	}
-	err = m.db.Create(&user).Error
+
+	err := m.db.Create(&user).Error
 	if err != nil {
 		return "", fmt.Errorf("can't create user: %v", err)
 	}
@@ -76,7 +83,7 @@ func (m *PgManager) CheckPassword(email string, password string) error {
 		return err
 	}
 
-	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
+	err = bcrypt.CompareHashAndPassword([]byte(*user.Password), []byte(password))
 
 	return err
 }
@@ -97,7 +104,7 @@ func (m *PgManager) GetUserByUUID(uuid string) (*User, error) {
 	return &user, nil
 }
 
-func (m *PgManager) GetUserByTgID(tgID string) (*User, error) {
+func (m *PgManager) GetUserByTgID(tgID int64) (*User, error) {
 	var user User
 	if err := m.db.Where("tg_id = ?", tgID).First(&user).Error; err != nil {
 		return nil, err
