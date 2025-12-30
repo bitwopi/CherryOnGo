@@ -16,7 +16,7 @@ import (
 )
 
 type Server struct {
-	pgManager    *db.PgManager
+	dbManager    db.DBManager
 	jwtManager   *jwtmanager.JWTManager
 	redisManager *redismanager.RedisManager
 	sessionTTL   time.Duration
@@ -41,7 +41,7 @@ func NewServer(
 	}
 	rm := redismanager.NewRedisManager(redisAddr, "", redisDB)
 	return &Server{
-		pgManager:    pg,
+		dbManager:    pg,
 		jwtManager:   jm,
 		redisManager: rm,
 		sessionTTL:   sessionTTL,
@@ -51,7 +51,7 @@ func NewServer(
 
 func (r *Server) Start(bindURL string) error {
 	log.Println("Starting gRPC server...")
-	r.pgManager.Migrate()
+	r.dbManager.Migrate()
 	server := grpc.NewServer()
 	pb.RegisterUserServiceServer(server, r)
 	lis, err := net.Listen("tcp", bindURL)
@@ -66,7 +66,7 @@ func (s *Server) SignUpUser(ctx context.Context, req *pb.AuthRequest) (*pb.JWTRe
 	if req.Login == "" || req.Password == "" {
 		return nil, status.Error(codes.InvalidArgument, "empty login or password")
 	}
-	userUUID, err := s.pgManager.CreateUser(
+	userUUID, err := s.dbManager.CreateUser(
 		&req.Login,
 		&req.Password,
 		nil,
@@ -96,14 +96,14 @@ func (s *Server) AuthUser(ctx context.Context, req *pb.AuthRequest) (*pb.JWTResp
 	if req.Login == "" || req.Password == "" {
 		return nil, status.Error(codes.InvalidArgument, "empty login or password")
 	}
-	user, err := s.pgManager.GetUserByEmail(req.Login)
+	user, err := s.dbManager.GetUserByEmail(req.Login)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "failed to get user: %v", err)
 	}
 	if user == nil {
 		return nil, status.Error(codes.NotFound, "user not found")
 	}
-	if err := s.pgManager.CheckPassword(req.Login, req.Password); err != nil {
+	if err := s.dbManager.CheckPassword(req.Login, req.Password); err != nil {
 		return nil, status.Error(codes.Unauthenticated, "invalid password")
 	}
 	jwt, err := s.jwtManager.NewJWT(user.UUID, s.jwtTTL)
@@ -156,10 +156,10 @@ func (s *Server) GetUserData(ctx context.Context, req *pb.GetUserRequest) (*pb.U
 }
 
 func (s *Server) TgOAuth(ctx context.Context, req *pb.UserRequest) (*pb.JWTResponse, error) {
-	user, err := s.pgManager.GetUserByTgID(req.TgId)
+	user, err := s.dbManager.GetUserByTgID(req.TgId)
 	var userUUID string
 	if err != nil {
-		userUUID, err = s.pgManager.CreateUser(
+		userUUID, err = s.dbManager.CreateUser(
 			nil,
 			nil,
 			&req.TgId,

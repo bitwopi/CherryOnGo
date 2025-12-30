@@ -11,11 +11,19 @@ import (
 )
 
 type DBManager interface {
-	CreateUser(email *string, password *string, tgID *int64, referral *string) error
+	CreateUser(
+		email *string,
+		password *string,
+		tgID *int64,
+		referral *string,
+		username *string,
+		firstName *string,
+		photoURL *string) (string, error)
 	GetUserByEmail(email string) (*User, error)
 	GetUserByUUID(uuid string) (*User, error)
 	GetUserByTgID(tgID int64) (*User, error)
 	CheckPassword(email string, password string) error
+	Migrate()
 }
 
 type PgManager struct {
