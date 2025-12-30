@@ -287,6 +287,12 @@ type UserResponse struct {
 	Active        bool                   `protobuf:"varint,2,opt,name=active,proto3" json:"active,omitempty"`
 	HasReferral   bool                   `protobuf:"varint,3,opt,name=has_referral,json=hasReferral,proto3" json:"has_referral,omitempty"`
 	Trial         bool                   `protobuf:"varint,4,opt,name=trial,proto3" json:"trial,omitempty"`
+	UserUuid      string                 `protobuf:"bytes,5,opt,name=user_uuid,json=userUuid,proto3" json:"user_uuid,omitempty"`
+	TgId          int64                  `protobuf:"varint,6,opt,name=tg_id,json=tgId,proto3" json:"tg_id,omitempty"`
+	FirstName     string                 `protobuf:"bytes,7,opt,name=first_name,json=firstName,proto3" json:"first_name,omitempty"`
+	Username      string                 `protobuf:"bytes,8,opt,name=username,proto3" json:"username,omitempty"`
+	PhotoUrl      string                 `protobuf:"bytes,9,opt,name=photo_url,json=photoUrl,proto3" json:"photo_url,omitempty"`
+	IsAdmin       bool                   `protobuf:"varint,10,opt,name=is_admin,json=isAdmin,proto3" json:"is_admin,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -349,6 +355,48 @@ func (x *UserResponse) GetTrial() bool {
 	return false
 }
 
+func (x *UserResponse) GetUserUuid() string {
+	if x != nil {
+		return x.UserUuid
+	}
+	return ""
+}
+
+func (x *UserResponse) GetTgId() int64 {
+	if x != nil {
+		return x.TgId
+	}
+	return 0
+}
+
+func (x *UserResponse) GetFirstName() string {
+	if x != nil {
+		return x.FirstName
+	}
+	return ""
+}
+
+func (x *UserResponse) GetUsername() string {
+	if x != nil {
+		return x.Username
+	}
+	return ""
+}
+
+func (x *UserResponse) GetPhotoUrl() string {
+	if x != nil {
+		return x.PhotoUrl
+	}
+	return ""
+}
+
+func (x *UserResponse) GetIsAdmin() bool {
+	if x != nil {
+		return x.IsAdmin
+	}
+	return false
+}
+
 var File_user_proto protoreflect.FileDescriptor
 
 const file_user_proto_rawDesc = "" +
@@ -370,12 +418,20 @@ const file_user_proto_rawDesc = "" +
 	"\n" +
 	"first_name\x18\x02 \x01(\tR\tfirstName\x12\x1b\n" +
 	"\tphoto_url\x18\x03 \x01(\tR\bphotoUrl\x12\x1a\n" +
-	"\busername\x18\x04 \x01(\tR\busername\"u\n" +
+	"\busername\x18\x04 \x01(\tR\busername\"\x9a\x02\n" +
 	"\fUserResponse\x12\x14\n" +
 	"\x05email\x18\x01 \x01(\tR\x05email\x12\x16\n" +
 	"\x06active\x18\x02 \x01(\bR\x06active\x12!\n" +
 	"\fhas_referral\x18\x03 \x01(\bR\vhasReferral\x12\x14\n" +
-	"\x05trial\x18\x04 \x01(\bR\x05trial2\x9e\x02\n" +
+	"\x05trial\x18\x04 \x01(\bR\x05trial\x12\x1b\n" +
+	"\tuser_uuid\x18\x05 \x01(\tR\buserUuid\x12\x13\n" +
+	"\x05tg_id\x18\x06 \x01(\x03R\x04tgId\x12\x1d\n" +
+	"\n" +
+	"first_name\x18\a \x01(\tR\tfirstName\x12\x1a\n" +
+	"\busername\x18\b \x01(\tR\busername\x12\x1b\n" +
+	"\tphoto_url\x18\t \x01(\tR\bphotoUrl\x12\x19\n" +
+	"\bis_admin\x18\n" +
+	" \x01(\bR\aisAdmin2\x9e\x02\n" +
 	"\vUserService\x124\n" +
 	"\n" +
 	"SignUpUser\x12\x12.users.AuthRequest\x1a\x12.users.JWTResponse\x122\n" +

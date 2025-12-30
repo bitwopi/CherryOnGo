@@ -16,4 +16,5 @@ type User struct {
 	Active       bool      `gorm:"default:true"`
 	ReferralUUID *string   `gorm:"type:varchar(36)"`
 	Trial        bool      `gorm:"default:false"`
+	IsAdmin      bool      `gorm:"default:false"`
 }

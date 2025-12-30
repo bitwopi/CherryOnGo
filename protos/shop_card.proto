@@ -1,0 +1,47 @@
+syntax = "proto3";
+package shop_card;
+option go_package = "/shop_card";
+
+import "google/protobuf/timestamp.proto";
+
+
+message ShopCardRequest{
+    string name = 1;
+    string description = 2;
+    string category = 3;
+    float price = 4;
+    bool visible = 5;
+    string cover_url = 6; 
+}
+
+message UpdateShopCardRequest{
+    string uuid = 1;
+    string name = 2;
+    string description = 3;
+    string category = 4;
+    float price = 5;
+    bool visible = 6;
+    string cover_url = 7; 
+}
+
+message ShopCardUUIDRequest{
+    string shop_card_uuid = 1;
+}
+
+message ShopCardResponse{
+    string uuid = 1;
+    string name = 2;
+    string description = 3;
+    string category = 4;
+    float price = 5;
+    bool visible = 6;
+    string cover_url = 7; 
+    google.protobuf.Timestamp created_at = 8;
+}
+
+service ShopCardService{
+    rpc CreateShopCard(ShopCardRequest) returns (ShopCardResponse);
+    rpc UpdateShopCard(UpdateShopCardRequest) returns (ShopCardResponse);
+    rpc GetShopCard(ShopCardUUIDRequest) returns (ShopCardResponse);
+    rpc DeleteShopCard(ShopCardUUIDRequest) returns (ShopCardResponse);
+}

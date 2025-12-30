@@ -32,6 +32,12 @@ message UserResponse {
     bool active = 2;
     bool has_referral = 3;
     bool trial = 4; 
+    string user_uuid = 5;
+    int64 tg_id = 6;
+    string first_name = 7;
+    string username = 8;
+    string photo_url = 9;
+    bool is_admin =10;
 }
 
 service UserService{
