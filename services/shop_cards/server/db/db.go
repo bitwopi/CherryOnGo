@@ -11,10 +11,11 @@ import (
 )
 
 type DBManager interface {
-	CreateShopCard(name string, description string, category string, price *float64, visible bool, coverURL *string) (*ShopCard, error)
-	UpdateShopCard(uuid string, name string, description string, category string, price *float64, visible bool, coverURL *string) (*ShopCard, error)
+	CreateShopCard(name string, description string, category string, price *float32, visible bool, coverURL *string) (*ShopCard, error)
+	UpdateShopCard(uuid string, name string, description string, category string, price *float32, visible bool, coverURL *string) (*ShopCard, error)
 	GetShopCard(uuid string) (*ShopCard, error)
 	DeleteShopCard(uuid string) error
+	Migrate()
 }
 
 type PgManager struct {
@@ -41,7 +42,7 @@ func (m *PgManager) CreateShopCard(
 	name string,
 	description string,
 	category string,
-	price *float64,
+	price *float32,
 	visible bool,
 	coverURL *string) (*ShopCard, error) {
 	card := ShopCard{
@@ -67,7 +68,7 @@ func (m *PgManager) UpdateShopCard(
 	name string,
 	description string,
 	category string,
-	price *float64,
+	price *float32,
 	visible bool,
 	coverURL *string) (*ShopCard, error) {
 	card := ShopCard{

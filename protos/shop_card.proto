@@ -3,7 +3,7 @@ package shop_card;
 option go_package = "/shop_card";
 
 import "google/protobuf/timestamp.proto";
-
+import "google/protobuf/empty.proto";
 
 message ShopCardRequest{
     string name = 1;
@@ -43,5 +43,5 @@ service ShopCardService{
     rpc CreateShopCard(ShopCardRequest) returns (ShopCardResponse);
     rpc UpdateShopCard(UpdateShopCardRequest) returns (ShopCardResponse);
     rpc GetShopCard(ShopCardUUIDRequest) returns (ShopCardResponse);
-    rpc DeleteShopCard(ShopCardUUIDRequest) returns (ShopCardResponse);
+    rpc DeleteShopCard(ShopCardUUIDRequest) returns (google.protobuf.Empty);
 }
