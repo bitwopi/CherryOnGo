@@ -39,9 +39,9 @@ func NewApp(cfg config.Config, logger *zap.Logger) *App {
 	}
 
 	oClient, err := orderclient.NewOrderGRPCClient(
-		cfg.UserService.Addr,
-		cfg.UserService.Timeout,
-		cfg.UserService.MaxRetries)
+		cfg.OrderService.Addr,
+		cfg.OrderService.Timeout,
+		cfg.OrderService.MaxRetries)
 	if err != nil {
 		logger.Fatal("failed to create order gRPC client", zap.Error(err))
 	}
@@ -97,7 +97,7 @@ func (a *App) SetupRouter() {
 		r.Use(checktgauth.New(a.botToken))
 		r.Post("/", tgauth.New(a.logger, a.userClient))
 	})
-	a.router.Route("/api/order/", func(r chi.Router) {
+	a.router.Route("/api/order", func(r chi.Router) {
 		r.Use(jwtcheck.New(*a.jm))
 		r.Post("/create", handlers.CreateOrder(a.logger, a.orderClient))
 		r.Post("/update/status", handlers.UpdateOrderStatus(a.logger, a.orderClient))

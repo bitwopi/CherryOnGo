@@ -28,6 +28,7 @@ func TestCRUDPositive(t *testing.T) {
 		},
 		Price: gofakeit.Float32(),
 	}
+
 	resp, err := st.OrderClient.CreateOrder(ctx, &cRequest)
 	require.NoError(t, err)
 	assert.NotEmpty(t, resp)

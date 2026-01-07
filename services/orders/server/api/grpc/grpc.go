@@ -43,20 +43,26 @@ func (s *Server) Start(bindURL string) error {
 }
 
 func (s *Server) CreateOrder(ctx context.Context, req *pb.CreateOrderRequest) (*pb.OrderResponse, error) {
+	log.Println(req)
 	if !isValidStatus(req.Status) {
 		return nil, status.Errorf(codes.InvalidArgument, "invalid order status: %s", req.Status)
+	}
+	if req.ShopCard == nil {
+		return nil, status.Errorf(codes.InvalidArgument, "shop card is required")
 	}
 	shopCard := db.ShopCard{
 		UUID:        req.ShopCard.Uuid,
 		Name:        req.ShopCard.Name,
-		CreatedAt:   req.ShopCard.CreatedAt.AsTime(),
 		Description: req.ShopCard.Description,
 		Category:    req.ShopCard.Category,
 		Price:       &req.ShopCard.Price,
 		Visible:     req.ShopCard.Visible,
 		CoverURL:    &req.ShopCard.CoverUrl,
 	}
-	log.Println(req)
+	if req.ShopCard.CreatedAt != nil {
+		shopCard.CreatedAt = req.ShopCard.CreatedAt.AsTime()
+	}
+
 	order, err := s.db.CreateOrder(
 		req.CustomerUuid,
 		db.OrderStatus(req.Status),
@@ -66,21 +72,29 @@ func (s *Server) CreateOrder(ctx context.Context, req *pb.CreateOrderRequest) (*
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "failed to create order: %v", err)
 	}
-	return &pb.OrderResponse{
-		Uuid:         order.UUID,
-		CustomerUuid: order.CustomerUUID,
-		Status:       string(order.Status),
-		ShopCard: &pb.ShopCard{
+	var sCard pb.ShopCard
+	if order.ShopCard != nil {
+		sCard = pb.ShopCard{
 			Uuid:        order.ShopCard.UUID,
 			Name:        order.ShopCard.Name,
 			CreatedAt:   timestamppb.New(order.ShopCard.CreatedAt),
 			Description: order.ShopCard.Description,
 			Category:    order.ShopCard.Category,
-			Price:       *order.ShopCard.Price,
 			Visible:     order.ShopCard.Visible,
-			CoverUrl:    *order.ShopCard.CoverURL,
-		},
-		Price: order.Price,
+		}
+		if order.ShopCard.Price != nil {
+			sCard.Price = *order.ShopCard.Price
+		}
+		if order.ShopCard.CoverURL != nil {
+			sCard.CoverUrl = *order.ShopCard.CoverURL
+		}
+	}
+	return &pb.OrderResponse{
+		Uuid:         order.UUID,
+		CustomerUuid: order.CustomerUUID,
+		Status:       string(order.Status),
+		ShopCard:     &sCard,
+		Price:        order.Price,
 	}, nil
 }
 

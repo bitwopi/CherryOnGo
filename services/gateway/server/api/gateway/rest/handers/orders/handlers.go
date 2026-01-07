@@ -13,19 +13,24 @@ func CreateOrder(log *zap.Logger, client *orderclient.OrderGRPCClient) http.Hand
 	return func(w http.ResponseWriter, r *http.Request) {
 		var req pb.CreateOrderRequest
 		if err := render.DecodeJSON(r.Body, &req); err != nil {
-			http.Error(w, "failed to parse request body: "+err.Error(), http.StatusBadRequest)
+			http.Error(w, "failed to parse request body", http.StatusBadRequest)
+			log.Error(err.Error())
 			return
 		}
-		shopCard := &pb.ShopCard{
-			Uuid:        req.ShopCard.Uuid,
-			Name:        req.ShopCard.Name,
-			Description: req.ShopCard.Description,
-			Category:    req.ShopCard.Category,
-			Visible:     req.ShopCard.Visible,
+		var shopCard *pb.ShopCard
+		if req.ShopCard != nil {
+			shopCard = &pb.ShopCard{
+				Uuid:        req.ShopCard.Uuid,
+				Name:        req.ShopCard.Name,
+				Description: req.ShopCard.Description,
+				Category:    req.ShopCard.Category,
+				Visible:     req.ShopCard.Visible,
+			}
 		}
 		resp, err := client.CreateOrder(req.CustomerUuid, req.Status, shopCard, req.Price)
 		if err != nil {
-			http.Error(w, "failed to create order: "+err.Error(), http.StatusInternalServerError)
+			http.Error(w, "failed to create order", http.StatusInternalServerError)
+			log.Error(err.Error())
 			return
 		}
 
@@ -37,12 +42,14 @@ func UpdateOrderStatus(log *zap.Logger, client *orderclient.OrderGRPCClient) htt
 	return func(w http.ResponseWriter, r *http.Request) {
 		var req pb.OrderStatusRequest
 		if err := render.DecodeJSON(r.Body, &req); err != nil {
-			http.Error(w, "failed to parse request body: "+err.Error(), http.StatusBadRequest)
+			http.Error(w, "failed to parse request body", http.StatusBadRequest)
+			log.Error(err.Error())
 			return
 		}
 		resp, err := client.UpdateOrderStatus(req.OrderUuid, req.Status)
 		if err != nil {
-			http.Error(w, "failed to update order"+err.Error(), http.StatusInternalServerError)
+			http.Error(w, "failed to update order", http.StatusInternalServerError)
+			log.Error(err.Error())
 			return
 		}
 
@@ -59,7 +66,8 @@ func GetOrder(log *zap.Logger, client *orderclient.OrderGRPCClient) http.Handler
 		}
 		resp, err := client.GetOrder(orderUUID)
 		if err != nil {
-			http.Error(w, "failed to get order: "+err.Error(), http.StatusInternalServerError)
+			http.Error(w, "failed to get order", http.StatusInternalServerError)
+			log.Error(err.Error())
 			return
 		}
 
