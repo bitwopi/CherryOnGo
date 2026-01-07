@@ -2,7 +2,7 @@ package main
 
 import (
 	"log"
-	"orders/server/api/grpc"
+	remna "orders/server/api/grpc/remna_client"
 	"os"
 	"time"
 
@@ -18,12 +18,12 @@ func main() {
 	if len(addr) == 0 {
 		panic("Bind url is required")
 	}
-	cfg := grpc.Config{
+	cfg := remna.Config{
 		Address:        addr,
 		RequestTimeout: 2 * time.Second,
 		MaxRetries:     3,
 	}
-	client, err := grpc.NewRemnaGRPCClient(cfg)
+	client, err := remna.NewRemnaGRPCClient(cfg)
 	if err != nil {
 		panic(err)
 	}

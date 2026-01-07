@@ -1,0 +1,18 @@
+syntax = "proto3";
+package payment;
+option go_package = "/payment";
+
+message PaymentCreated{
+    string payment_uuid = 1;
+    string order_uuid = 2;
+    string payment_url = 3;
+}
+
+message PaymentStatusChanged{
+    string order_uuid = 2;
+    string status = 3;
+}
+
+service PaymentService{
+    rpc CreatePayment(CreatePaymentMessage) returns (PaymentMessage)
+}
