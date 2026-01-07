@@ -1,3 +1,47 @@
 syntax = "proto3";
 package order;
 option go_package = "/order";
+import "google/protobuf/timestamp.proto";
+
+message CreateOrderRequest{
+    string customer_uuid = 1;
+    string status = 2;
+    ShopCard shop_card = 3;
+    float price = 4;
+}
+
+message ShopCard{
+    string uuid = 1;
+    string name = 2;
+    google.protobuf.Timestamp created_at = 3;
+    string description = 4;
+    string category = 5;
+    float price = 6;
+    bool visible = 7;
+    string cover_url = 8;
+}
+
+message OrderResponse{
+    string uuid = 1;
+    google.protobuf.Timestamp created_at = 2;
+    google.protobuf.Timestamp updated_at = 3;
+    string customer_uuid = 4;
+    string status = 5;
+    ShopCard shop_card = 6;
+    float price = 7;
+}
+
+message OrderStatusRequest{
+    string order_uuid = 1;
+    string status = 2;
+}
+
+message GetOrderRequest{
+    string order_uuid = 1;
+}
+
+service OrderService{
+    rpc CreateOrder(CreateOrderRequest) returns (OrderResponse);
+    rpc UpdateOrderStatus(OrderStatusRequest) returns (OrderResponse);
+    rpc GetOrder(GetOrderRequest) returns (OrderResponse);
+}

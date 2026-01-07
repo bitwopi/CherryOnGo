@@ -8,7 +8,7 @@ type Order struct {
 	UpdatedAt    time.Time   `gorm:"autoUpdateTime"`
 	CustomerUUID string      `gorm:"type:varchar(36)"`
 	Status       OrderStatus `gorm:"type:varchar(20);default:'NEW';check:status IN ('NEW','UNPAID','PAID','CANCELLED','REFUNDED')"`
-	ShopCard     ShopCard    `gorm:"type:jsonb;serializer:json" json:"shop_card"`
+	ShopCard     *ShopCard   `gorm:"type:jsonb;serializer:json" json:"shop_card"`
 	Price        float32     `gorm:"type:decimal(10,2)"`
 }
 

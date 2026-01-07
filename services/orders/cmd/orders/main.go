@@ -1,33 +1,26 @@
 package main
 
 import (
-	"log"
-	remna "orders/server/api/grpc/remna_client"
+	"orders/config"
+	"orders/server/api/grpc"
 	"os"
-	"time"
-
-	"github.com/joho/godotenv"
+	"os/signal"
+	"syscall"
 )
 
 func main() {
-	err := godotenv.Load()
-	if err != nil {
-		panic("Error loading .env file")
-	}
-	addr := os.Getenv("REMNAVAWE_GRPC_BIND_URL")
-	if len(addr) == 0 {
-		panic("Bind url is required")
-	}
-	cfg := remna.Config{
-		Address:        addr,
-		RequestTimeout: 2 * time.Second,
-		MaxRetries:     3,
-	}
-	client, err := remna.NewRemnaGRPCClient(cfg)
+	cfg := config.MustLoad("config/local.yaml")
+	server, err := grpc.NewServer(cfg.DSN)
 	if err != nil {
 		panic(err)
 	}
-	defer client.Close()
-	user := client.GetUser("motbot")
-	log.Println("UserResponse: ", user)
+	done := make(chan os.Signal, 1)
+	signal.Notify(done, os.Interrupt, syscall.SIGINT, syscall.SIGTERM)
+	go func() {
+		if err := server.Start(":" + cfg.GRPC.Port); err != nil {
+			panic(err)
+		}
+	}()
+	<-done
+	server.Stop()
 }

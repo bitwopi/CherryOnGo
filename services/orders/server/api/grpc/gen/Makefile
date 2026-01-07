@@ -13,9 +13,10 @@ generate:
 
 	protoc \
 		-I$(PROTO_DIR) \
-		--go_out=$(OUT_DIR) --go_opt=paths=source_relative \
-		--go-grpc_out=$(OUT_DIR) --go-grpc_opt=paths=source_relative \
-		$(PROTO_DIR)/remna.proto
+		--go_out=$(OUT_DIR) \
+		--go-grpc_out=$(OUT_DIR)\
+		$(PROTO_DIR)/remna.proto\
+		$(PROTO_DIR)/order.proto
 
 clean:
 	rm -f $(OUT_DIR)*.pb.go

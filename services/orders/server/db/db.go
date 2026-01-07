@@ -10,7 +10,7 @@ import (
 )
 
 type DBManager interface {
-	CreateOrder(customerUUID string, status OrderStatus, shopCard ShopCard, price float32) (*Order, error)
+	CreateOrder(customerUUID string, status OrderStatus, shopCard *ShopCard, price float32) (*Order, error)
 	GetOrder(uuid string) (*Order, error)
 	UpdateOrderStatus(uuid string, status OrderStatus) (*Order, error)
 	Migrate()
@@ -40,7 +40,7 @@ func (m *PgManager) Migrate() {
 	}
 }
 
-func (m *PgManager) CreateUser(customerUUID string, status OrderStatus, shopCard ShopCard, price float32) (*Order, error) {
+func (m *PgManager) CreateOrder(customerUUID string, status OrderStatus, shopCard *ShopCard, price float32) (*Order, error) {
 	order := Order{
 		UUID:         uuid.NewString(),
 		CustomerUUID: customerUUID,
