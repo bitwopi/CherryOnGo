@@ -3,11 +3,14 @@ package app
 import (
 	"context"
 	"gateway/config"
+	orderclient "gateway/server/api/gateway/grpc/order_client"
 	userclient "gateway/server/api/gateway/grpc/user_client"
+	handlers "gateway/server/api/gateway/rest/handers/orders"
 	"gateway/server/api/gateway/rest/handers/users/refresh"
 	"gateway/server/api/gateway/rest/handers/users/sign"
 	tgauth "gateway/server/api/gateway/rest/handers/users/tg_auth"
 	checktgauth "gateway/server/api/gateway/rest/middleware/check_tg_auth"
+	jwtcheck "gateway/server/api/gateway/rest/middleware/jwt_check"
 	jwtmanager "gateway/server/jwt_manager"
 	"net/http"
 
@@ -17,21 +20,30 @@ import (
 )
 
 type App struct {
-	client   *userclient.UserGRPCClient
-	jm       *jwtmanager.JWTManager
-	logger   *zap.Logger
-	router   *chi.Mux
-	server   *http.Server
-	botToken string
+	userClient  *userclient.UserGRPCClient
+	orderClient *orderclient.OrderGRPCClient
+	jm          *jwtmanager.JWTManager
+	logger      *zap.Logger
+	router      *chi.Mux
+	server      *http.Server
+	botToken    string
 }
 
 func NewApp(cfg config.Config, logger *zap.Logger) *App {
-	client, err := userclient.NewUserGRPCClient(
-		cfg.GRPC.Addr,
-		cfg.GRPC.Timeout,
-		cfg.GRPC.MaxRetries)
+	uClient, err := userclient.NewUserGRPCClient(
+		cfg.UserService.Addr,
+		cfg.UserService.Timeout,
+		cfg.UserService.MaxRetries)
 	if err != nil {
 		logger.Fatal("failed to create user gRPC client", zap.Error(err))
+	}
+
+	oClient, err := orderclient.NewOrderGRPCClient(
+		cfg.UserService.Addr,
+		cfg.UserService.Timeout,
+		cfg.UserService.MaxRetries)
+	if err != nil {
+		logger.Fatal("failed to create order gRPC client", zap.Error(err))
 	}
 
 	jm, err := jwtmanager.NewJWTManager(cfg.JWTSecret)
@@ -47,12 +59,13 @@ func NewApp(cfg config.Config, logger *zap.Logger) *App {
 		IdleTimeout:  cfg.REST.IdleTimeout,
 	}
 	return &App{
-		client:   client,
-		jm:       jm,
-		logger:   logger,
-		router:   router,
-		server:   server,
-		botToken: cfg.BotToken,
+		userClient:  uClient,
+		orderClient: oClient,
+		jm:          jm,
+		logger:      logger,
+		router:      router,
+		server:      server,
+		botToken:    cfg.BotToken,
 	}
 }
 
@@ -66,7 +79,7 @@ func (a *App) Start(addr string) error {
 }
 
 func (a *App) Close() {
-	a.client.Close()
+	a.userClient.Close()
 }
 
 func (a *App) SetupMiddleware() {
@@ -75,23 +88,26 @@ func (a *App) SetupMiddleware() {
 }
 
 func (a *App) SetupRouter() {
-	a.router.Get("/", func(w http.ResponseWriter, r *http.Request) {
-		http.ServeFile(w, r, "/home/d3d1k/CherryOnGo/services/gateway/server/api/gateway/rest/app/index.html")
-	})
 	a.router.Route("/api/auth", func(r chi.Router) {
-		r.Post("/login", sign.Auth(a.logger, a.client))
-		r.Post("/register", sign.SignUp(a.logger, a.client))
-		r.Post("/refresh", refresh.RefreshJWT(a.logger, a.client))
+		r.Post("/login", sign.Auth(a.logger, a.userClient))
+		r.Post("/register", sign.SignUp(a.logger, a.userClient))
+		r.Post("/refresh", refresh.RefreshJWT(a.logger, a.userClient))
 	})
 	a.router.Route("/api/auth/telegram", func(r chi.Router) {
 		r.Use(checktgauth.New(a.botToken))
-		r.Post("/", tgauth.New(a.logger, a.client))
+		r.Post("/", tgauth.New(a.logger, a.userClient))
+	})
+	a.router.Route("/api/order/", func(r chi.Router) {
+		r.Use(jwtcheck.New(*a.jm))
+		r.Post("/create", handlers.CreateOrder(a.logger, a.orderClient))
+		r.Post("/update/status", handlers.UpdateOrderStatus(a.logger, a.orderClient))
+		r.Get("/get", handlers.GetOrder(a.logger, a.orderClient))
 	})
 
 }
 
 func (a *App) Stop(ctx context.Context) error {
-	if err := a.client.Close(); err != nil {
+	if err := a.userClient.Close(); err != nil {
 		return err
 	}
 	return a.server.Shutdown(ctx)

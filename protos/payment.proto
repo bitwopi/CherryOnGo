@@ -14,5 +14,5 @@ message PaymentStatusChanged{
 }
 
 service PaymentService{
-    rpc CreatePayment(CreatePaymentMessage) returns (PaymentMessage)
+    rpc CreatePayment(CreatePaymentMessage) returns (PaymentMessage);
 }
