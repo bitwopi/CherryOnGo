@@ -11,7 +11,7 @@ func main() {
 	if err != nil {
 		panic("failed to get root path")
 	}
-	cfg := config.MustLoad(rootPath + "/config/local.yaml")
+	cfg := config.MustLoad(rootPath + "/config/dev.yaml")
 	server := grpc.NewServer(cfg.DSN)
 	server.Start(":" + cfg.GRPC.Port)
 }

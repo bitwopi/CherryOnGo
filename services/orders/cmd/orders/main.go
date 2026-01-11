@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-	cfg := config.MustLoad("config/local.yaml")
+	cfg := config.MustLoad("config/dev.yaml")
 	server, err := grpc.NewServer(cfg.DSN)
 	if err != nil {
 		panic(err)

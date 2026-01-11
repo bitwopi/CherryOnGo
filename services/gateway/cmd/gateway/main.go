@@ -17,7 +17,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	cfg := config.MustLoad(rootPath + "/config/local.yaml")
+	cfg := config.MustLoad(rootPath + "/config/dev.yaml")
 	logger := setupLogger(cfg.Env)
 	defer logger.Sync()
 	app := app.NewApp(

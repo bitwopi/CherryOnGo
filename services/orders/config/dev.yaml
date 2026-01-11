@@ -1,0 +1,5 @@
+env: "dev"
+dsn: "host=${ORDER_DB_HOST} user=${DB_USER} password=${DB_PASS} dbname=${ORDER_DB_NAME} port=${DB_PORT} sslmode=disable"
+grpc:
+  port: "${ORDER_SERVICE_PORT}"
+  timeout: ${ORDER_SERVICE_TIMEOUT}s

@@ -1,6 +1,61 @@
-version: "3.9"
-
 services:
+  shop_cards:
+    env_file:
+    - .env
+    build:
+      context: ./services/shop_cards
+      dockerfile: Dockerfile.shopcards
+    container_name: shop_cards
+    network_mode: host
+    ports: 
+      - "${CARD_SERVICE_PORT}:${CARD_SERVICE_PORT}"
+    depends_on: 
+      cards-db:
+        condition: service_healthy
+  users:
+    env_file:
+    - .env
+    build:
+      context: ./services/users
+      dockerfile: Dockerfile.users
+    container_name: users
+    network_mode: host
+    ports: 
+      - "${USER_SERVICE_PORT}:${USER_SERVICE_PORT}"
+    depends_on: 
+      users-db:
+        condition: service_healthy
+  orders:
+    env_file:
+    - .env
+    build:
+      context: ./services/orders
+      dockerfile: Dockerfile.orders
+    container_name: orders
+    network_mode: host
+    ports: 
+      - "${ORDER_SERVICE_PORT}:${ORDER_SERVICE_PORT}"
+    depends_on: 
+      shop_cards:
+        condition: service_started
+      users:
+        condition: service_started
+      orders-db:
+        condition: service_healthy
+  gateway:
+    env_file:
+    - .env
+    build:
+      context: ./services/gateway
+      dockerfile: Dockerfile.gateway
+    container_name: gateway
+    network_mode: host
+    ports: 
+      - "${REST_PORT}:${REST_PORT}"
+    depends_on: 
+      orders:
+        condition: service_started
+
   kafka:
     image: confluentinc/cp-kafka:8.1.1
     container_name: kafka
@@ -21,3 +76,82 @@ services:
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
       CLUSTER_ID: AkzAKoIeTauyH6SPdYZpUg
       KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+
+  orders-db:
+    env_file:
+    - .env
+    image: postgres:15
+    container_name: orders-db
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASS}
+      POSTGRES_DB: ${ORDER_DB_NAME}
+    restart: always
+    ports:
+      - "${ORDER_DB_PORT}:${DB_PORT}"
+    volumes:
+      - orders_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      retries: 5
+
+  cards-db:
+    env_file:
+    - .env
+    image: postgres:15
+    container_name: cards-db
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASS}
+      POSTGRES_DB: ${CARD_DB_NAME}
+    ports:
+      - "${CARD_DB_PORT}:${DB_PORT}"
+    restart: always
+    volumes:
+      - cards_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      retries: 5
+
+  users-db:
+    env_file:
+    - .env
+    image: postgres:15
+    container_name: users-db
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASS}
+      POSTGRES_DB: ${USER_DB_NAME}
+    ports:
+      - "${USER_DB_PORT}:${DB_PORT}"
+    restart: always
+    volumes:
+      - users_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      retries: 5
+
+  redis:
+    env_file:
+    - .env
+    image: redis:8
+    container_name: redis
+    ports:
+      - "${REDIS_PORT}:${REDIS_PORT}"
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - redisdata:/data
+    restart: always
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      retries: 5
+
+volumes:
+  orders_pgdata:
+  users_pgdata:
+  cards_pgdata:
+  redisdata:
