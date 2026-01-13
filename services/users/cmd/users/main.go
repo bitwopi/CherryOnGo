@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"os"
 	"users/config"
 	"users/server/api/grpc"
@@ -11,7 +12,9 @@ func main() {
 	if err != nil {
 		panic("failed to get root path")
 	}
-	cfg := config.MustLoad(rootPath + "/config/dev.yaml")
+	cfgPath := flag.String("c", "/config/dev.yaml", "cfg path")
+	flag.Parse()
+	cfg := config.MustLoad(rootPath + *cfgPath)
 	server := grpc.NewServer(
 		cfg.DSN,
 		cfg.JWTSecret,

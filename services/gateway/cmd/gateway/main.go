@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"flag"
 	"gateway/config"
 	"gateway/server/api/gateway/rest/app"
 	"os"
@@ -17,7 +18,9 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	cfg := config.MustLoad(rootPath + "/config/dev.yaml")
+	cfgPath := flag.String("c", "/config/dev.yaml", "cfg path")
+	flag.Parse()
+	cfg := config.MustLoad(rootPath + *cfgPath)
 	logger := setupLogger(cfg.Env)
 	defer logger.Sync()
 	app := app.NewApp(

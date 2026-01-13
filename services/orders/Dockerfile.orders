@@ -3,7 +3,9 @@ FROM golang:1.25.2-alpine
 WORKDIR /app
 COPY go.mod go.sum ./
 RUN go mod download
+RUN apk update \
+ && apk add --no-cache gettext
 
 COPY . .
 RUN go build -o app ./cmd/orders 
-CMD ["./app"]
+CMD sh -c "envsubst < ./config/dev.yaml > ./config/dev.gen.yaml && exec ./app -c /config/dev.gen.yaml"

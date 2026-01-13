@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"orders/config"
 	"orders/server/api/grpc"
 	"os"
@@ -9,7 +10,9 @@ import (
 )
 
 func main() {
-	cfg := config.MustLoad("config/dev.yaml")
+	cfgPath := flag.String("c", "/config/dev.yaml", "cfg path")
+	flag.Parse()
+	cfg := config.MustLoad(*cfgPath)
 	server, err := grpc.NewServer(cfg.DSN)
 	if err != nil {
 		panic(err)
