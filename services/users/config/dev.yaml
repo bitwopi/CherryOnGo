@@ -2,10 +2,10 @@ env: "dev"
 dsn: "host=${USER_DB_HOST} user=${DB_USER} password=${DB_PASS} dbname=${USER_DB_NAME} port=${DB_PORT} sslmode=disable"
 grpc:
   port: "${USER_SERVICE_PORT}"
-  timeout: ${USER_SERVICE_TIMEOUT}s
+  timeout: ${USER_SERVICE_TIMEOUT}
 redis:
   addr: ${REDIS_ADDR}
   dbnum: 1
-access_token_ttl: ${ACCESS_TOKEN_TTL}s
-refresh_token_ttl: ${REFRESH_TOKEN_TTL}s
+access_token_ttl: ${ACCESS_TOKEN_TTL}
+refresh_token_ttl: ${REFRESH_TOKEN_TTL}
 jwt_secret: ${JWT_SECRET}

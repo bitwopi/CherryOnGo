@@ -8,4 +8,4 @@ RUN apk update \
 
 COPY . .
 RUN go build -o app ./cmd/orders 
-CMD sh -c "envsubst < ./config/dev.yaml > ./config/dev.gen.yaml && exec ./app -c /config/dev.gen.yaml"
+CMD sh -c "envsubst < ./config/dev.yaml > ./config/dev.gen.yaml && exec ./app -c ./config/dev.gen.yaml"

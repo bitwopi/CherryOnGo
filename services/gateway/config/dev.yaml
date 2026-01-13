@@ -1,16 +1,16 @@
 env: "dev"
 user_service:
   addr: ":${USER_SERVICE_PORT}"
-  timeout: ${USER_SERVICE_TIMEOUT}s
+  timeout: ${USER_SERVICE_TIMEOUT}
   max_retries: ${USER_SERVICE_MAX_RETRIES}
 order_service:
   addr: ":${ORDER_SERVICE_PORT}"
-  timeout: ${ORDER_SERVICE_TIMEOUT}s
+  timeout: ${ORDER_SERVICE_TIMEOUT}
   max_retries: ${ORDER_SERVICE_MAX_RETRIES}
 rest:
   addr: ":${REST_PORT}"
-  request_timeout: ${REST_REQUEST_TIMEOUT}s
-  idle_timout: ${REST_IDLE_TIOMOUT}s
-refresh_token_ttl: ${REFRESH_TOKEN_TTL}s
+  request_timeout: ${REST_REQUEST_TIMEOUT}
+  idle_timout: ${REST_IDLE_TIOMOUT}
+refresh_token_ttl: ${REFRESH_TOKEN_TTL}
 jwt_secret: ${JWT_SECRET}
 bot_token: ${BOT_TOKEN}
