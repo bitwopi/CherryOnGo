@@ -88,6 +88,9 @@ func (a *App) SetupMiddleware() {
 }
 
 func (a *App) SetupRouter() {
+	a.router.Get("/", func(w http.ResponseWriter, r *http.Request) {
+		http.ServeFile(w, r, "index.html")
+	})
 	a.router.Route("/api/auth", func(r chi.Router) {
 		r.Post("/login", sign.Auth(a.logger, a.userClient))
 		r.Post("/register", sign.SignUp(a.logger, a.userClient))
