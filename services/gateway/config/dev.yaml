@@ -1,10 +1,10 @@
 env: "dev"
 user_service:
-  addr: ":${USER_SERVICE_PORT}"
+  addr: "${USER_DB_NAME}:${USER_SERVICE_PORT}"
   timeout: ${USER_SERVICE_TIMEOUT}
   max_retries: ${USER_SERVICE_MAX_RETRIES}
 order_service:
-  addr: ":${ORDER_SERVICE_PORT}"
+  addr: "${ORDER_DB_NAME}:${ORDER_SERVICE_PORT}"
   timeout: ${ORDER_SERVICE_TIMEOUT}
   max_retries: ${ORDER_SERVICE_MAX_RETRIES}
 rest:

@@ -16,5 +16,5 @@ func main() {
 	flag.Parse()
 	cfg := config.MustLoad(rootPath + *cfgPath)
 	server := grpc.NewServer(cfg.DSN)
-	server.Start(":" + cfg.GRPC.Port)
+	server.Start(cfg.GRPC.Host + ":" + cfg.GRPC.Port)
 }

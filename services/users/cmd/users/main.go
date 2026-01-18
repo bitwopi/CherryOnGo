@@ -23,5 +23,5 @@ func main() {
 		cfg.RefreshTokenTTL,
 		cfg.AccessTokenTTL,
 	)
-	server.Start("localhost:" + cfg.GRPC.Port)
+	server.Start(cfg.GRPC.Host + ":" + cfg.GRPC.Port)
 }

@@ -138,7 +138,7 @@ services:
     image: redis:8
     container_name: redis
     ports:
-      - "${REDIS_PORT}:${REDIS_PORT}"
+      - "${REDIS_PORT}:6379"
     command: ["redis-server", "--appendonly", "yes"]
     volumes:
       - redisdata:/data

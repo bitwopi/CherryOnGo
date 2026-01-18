@@ -1,6 +1,7 @@
 env: "dev"
 dsn: "host=${USER_DB_HOST} user=${DB_USER} password=${DB_PASS} dbname=${USER_DB_NAME} port=${DB_PORT} sslmode=disable"
 grpc:
+  host: "${HOST}"
   port: "${USER_SERVICE_PORT}"
   timeout: ${USER_SERVICE_TIMEOUT}
 redis:
