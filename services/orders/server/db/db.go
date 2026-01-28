@@ -69,7 +69,7 @@ func (m *PgManager) UpdateOrderStatus(uuid string, status OrderStatus) (*Order, 
 		Where("uuid = ?", uuid).
 		Update("status", status).
 		First(&order).Error; err != nil {
-		return nil, fmt.Errorf("failed to create card: %v", err)
+		return nil, fmt.Errorf("failed to update order: %v", err)
 	}
 	return &order, nil
 }
