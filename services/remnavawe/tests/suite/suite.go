@@ -3,8 +3,8 @@ package suite
 import (
 	"context"
 	"os"
-	"shopcards/config"
-	pb "shopcards/server/api/grpc/shop_card"
+	"remnawave/config"
+	pb "remnawave/server/api/grpc/remna"
 	"testing"
 
 	"google.golang.org/grpc"
@@ -13,13 +13,9 @@ import (
 
 type Suite struct {
 	*testing.T
-	Cfg            *config.Config
-	ShopCardClient pb.ShopCardServiceClient
+	Cfg         *config.Config
+	RemnaClient pb.RemnaServiceClient
 }
-
-var (
-	grpcHost = "localhost:"
-)
 
 func New(t *testing.T) (context.Context, *Suite) {
 	t.Helper()
@@ -38,14 +34,14 @@ func New(t *testing.T) (context.Context, *Suite) {
 	})
 
 	cc, err := grpc.NewClient(
-		grpcHost+cfg.GRPC.Port,
+		cfg.GRPC.Host+cfg.GRPC.Port,
 		grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		t.Fatalf("grpc server connection failed: %v", err)
 	}
-	client := pb.NewShopCardServiceClient(cc)
+	client := pb.NewRemnaServiceClient(cc)
 	return ctx, &Suite{
-		Cfg:            cfg,
-		ShopCardClient: client,
+		Cfg:         cfg,
+		RemnaClient: client,
 	}
 }

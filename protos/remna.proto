@@ -29,11 +29,19 @@ message UserResponse{
     repeated string internal_squads = 5;
     google.protobuf.Timestamp expiry_time = 6;
     string sub_url = 7;
+    int64 device_limit = 8;
+}
+
+message UpdateUserRequest{
+    string username = 1;
+    string uuid = 2;
+    string plan = 3;
 }
 
 service RemnaService{
     rpc PingRemna (PingRequest) returns (PingResponse);
     rpc GetUser (GetUserRequest) returns (UserResponse);
     rpc CreateUser (CreateUserRequest) returns(UserResponse);
+    rpc UpdateUserExpiryTime (UpdateUserRequest) returns(UserResponse);
 }
 

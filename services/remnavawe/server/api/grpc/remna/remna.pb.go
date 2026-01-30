@@ -223,6 +223,7 @@ type UserResponse struct {
 	InternalSquads []string               `protobuf:"bytes,5,rep,name=internal_squads,json=internalSquads,proto3" json:"internal_squads,omitempty"`
 	ExpiryTime     *timestamppb.Timestamp `protobuf:"bytes,6,opt,name=expiry_time,json=expiryTime,proto3" json:"expiry_time,omitempty"`
 	SubUrl         string                 `protobuf:"bytes,7,opt,name=sub_url,json=subUrl,proto3" json:"sub_url,omitempty"`
+	DeviceLimit    int64                  `protobuf:"varint,8,opt,name=device_limit,json=deviceLimit,proto3" json:"device_limit,omitempty"`
 	unknownFields  protoimpl.UnknownFields
 	sizeCache      protoimpl.SizeCache
 }
@@ -306,6 +307,73 @@ func (x *UserResponse) GetSubUrl() string {
 	return ""
 }
 
+func (x *UserResponse) GetDeviceLimit() int64 {
+	if x != nil {
+		return x.DeviceLimit
+	}
+	return 0
+}
+
+type UpdateUserRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Username      string                 `protobuf:"bytes,1,opt,name=username,proto3" json:"username,omitempty"`
+	Uuid          string                 `protobuf:"bytes,2,opt,name=uuid,proto3" json:"uuid,omitempty"`
+	Plan          string                 `protobuf:"bytes,3,opt,name=plan,proto3" json:"plan,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *UpdateUserRequest) Reset() {
+	*x = UpdateUserRequest{}
+	mi := &file_remna_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UpdateUserRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UpdateUserRequest) ProtoMessage() {}
+
+func (x *UpdateUserRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_remna_proto_msgTypes[5]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UpdateUserRequest.ProtoReflect.Descriptor instead.
+func (*UpdateUserRequest) Descriptor() ([]byte, []int) {
+	return file_remna_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *UpdateUserRequest) GetUsername() string {
+	if x != nil {
+		return x.Username
+	}
+	return ""
+}
+
+func (x *UpdateUserRequest) GetUuid() string {
+	if x != nil {
+		return x.Uuid
+	}
+	return ""
+}
+
+func (x *UpdateUserRequest) GetPlan() string {
+	if x != nil {
+		return x.Plan
+	}
+	return ""
+}
+
 var File_remna_proto protoreflect.FileDescriptor
 
 const file_remna_proto_rawDesc = "" +
@@ -320,7 +388,7 @@ const file_remna_proto_rawDesc = "" +
 	"\busername\x18\x01 \x01(\tR\busername\x12\x14\n" +
 	"\x05email\x18\x02 \x01(\tR\x05email\x12\x12\n" +
 	"\x04tgid\x18\x03 \x01(\tR\x04tgid\x12\x12\n" +
-	"\x04plan\x18\x04 \x01(\tR\x04plan\"\xe7\x01\n" +
+	"\x04plan\x18\x04 \x01(\tR\x04plan\"\x8a\x02\n" +
 	"\fUserResponse\x12\x12\n" +
 	"\x04uuid\x18\x01 \x01(\tR\x04uuid\x12\x1a\n" +
 	"\busername\x18\x02 \x01(\tR\busername\x12\x12\n" +
@@ -329,12 +397,18 @@ const file_remna_proto_rawDesc = "" +
 	"\x0finternal_squads\x18\x05 \x03(\tR\x0einternalSquads\x12;\n" +
 	"\vexpiry_time\x18\x06 \x01(\v2\x1a.google.protobuf.TimestampR\n" +
 	"expiryTime\x12\x17\n" +
-	"\asub_url\x18\a \x01(\tR\x06subUrl2\xb8\x01\n" +
+	"\asub_url\x18\a \x01(\tR\x06subUrl\x12!\n" +
+	"\fdevice_limit\x18\b \x01(\x03R\vdeviceLimit\"W\n" +
+	"\x11UpdateUserRequest\x12\x1a\n" +
+	"\busername\x18\x01 \x01(\tR\busername\x12\x12\n" +
+	"\x04uuid\x18\x02 \x01(\tR\x04uuid\x12\x12\n" +
+	"\x04plan\x18\x03 \x01(\tR\x04plan2\xff\x01\n" +
 	"\fRemnaService\x124\n" +
 	"\tPingRemna\x12\x12.remna.PingRequest\x1a\x13.remna.PingResponse\x125\n" +
 	"\aGetUser\x12\x15.remna.GetUserRequest\x1a\x13.remna.UserResponse\x12;\n" +
 	"\n" +
-	"CreateUser\x12\x18.remna.CreateUserRequest\x1a\x13.remna.UserResponseB\bZ\x06/remnab\x06proto3"
+	"CreateUser\x12\x18.remna.CreateUserRequest\x1a\x13.remna.UserResponse\x12E\n" +
+	"\x14UpdateUserExpiryTime\x12\x18.remna.UpdateUserRequest\x1a\x13.remna.UserResponseB\bZ\x06/remnab\x06proto3"
 
 var (
 	file_remna_proto_rawDescOnce sync.Once
@@ -348,25 +422,28 @@ func file_remna_proto_rawDescGZIP() []byte {
 	return file_remna_proto_rawDescData
 }
 
-var file_remna_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
+var file_remna_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
 var file_remna_proto_goTypes = []any{
 	(*PingRequest)(nil),           // 0: remna.PingRequest
 	(*PingResponse)(nil),          // 1: remna.PingResponse
 	(*GetUserRequest)(nil),        // 2: remna.GetUserRequest
 	(*CreateUserRequest)(nil),     // 3: remna.CreateUserRequest
 	(*UserResponse)(nil),          // 4: remna.UserResponse
-	(*timestamppb.Timestamp)(nil), // 5: google.protobuf.Timestamp
+	(*UpdateUserRequest)(nil),     // 5: remna.UpdateUserRequest
+	(*timestamppb.Timestamp)(nil), // 6: google.protobuf.Timestamp
 }
 var file_remna_proto_depIdxs = []int32{
-	5, // 0: remna.UserResponse.expiry_time:type_name -> google.protobuf.Timestamp
+	6, // 0: remna.UserResponse.expiry_time:type_name -> google.protobuf.Timestamp
 	0, // 1: remna.RemnaService.PingRemna:input_type -> remna.PingRequest
 	2, // 2: remna.RemnaService.GetUser:input_type -> remna.GetUserRequest
 	3, // 3: remna.RemnaService.CreateUser:input_type -> remna.CreateUserRequest
-	1, // 4: remna.RemnaService.PingRemna:output_type -> remna.PingResponse
-	4, // 5: remna.RemnaService.GetUser:output_type -> remna.UserResponse
-	4, // 6: remna.RemnaService.CreateUser:output_type -> remna.UserResponse
-	4, // [4:7] is the sub-list for method output_type
-	1, // [1:4] is the sub-list for method input_type
+	5, // 4: remna.RemnaService.UpdateUserExpiryTime:input_type -> remna.UpdateUserRequest
+	1, // 5: remna.RemnaService.PingRemna:output_type -> remna.PingResponse
+	4, // 6: remna.RemnaService.GetUser:output_type -> remna.UserResponse
+	4, // 7: remna.RemnaService.CreateUser:output_type -> remna.UserResponse
+	4, // 8: remna.RemnaService.UpdateUserExpiryTime:output_type -> remna.UserResponse
+	5, // [5:9] is the sub-list for method output_type
+	1, // [1:5] is the sub-list for method input_type
 	1, // [1:1] is the sub-list for extension type_name
 	1, // [1:1] is the sub-list for extension extendee
 	0, // [0:1] is the sub-list for field type_name
@@ -383,7 +460,7 @@ func file_remna_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_remna_proto_rawDesc), len(file_remna_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   5,
+			NumMessages:   6,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

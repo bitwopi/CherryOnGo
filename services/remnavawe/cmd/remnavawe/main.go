@@ -1,14 +1,19 @@
 package main
 
 import (
+	"log"
+	"os"
 	"remnawave/config"
 	gs "remnawave/server/api/grpc"
 )
 
 func main() {
-	cfg := config.NewConfig()
-	// api := rest.NewAPIServer(cfg)
-	// api.Start()
+	rootPath, err := os.Getwd()
+	if err != nil {
+		panic(err)
+	}
+	log.Print(rootPath)
+	cfg := config.MustLoad(rootPath + "/config/local.yaml")
 	gserver := gs.NewRemnaGRPCServer(cfg)
-	gserver.Start(cfg.GRPCBindUrl)
+	gserver.Start(cfg.GRPC.Host + cfg.GRPC.Port)
 }

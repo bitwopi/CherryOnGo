@@ -2,6 +2,7 @@ package grpc
 
 import (
 	"context"
+	"errors"
 	"log"
 	"net"
 	"remnawave/client"
@@ -10,6 +11,7 @@ import (
 	"strconv"
 
 	"github.com/Jolymmiles/remnawave-api-go/v2/api"
+	"github.com/google/uuid"
 	"google.golang.org/grpc"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
@@ -21,7 +23,8 @@ type RemnaGRPCServer struct {
 }
 
 func NewRemnaGRPCServer(cfg *config.Config) *RemnaGRPCServer {
-	client := client.NewClient(cfg.RemnaAPIKey, cfg.RemnaURL)
+	log.Println(cfg.Remna)
+	client := client.NewClient(cfg.Remna.RemnaAPIKey, cfg.Remna.RemnaURL)
 	return &RemnaGRPCServer{
 		remnaClient: *client,
 	}
@@ -41,7 +44,7 @@ func (r *RemnaGRPCServer) Start(bindURL string) error {
 }
 
 func (r *RemnaGRPCServer) PingRemna(ctx context.Context, req *pb.PingRequest) (*pb.PingResponse, error) {
-	err := r.remnaClient.Ping()
+	err := r.remnaClient.Ping(ctx)
 	if err != nil {
 		return &pb.PingResponse{
 			Status: "down",
@@ -54,10 +57,11 @@ func (r *RemnaGRPCServer) PingRemna(ctx context.Context, req *pb.PingRequest) (*
 func (r *RemnaGRPCServer) GetUser(ctx context.Context, req *pb.GetUserRequest) (*pb.UserResponse, error) {
 	log.Println("GetUser called", "req", req)
 	defer log.Println("GetUser finished")
-	resp, err := r.remnaClient.GetUserByUsername(req.Username)
+	resp, err := r.remnaClient.GetUserByUsername(ctx, req.Username)
 	if err != nil {
 		return nil, err
 	}
+	log.Println(resp)
 	result := convertUserResponse(*resp)
 	return result, nil
 
@@ -65,7 +69,22 @@ func (r *RemnaGRPCServer) GetUser(ctx context.Context, req *pb.GetUserRequest) (
 func (r *RemnaGRPCServer) CreateUser(ctx context.Context, req *pb.CreateUserRequest) (*pb.UserResponse, error) {
 	log.Println("CreateUser called", "req", req)
 	defer log.Println("CreateUser finished")
-	resp, err := r.remnaClient.CreateUser(client.Plans[req.Plan], req.Username, req.Tgid, req.Email)
+	resp, err := r.remnaClient.CreateUser(ctx, client.Plans[req.Plan], req.Username, req.Tgid, req.Email)
+	if err != nil {
+		log.Println(err)
+		return nil, err
+	}
+	result := convertUserResponse(*resp)
+	return result, nil
+}
+
+func (r *RemnaGRPCServer) UpdateUserExpiryTime(ctx context.Context, req *pb.UpdateUserRequest) (*pb.UserResponse, error) {
+	userUUID, err := uuid.Parse(req.Uuid)
+	plan := client.Plans[req.Plan]
+	if plan == nil {
+		return nil, errors.New("invalid plan")
+	}
+	resp, err := r.remnaClient.UpdateUserExpiryTime(ctx, plan, &req.Username, &userUUID)
 	if err != nil {
 		return nil, err
 	}
@@ -87,6 +106,7 @@ func convertUserResponse(resp api.UserResponse) *pb.UserResponse {
 		InternalSquads: intSquad,
 		ExpiryTime:     timestamppb.New(ur.GetExpireAt()),
 		SubUrl:         ur.SubscriptionUrl,
+		DeviceLimit:    int64(ur.HwidDeviceLimit.Value),
 	}
 	return &result
 }

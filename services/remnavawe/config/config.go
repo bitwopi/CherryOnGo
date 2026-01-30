@@ -2,42 +2,39 @@ package config
 
 import (
 	"os"
+	"time"
 
-	"github.com/joho/godotenv"
+	"github.com/ilyakaznacheev/cleanenv"
 )
 
 type Config struct {
-	RESTBindUrl string
-	GRPCBindUrl string
-	RemnaAPIKey string
-	RemnaURL    string
+	Env   string      `yaml:"env" env-deafault:"local"`
+	GRPC  GRPCConfig  `yaml:"grpc" env-required:"true"`
+	Remna RemnaConfig `yaml:"remna" env-required:"true"`
 }
 
-func NewConfig() *Config {
-	err := godotenv.Load()
-	if err != nil {
-		panic("Error loading .env file")
+type GRPCConfig struct {
+	Host    string        `yaml:"host"`
+	Port    string        `yaml:"port"`
+	Timeout time.Duration `yaml:"timeout"`
+}
+
+type RemnaConfig struct {
+	RemnaAPIKey string `yaml:"api_key"`
+	RemnaURL    string `yaml:"url"`
+}
+
+func MustLoad(configPath string) *Config {
+	if configPath == "" {
+		panic("config path required")
 	}
-	rBindUrl := os.Getenv("REMNAVAWE_REST_BIND_URL")
-	if len(rBindUrl) == 0 {
-		rBindUrl = ":8080"
+	if _, err := os.Stat(configPath); os.IsNotExist(err) {
+		panic("file does not exist: " + configPath)
 	}
-	gBindUrl := os.Getenv("REMNAVAWE_GRPC_BIND_URL")
-	if len(gBindUrl) == 0 {
-		gBindUrl = ":8080"
+	var config Config
+
+	if err := cleanenv.ReadConfig(configPath, &config); err != nil {
+		panic(err)
 	}
-	remnaAPIKey := os.Getenv("REMNAVAWE_API_KEY")
-	if len(remnaAPIKey) == 0 {
-		remnaAPIKey = ""
-	}
-	remnaURL := os.Getenv("REMNAVAWE_URL")
-	if len(remnaURL) == 0 {
-		remnaURL = ""
-	}
-	return &Config{
-		RESTBindUrl: rBindUrl,
-		GRPCBindUrl: gBindUrl,
-		RemnaAPIKey: remnaAPIKey,
-		RemnaURL:    remnaURL,
-	}
+	return &config
 }

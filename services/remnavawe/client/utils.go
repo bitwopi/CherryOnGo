@@ -11,7 +11,7 @@ var Plans = map[string]*RemnaPlan{
 	"3:30": {
 		DayLimit:    30,
 		DeviceLimit: 3,
-		Squad:       parseUuid(""),
+		Squad:       parseUuid("81360544-6e21-45be-aa48-c308074f0b0b"),
 	},
 	"5:30": {
 		DayLimit:    30,

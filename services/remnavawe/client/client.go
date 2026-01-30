@@ -33,8 +33,7 @@ func NewClient(apiKey string, baseURL string) *Client {
 	return &Client{api: apiClient}
 }
 
-func (c *Client) GetUserByUsername(username string) (*remapi.UserResponse, error) {
-	ctx := context.Background()
+func (c *Client) GetUserByUsername(ctx context.Context, username string) (*remapi.UserResponse, error) {
 	resp, err := c.api.Users().GetUserByUsername(ctx, username)
 	if err != nil {
 		return nil, err
@@ -46,16 +45,16 @@ func (c *Client) GetUserByUsername(username string) (*remapi.UserResponse, error
 	return result, nil
 }
 
-func (c *Client) CreateUser(plan *RemnaPlan, username string, tgID string, email string) (*remapi.UserResponse, error) {
-	ctx := context.Background()
+func (c *Client) CreateUser(ctx context.Context, plan *RemnaPlan, username string, tgID string, email string) (*remapi.UserResponse, error) {
 	if len(username) == 0 {
 		username = uuid.New().String()
 	}
 	userDto := remapi.CreateUserRequestDto{
-		Username:        username,
-		CreatedAt:       remapi.NewOptDateTime(time.Now()),
-		ExpireAt:        time.Now().AddDate(0, 0, plan.DayLimit),
-		HwidDeviceLimit: remapi.NewOptInt(plan.DeviceLimit),
+		Username:             username,
+		CreatedAt:            remapi.NewOptDateTime(time.Now()),
+		ExpireAt:             time.Now().AddDate(0, 0, plan.DayLimit),
+		HwidDeviceLimit:      remapi.NewOptInt(plan.DeviceLimit),
+		ActiveInternalSquads: []uuid.UUID{plan.Squad},
 	}
 	if len(tgID) != 0 {
 		val, err := strconv.Atoi(tgID)
@@ -82,8 +81,30 @@ func (c *Client) CreateUser(plan *RemnaPlan, username string, tgID string, email
 	return res, nil
 }
 
-func (c *Client) Ping() error {
-	ctx := context.Background()
+func (c *Client) UpdateUserExpiryTime(ctx context.Context, plan *RemnaPlan, username *string, uuid *uuid.UUID) (*remapi.UserResponse, error) {
+	userDto := remapi.UpdateUserRequestDto{
+		ExpireAt:        remapi.NewOptDateTime(time.Now().AddDate(0, 0, plan.DayLimit)),
+		HwidDeviceLimit: remapi.NewOptNilInt(plan.DeviceLimit),
+	}
+	if username != nil {
+		userDto.Username = remapi.NewOptString(*username)
+	}
+	if uuid != nil {
+		userDto.UUID = remapi.NewOptUUID(*uuid)
+	}
+	resp, err := c.api.Users().UpdateUser(ctx, &userDto)
+	if err != nil {
+		return nil, err
+	}
+
+	res, ok := resp.(*remapi.UserResponse)
+	if !ok {
+		return nil, errors.New("undefined response")
+	}
+	return res, nil
+}
+
+func (c *Client) Ping(ctx context.Context) error {
 	_, err := c.api.Users().GetAllUsers(ctx, 0, 0)
 	return err
 }
