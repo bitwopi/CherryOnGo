@@ -3,7 +3,7 @@ module remnawave
 go 1.25.5
 
 require (
-	github.com/Jolymmiles/remnawave-api-go/v2 v2.3.0-6
+	github.com/Jolymmiles/remnawave-api-go/v2 v2.3.2
 	github.com/brianvoe/gofakeit/v7 v7.14.0
 	github.com/google/uuid v1.6.0
 	github.com/ilyakaznacheev/cleanenv v1.5.0

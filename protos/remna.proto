@@ -4,14 +4,22 @@ option go_package = "/remna";
 
 import "google/protobuf/timestamp.proto";
 
-message PingRequest{}
+message EmptyRequest{}
 
 message PingResponse{
     string status = 1;
 }
 
-message GetUserRequest{
+message GetUserByUsernameRequest{
     string username = 1;
+}
+
+message GetUserByTgIDRequest{
+    string tgid = 1;
+}
+
+message GetUserByEmailRequest{
+    string email = 1;
 }
 
 message CreateUserRequest{
@@ -38,10 +46,17 @@ message UpdateUserRequest{
     string plan = 3;
 }
 
+message MultipleUsersResponse{
+    repeated UserResponse users = 1;
+}
+
 service RemnaService{
-    rpc PingRemna (PingRequest) returns (PingResponse);
-    rpc GetUser (GetUserRequest) returns (UserResponse);
+    rpc PingRemna (EmptyRequest) returns (PingResponse);
+    rpc GetUser (GetUserByUsernameRequest) returns (UserResponse);
     rpc CreateUser (CreateUserRequest) returns(UserResponse);
     rpc UpdateUserExpiryTime (UpdateUserRequest) returns(UserResponse);
+    rpc GetUsersByTgID (GetUserByTgIDRequest) returns(MultipleUsersResponse);
+    rpc GetUsersByEmail (GetUserByEmailRequest) returns(MultipleUsersResponse);
+    rpc GetAllUsers (EmptyRequest) returns(MultipleUsersResponse);
 }
 

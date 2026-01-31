@@ -3,6 +3,7 @@ package client
 import (
 	"context"
 	"errors"
+	"log"
 	"strconv"
 	"time"
 
@@ -107,4 +108,43 @@ func (c *Client) UpdateUserExpiryTime(ctx context.Context, plan *RemnaPlan, user
 func (c *Client) Ping(ctx context.Context) error {
 	_, err := c.api.Users().GetAllUsers(ctx, 0, 0)
 	return err
+}
+
+func (c *Client) GetUsersByTgID(ctx context.Context, tgID string) (*remapi.UsersResponse, error) {
+	resp, err := c.api.Users().GetUserByTelegramId(ctx, tgID)
+	log.Println("client resp: ", resp)
+	if err != nil {
+		return nil, err
+	}
+
+	res, ok := resp.(*remapi.UsersResponse)
+	if !ok {
+		return nil, errors.New("undefined response")
+	}
+	return res, nil
+}
+
+func (c *Client) GetUsersByEmail(ctx context.Context, email string) (*remapi.UsersResponse, error) {
+	resp, err := c.api.Users().GetUsersByEmail(ctx, email)
+	if err != nil {
+		return nil, err
+	}
+
+	res, ok := resp.(*remapi.UsersResponse)
+	if !ok {
+		return nil, errors.New("undefined response")
+	}
+	return res, nil
+}
+
+func (c *Client) GetAllUsers(ctx context.Context) (*remapi.GetAllUsersResponseDto, error) {
+	resp, err := c.api.Users().GetAllUsers(ctx, 0, 0)
+	if err != nil {
+		return nil, err
+	}
+	res, ok := resp.(*remapi.GetAllUsersResponseDto)
+	if !ok {
+		return nil, errors.New("undefined response")
+	}
+	return res, nil
 }

@@ -8,12 +8,11 @@ import (
 
 	"github.com/brianvoe/gofakeit/v7"
 	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 )
 
 func TestCRUDPositive(t *testing.T) {
 	ctx, st := suite.New(t)
-	username := "test_user_client4"
+	username := "test_user_client"
 	req := pb.CreateUserRequest{
 		Username: username,
 		Email:    gofakeit.Email(),
@@ -21,10 +20,10 @@ func TestCRUDPositive(t *testing.T) {
 	}
 
 	resp, err := st.RemnaClient.CreateUser(ctx, &req)
-	require.NoError(t, err)
+	assert.NoError(t, err)
 	assert.NotEmpty(t, resp)
 	assert.EqualValues(t, client.Plans["3:30"].DeviceLimit, resp.DeviceLimit)
-	getResp, err := st.RemnaClient.GetUser(ctx, &pb.GetUserRequest{Username: username})
+	getResp, err := st.RemnaClient.GetUser(ctx, &pb.GetUserByUsernameRequest{Username: username})
 	assert.NoError(t, err)
 	assert.NotEmpty(t, getResp)
 	assert.EqualValues(t, resp.Uuid, getResp.Uuid)
@@ -36,5 +35,5 @@ func TestCRUDPositive(t *testing.T) {
 	updResp, err := st.RemnaClient.UpdateUserExpiryTime(ctx, &updReq)
 	assert.NoError(t, err)
 	assert.NotEmpty(t, updResp)
-	assert.NotEqual(t, getResp.ExpiryTime, updResp.ExpiryTime)
+	assert.NotEqual(t, getResp.ExpiryTime.AsTime(), updResp.ExpiryTime.AsTime())
 }
