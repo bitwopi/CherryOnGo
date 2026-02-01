@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"log"
 	"os"
 	"remnawave/config"
@@ -13,7 +14,9 @@ func main() {
 		panic(err)
 	}
 	log.Print(rootPath)
-	cfg := config.MustLoad(rootPath + "/config/local.yaml")
+	cfgPath := flag.String("c", "/config/dev.yaml", "cfg path")
+	flag.Parse()
+	cfg := config.MustLoad(rootPath + *cfgPath)
 	gserver := gs.NewRemnaGRPCServer(cfg)
-	gserver.Start(cfg.GRPC.Host + cfg.GRPC.Port)
+	gserver.Start(cfg.GRPC.Host + ":" + cfg.GRPC.Port)
 }

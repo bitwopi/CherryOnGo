@@ -25,6 +25,15 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
+  remna:
+    env_file:
+    - .env
+    build:
+      context: ./services/remnavawe
+      dockerfile: Dockerfile.remna
+    container_name: remna
+    ports: 
+      - "${REMNA_SERVICE_PORT}:${REMNA_SERVICE_PORT}"
   orders:
     env_file:
     - .env
