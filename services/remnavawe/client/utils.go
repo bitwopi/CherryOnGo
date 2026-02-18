@@ -8,6 +8,11 @@ func parseUuid(v string) uuid.UUID {
 }
 
 var Plans = map[string]*RemnaPlan{
+	"test": {
+		DayLimit:    1,
+		DeviceLimit: 3,
+		Squad:       parseUuid("f0bb8401-22ee-4b67-b256-d24cd64ee102"),
+	},
 	"3:30": {
 		DayLimit:    30,
 		DeviceLimit: 3,

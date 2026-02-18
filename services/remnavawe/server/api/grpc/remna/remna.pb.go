@@ -234,6 +234,50 @@ func (x *GetUserByEmailRequest) GetEmail() string {
 	return ""
 }
 
+type GetUserUUIDRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Uuid          string                 `protobuf:"bytes,1,opt,name=uuid,proto3" json:"uuid,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetUserUUIDRequest) Reset() {
+	*x = GetUserUUIDRequest{}
+	mi := &file_remna_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetUserUUIDRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetUserUUIDRequest) ProtoMessage() {}
+
+func (x *GetUserUUIDRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_remna_proto_msgTypes[5]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetUserUUIDRequest.ProtoReflect.Descriptor instead.
+func (*GetUserUUIDRequest) Descriptor() ([]byte, []int) {
+	return file_remna_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *GetUserUUIDRequest) GetUuid() string {
+	if x != nil {
+		return x.Uuid
+	}
+	return ""
+}
+
 type CreateUserRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Username      string                 `protobuf:"bytes,1,opt,name=username,proto3" json:"username,omitempty"`
@@ -246,7 +290,7 @@ type CreateUserRequest struct {
 
 func (x *CreateUserRequest) Reset() {
 	*x = CreateUserRequest{}
-	mi := &file_remna_proto_msgTypes[5]
+	mi := &file_remna_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -258,7 +302,7 @@ func (x *CreateUserRequest) String() string {
 func (*CreateUserRequest) ProtoMessage() {}
 
 func (x *CreateUserRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_remna_proto_msgTypes[5]
+	mi := &file_remna_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -271,7 +315,7 @@ func (x *CreateUserRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateUserRequest.ProtoReflect.Descriptor instead.
 func (*CreateUserRequest) Descriptor() ([]byte, []int) {
-	return file_remna_proto_rawDescGZIP(), []int{5}
+	return file_remna_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *CreateUserRequest) GetUsername() string {
@@ -318,7 +362,7 @@ type UserResponse struct {
 
 func (x *UserResponse) Reset() {
 	*x = UserResponse{}
-	mi := &file_remna_proto_msgTypes[6]
+	mi := &file_remna_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -330,7 +374,7 @@ func (x *UserResponse) String() string {
 func (*UserResponse) ProtoMessage() {}
 
 func (x *UserResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_remna_proto_msgTypes[6]
+	mi := &file_remna_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -343,7 +387,7 @@ func (x *UserResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UserResponse.ProtoReflect.Descriptor instead.
 func (*UserResponse) Descriptor() ([]byte, []int) {
-	return file_remna_proto_rawDescGZIP(), []int{6}
+	return file_remna_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *UserResponse) GetUuid() string {
@@ -413,7 +457,7 @@ type UpdateUserRequest struct {
 
 func (x *UpdateUserRequest) Reset() {
 	*x = UpdateUserRequest{}
-	mi := &file_remna_proto_msgTypes[7]
+	mi := &file_remna_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -425,7 +469,7 @@ func (x *UpdateUserRequest) String() string {
 func (*UpdateUserRequest) ProtoMessage() {}
 
 func (x *UpdateUserRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_remna_proto_msgTypes[7]
+	mi := &file_remna_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -438,7 +482,7 @@ func (x *UpdateUserRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateUserRequest.ProtoReflect.Descriptor instead.
 func (*UpdateUserRequest) Descriptor() ([]byte, []int) {
-	return file_remna_proto_rawDescGZIP(), []int{7}
+	return file_remna_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *UpdateUserRequest) GetUsername() string {
@@ -471,7 +515,7 @@ type MultipleUsersResponse struct {
 
 func (x *MultipleUsersResponse) Reset() {
 	*x = MultipleUsersResponse{}
-	mi := &file_remna_proto_msgTypes[8]
+	mi := &file_remna_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -483,7 +527,7 @@ func (x *MultipleUsersResponse) String() string {
 func (*MultipleUsersResponse) ProtoMessage() {}
 
 func (x *MultipleUsersResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_remna_proto_msgTypes[8]
+	mi := &file_remna_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -496,12 +540,276 @@ func (x *MultipleUsersResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MultipleUsersResponse.ProtoReflect.Descriptor instead.
 func (*MultipleUsersResponse) Descriptor() ([]byte, []int) {
-	return file_remna_proto_rawDescGZIP(), []int{8}
+	return file_remna_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *MultipleUsersResponse) GetUsers() []*UserResponse {
 	if x != nil {
 		return x.Users
+	}
+	return nil
+}
+
+type HwidResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Hwid          string                 `protobuf:"bytes,1,opt,name=hwid,proto3" json:"hwid,omitempty"`
+	UserUuid      string                 `protobuf:"bytes,2,opt,name=user_uuid,json=userUuid,proto3" json:"user_uuid,omitempty"`
+	Platform      string                 `protobuf:"bytes,3,opt,name=platform,proto3" json:"platform,omitempty"`
+	OsVersion     string                 `protobuf:"bytes,4,opt,name=os_version,json=osVersion,proto3" json:"os_version,omitempty"`
+	DeviceModel   string                 `protobuf:"bytes,5,opt,name=device_model,json=deviceModel,proto3" json:"device_model,omitempty"`
+	UserAgent     string                 `protobuf:"bytes,6,opt,name=user_agent,json=userAgent,proto3" json:"user_agent,omitempty"`
+	CreatedAt     *timestamppb.Timestamp `protobuf:"bytes,7,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
+	UpdatedAt     *timestamppb.Timestamp `protobuf:"bytes,8,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *HwidResponse) Reset() {
+	*x = HwidResponse{}
+	mi := &file_remna_proto_msgTypes[10]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *HwidResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*HwidResponse) ProtoMessage() {}
+
+func (x *HwidResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_remna_proto_msgTypes[10]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use HwidResponse.ProtoReflect.Descriptor instead.
+func (*HwidResponse) Descriptor() ([]byte, []int) {
+	return file_remna_proto_rawDescGZIP(), []int{10}
+}
+
+func (x *HwidResponse) GetHwid() string {
+	if x != nil {
+		return x.Hwid
+	}
+	return ""
+}
+
+func (x *HwidResponse) GetUserUuid() string {
+	if x != nil {
+		return x.UserUuid
+	}
+	return ""
+}
+
+func (x *HwidResponse) GetPlatform() string {
+	if x != nil {
+		return x.Platform
+	}
+	return ""
+}
+
+func (x *HwidResponse) GetOsVersion() string {
+	if x != nil {
+		return x.OsVersion
+	}
+	return ""
+}
+
+func (x *HwidResponse) GetDeviceModel() string {
+	if x != nil {
+		return x.DeviceModel
+	}
+	return ""
+}
+
+func (x *HwidResponse) GetUserAgent() string {
+	if x != nil {
+		return x.UserAgent
+	}
+	return ""
+}
+
+func (x *HwidResponse) GetCreatedAt() *timestamppb.Timestamp {
+	if x != nil {
+		return x.CreatedAt
+	}
+	return nil
+}
+
+func (x *HwidResponse) GetUpdatedAt() *timestamppb.Timestamp {
+	if x != nil {
+		return x.UpdatedAt
+	}
+	return nil
+}
+
+type MultipleHwidResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Devices       []*HwidResponse        `protobuf:"bytes,1,rep,name=devices,proto3" json:"devices,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *MultipleHwidResponse) Reset() {
+	*x = MultipleHwidResponse{}
+	mi := &file_remna_proto_msgTypes[11]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *MultipleHwidResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*MultipleHwidResponse) ProtoMessage() {}
+
+func (x *MultipleHwidResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_remna_proto_msgTypes[11]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use MultipleHwidResponse.ProtoReflect.Descriptor instead.
+func (*MultipleHwidResponse) Descriptor() ([]byte, []int) {
+	return file_remna_proto_rawDescGZIP(), []int{11}
+}
+
+func (x *MultipleHwidResponse) GetDevices() []*HwidResponse {
+	if x != nil {
+		return x.Devices
+	}
+	return nil
+}
+
+type SRHRecordResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	UserUuid      string                 `protobuf:"bytes,2,opt,name=user_uuid,json=userUuid,proto3" json:"user_uuid,omitempty"`
+	RequestIp     string                 `protobuf:"bytes,3,opt,name=request_ip,json=requestIp,proto3" json:"request_ip,omitempty"`
+	UserAgent     string                 `protobuf:"bytes,4,opt,name=user_agent,json=userAgent,proto3" json:"user_agent,omitempty"`
+	RequestedAt   *timestamppb.Timestamp `protobuf:"bytes,5,opt,name=requested_at,json=requestedAt,proto3" json:"requested_at,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *SRHRecordResponse) Reset() {
+	*x = SRHRecordResponse{}
+	mi := &file_remna_proto_msgTypes[12]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SRHRecordResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SRHRecordResponse) ProtoMessage() {}
+
+func (x *SRHRecordResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_remna_proto_msgTypes[12]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SRHRecordResponse.ProtoReflect.Descriptor instead.
+func (*SRHRecordResponse) Descriptor() ([]byte, []int) {
+	return file_remna_proto_rawDescGZIP(), []int{12}
+}
+
+func (x *SRHRecordResponse) GetId() int64 {
+	if x != nil {
+		return x.Id
+	}
+	return 0
+}
+
+func (x *SRHRecordResponse) GetUserUuid() string {
+	if x != nil {
+		return x.UserUuid
+	}
+	return ""
+}
+
+func (x *SRHRecordResponse) GetRequestIp() string {
+	if x != nil {
+		return x.RequestIp
+	}
+	return ""
+}
+
+func (x *SRHRecordResponse) GetUserAgent() string {
+	if x != nil {
+		return x.UserAgent
+	}
+	return ""
+}
+
+func (x *SRHRecordResponse) GetRequestedAt() *timestamppb.Timestamp {
+	if x != nil {
+		return x.RequestedAt
+	}
+	return nil
+}
+
+type SRHHistoryResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Records       []*SRHRecordResponse   `protobuf:"bytes,1,rep,name=records,proto3" json:"records,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *SRHHistoryResponse) Reset() {
+	*x = SRHHistoryResponse{}
+	mi := &file_remna_proto_msgTypes[13]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SRHHistoryResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SRHHistoryResponse) ProtoMessage() {}
+
+func (x *SRHHistoryResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_remna_proto_msgTypes[13]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SRHHistoryResponse.ProtoReflect.Descriptor instead.
+func (*SRHHistoryResponse) Descriptor() ([]byte, []int) {
+	return file_remna_proto_rawDescGZIP(), []int{13}
+}
+
+func (x *SRHHistoryResponse) GetRecords() []*SRHRecordResponse {
+	if x != nil {
+		return x.Records
 	}
 	return nil
 }
@@ -519,7 +827,9 @@ const file_remna_proto_rawDesc = "" +
 	"\x14GetUserByTgIDRequest\x12\x12\n" +
 	"\x04tgid\x18\x01 \x01(\tR\x04tgid\"-\n" +
 	"\x15GetUserByEmailRequest\x12\x14\n" +
-	"\x05email\x18\x01 \x01(\tR\x05email\"m\n" +
+	"\x05email\x18\x01 \x01(\tR\x05email\"(\n" +
+	"\x12GetUserUUIDRequest\x12\x12\n" +
+	"\x04uuid\x18\x01 \x01(\tR\x04uuid\"m\n" +
 	"\x11CreateUserRequest\x12\x1a\n" +
 	"\busername\x18\x01 \x01(\tR\busername\x12\x14\n" +
 	"\x05email\x18\x02 \x01(\tR\x05email\x12\x12\n" +
@@ -540,7 +850,32 @@ const file_remna_proto_rawDesc = "" +
 	"\x04uuid\x18\x02 \x01(\tR\x04uuid\x12\x12\n" +
 	"\x04plan\x18\x03 \x01(\tR\x04plan\"B\n" +
 	"\x15MultipleUsersResponse\x12)\n" +
-	"\x05users\x18\x01 \x03(\v2\x13.remna.UserResponseR\x05users2\xe8\x03\n" +
+	"\x05users\x18\x01 \x03(\v2\x13.remna.UserResponseR\x05users\"\xb2\x02\n" +
+	"\fHwidResponse\x12\x12\n" +
+	"\x04hwid\x18\x01 \x01(\tR\x04hwid\x12\x1b\n" +
+	"\tuser_uuid\x18\x02 \x01(\tR\buserUuid\x12\x1a\n" +
+	"\bplatform\x18\x03 \x01(\tR\bplatform\x12\x1d\n" +
+	"\n" +
+	"os_version\x18\x04 \x01(\tR\tosVersion\x12!\n" +
+	"\fdevice_model\x18\x05 \x01(\tR\vdeviceModel\x12\x1d\n" +
+	"\n" +
+	"user_agent\x18\x06 \x01(\tR\tuserAgent\x129\n" +
+	"\n" +
+	"created_at\x18\a \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x129\n" +
+	"\n" +
+	"updated_at\x18\b \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAt\"E\n" +
+	"\x14MultipleHwidResponse\x12-\n" +
+	"\adevices\x18\x01 \x03(\v2\x13.remna.HwidResponseR\adevices\"\xbd\x01\n" +
+	"\x11SRHRecordResponse\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x1b\n" +
+	"\tuser_uuid\x18\x02 \x01(\tR\buserUuid\x12\x1d\n" +
+	"\n" +
+	"request_ip\x18\x03 \x01(\tR\trequestIp\x12\x1d\n" +
+	"\n" +
+	"user_agent\x18\x04 \x01(\tR\tuserAgent\x12=\n" +
+	"\frequested_at\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampR\vrequestedAt\"H\n" +
+	"\x12SRHHistoryResponse\x122\n" +
+	"\arecords\x18\x01 \x03(\v2\x18.remna.SRHRecordResponseR\arecords2\xf4\x05\n" +
 	"\fRemnaService\x125\n" +
 	"\tPingRemna\x12\x13.remna.EmptyRequest\x1a\x13.remna.PingResponse\x12?\n" +
 	"\aGetUser\x12\x1f.remna.GetUserByUsernameRequest\x1a\x13.remna.UserResponse\x12;\n" +
@@ -549,7 +884,12 @@ const file_remna_proto_rawDesc = "" +
 	"\x14UpdateUserExpiryTime\x12\x18.remna.UpdateUserRequest\x1a\x13.remna.UserResponse\x12K\n" +
 	"\x0eGetUsersByTgID\x12\x1b.remna.GetUserByTgIDRequest\x1a\x1c.remna.MultipleUsersResponse\x12M\n" +
 	"\x0fGetUsersByEmail\x12\x1c.remna.GetUserByEmailRequest\x1a\x1c.remna.MultipleUsersResponse\x12@\n" +
-	"\vGetAllUsers\x12\x13.remna.EmptyRequest\x1a\x1c.remna.MultipleUsersResponseB\bZ\x06/remnab\x06proto3"
+	"\vGetAllUsers\x12\x13.remna.EmptyRequest\x1a\x1c.remna.MultipleUsersResponse\x12L\n" +
+	"\x12GetUserHwidDevices\x12\x19.remna.GetUserUUIDRequest\x1a\x1b.remna.MultipleHwidResponse\x12?\n" +
+	"\rGetSRHHistory\x12\x13.remna.EmptyRequest\x1a\x19.remna.SRHHistoryResponse\x12=\n" +
+	"\vDisableUser\x12\x19.remna.GetUserUUIDRequest\x1a\x13.remna.UserResponse\x12<\n" +
+	"\n" +
+	"EnableUser\x12\x19.remna.GetUserUUIDRequest\x1a\x13.remna.UserResponseB\bZ\x06/remnab\x06proto3"
 
 var (
 	file_remna_proto_rawDescOnce sync.Once
@@ -563,41 +903,59 @@ func file_remna_proto_rawDescGZIP() []byte {
 	return file_remna_proto_rawDescData
 }
 
-var file_remna_proto_msgTypes = make([]protoimpl.MessageInfo, 9)
+var file_remna_proto_msgTypes = make([]protoimpl.MessageInfo, 14)
 var file_remna_proto_goTypes = []any{
 	(*EmptyRequest)(nil),             // 0: remna.EmptyRequest
 	(*PingResponse)(nil),             // 1: remna.PingResponse
 	(*GetUserByUsernameRequest)(nil), // 2: remna.GetUserByUsernameRequest
 	(*GetUserByTgIDRequest)(nil),     // 3: remna.GetUserByTgIDRequest
 	(*GetUserByEmailRequest)(nil),    // 4: remna.GetUserByEmailRequest
-	(*CreateUserRequest)(nil),        // 5: remna.CreateUserRequest
-	(*UserResponse)(nil),             // 6: remna.UserResponse
-	(*UpdateUserRequest)(nil),        // 7: remna.UpdateUserRequest
-	(*MultipleUsersResponse)(nil),    // 8: remna.MultipleUsersResponse
-	(*timestamppb.Timestamp)(nil),    // 9: google.protobuf.Timestamp
+	(*GetUserUUIDRequest)(nil),       // 5: remna.GetUserUUIDRequest
+	(*CreateUserRequest)(nil),        // 6: remna.CreateUserRequest
+	(*UserResponse)(nil),             // 7: remna.UserResponse
+	(*UpdateUserRequest)(nil),        // 8: remna.UpdateUserRequest
+	(*MultipleUsersResponse)(nil),    // 9: remna.MultipleUsersResponse
+	(*HwidResponse)(nil),             // 10: remna.HwidResponse
+	(*MultipleHwidResponse)(nil),     // 11: remna.MultipleHwidResponse
+	(*SRHRecordResponse)(nil),        // 12: remna.SRHRecordResponse
+	(*SRHHistoryResponse)(nil),       // 13: remna.SRHHistoryResponse
+	(*timestamppb.Timestamp)(nil),    // 14: google.protobuf.Timestamp
 }
 var file_remna_proto_depIdxs = []int32{
-	9, // 0: remna.UserResponse.expiry_time:type_name -> google.protobuf.Timestamp
-	6, // 1: remna.MultipleUsersResponse.users:type_name -> remna.UserResponse
-	0, // 2: remna.RemnaService.PingRemna:input_type -> remna.EmptyRequest
-	2, // 3: remna.RemnaService.GetUser:input_type -> remna.GetUserByUsernameRequest
-	5, // 4: remna.RemnaService.CreateUser:input_type -> remna.CreateUserRequest
-	7, // 5: remna.RemnaService.UpdateUserExpiryTime:input_type -> remna.UpdateUserRequest
-	3, // 6: remna.RemnaService.GetUsersByTgID:input_type -> remna.GetUserByTgIDRequest
-	4, // 7: remna.RemnaService.GetUsersByEmail:input_type -> remna.GetUserByEmailRequest
-	0, // 8: remna.RemnaService.GetAllUsers:input_type -> remna.EmptyRequest
-	1, // 9: remna.RemnaService.PingRemna:output_type -> remna.PingResponse
-	6, // 10: remna.RemnaService.GetUser:output_type -> remna.UserResponse
-	6, // 11: remna.RemnaService.CreateUser:output_type -> remna.UserResponse
-	6, // 12: remna.RemnaService.UpdateUserExpiryTime:output_type -> remna.UserResponse
-	8, // 13: remna.RemnaService.GetUsersByTgID:output_type -> remna.MultipleUsersResponse
-	8, // 14: remna.RemnaService.GetUsersByEmail:output_type -> remna.MultipleUsersResponse
-	8, // 15: remna.RemnaService.GetAllUsers:output_type -> remna.MultipleUsersResponse
-	9, // [9:16] is the sub-list for method output_type
-	2, // [2:9] is the sub-list for method input_type
-	2, // [2:2] is the sub-list for extension type_name
-	2, // [2:2] is the sub-list for extension extendee
-	0, // [0:2] is the sub-list for field type_name
+	14, // 0: remna.UserResponse.expiry_time:type_name -> google.protobuf.Timestamp
+	7,  // 1: remna.MultipleUsersResponse.users:type_name -> remna.UserResponse
+	14, // 2: remna.HwidResponse.created_at:type_name -> google.protobuf.Timestamp
+	14, // 3: remna.HwidResponse.updated_at:type_name -> google.protobuf.Timestamp
+	10, // 4: remna.MultipleHwidResponse.devices:type_name -> remna.HwidResponse
+	14, // 5: remna.SRHRecordResponse.requested_at:type_name -> google.protobuf.Timestamp
+	12, // 6: remna.SRHHistoryResponse.records:type_name -> remna.SRHRecordResponse
+	0,  // 7: remna.RemnaService.PingRemna:input_type -> remna.EmptyRequest
+	2,  // 8: remna.RemnaService.GetUser:input_type -> remna.GetUserByUsernameRequest
+	6,  // 9: remna.RemnaService.CreateUser:input_type -> remna.CreateUserRequest
+	8,  // 10: remna.RemnaService.UpdateUserExpiryTime:input_type -> remna.UpdateUserRequest
+	3,  // 11: remna.RemnaService.GetUsersByTgID:input_type -> remna.GetUserByTgIDRequest
+	4,  // 12: remna.RemnaService.GetUsersByEmail:input_type -> remna.GetUserByEmailRequest
+	0,  // 13: remna.RemnaService.GetAllUsers:input_type -> remna.EmptyRequest
+	5,  // 14: remna.RemnaService.GetUserHwidDevices:input_type -> remna.GetUserUUIDRequest
+	0,  // 15: remna.RemnaService.GetSRHHistory:input_type -> remna.EmptyRequest
+	5,  // 16: remna.RemnaService.DisableUser:input_type -> remna.GetUserUUIDRequest
+	5,  // 17: remna.RemnaService.EnableUser:input_type -> remna.GetUserUUIDRequest
+	1,  // 18: remna.RemnaService.PingRemna:output_type -> remna.PingResponse
+	7,  // 19: remna.RemnaService.GetUser:output_type -> remna.UserResponse
+	7,  // 20: remna.RemnaService.CreateUser:output_type -> remna.UserResponse
+	7,  // 21: remna.RemnaService.UpdateUserExpiryTime:output_type -> remna.UserResponse
+	9,  // 22: remna.RemnaService.GetUsersByTgID:output_type -> remna.MultipleUsersResponse
+	9,  // 23: remna.RemnaService.GetUsersByEmail:output_type -> remna.MultipleUsersResponse
+	9,  // 24: remna.RemnaService.GetAllUsers:output_type -> remna.MultipleUsersResponse
+	11, // 25: remna.RemnaService.GetUserHwidDevices:output_type -> remna.MultipleHwidResponse
+	13, // 26: remna.RemnaService.GetSRHHistory:output_type -> remna.SRHHistoryResponse
+	7,  // 27: remna.RemnaService.DisableUser:output_type -> remna.UserResponse
+	7,  // 28: remna.RemnaService.EnableUser:output_type -> remna.UserResponse
+	18, // [18:29] is the sub-list for method output_type
+	7,  // [7:18] is the sub-list for method input_type
+	7,  // [7:7] is the sub-list for extension type_name
+	7,  // [7:7] is the sub-list for extension extendee
+	0,  // [0:7] is the sub-list for field type_name
 }
 
 func init() { file_remna_proto_init() }
@@ -611,7 +969,7 @@ func file_remna_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_remna_proto_rawDesc), len(file_remna_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   9,
+			NumMessages:   14,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

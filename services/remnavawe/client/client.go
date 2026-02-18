@@ -82,17 +82,38 @@ func (c *Client) CreateUser(ctx context.Context, plan *RemnaPlan, username strin
 	return res, nil
 }
 
-func (c *Client) UpdateUserExpiryTime(ctx context.Context, plan *RemnaPlan, username *string, uuid *uuid.UUID) (*remapi.UserResponse, error) {
+func (c *Client) UpdateUserExpiryTime(ctx context.Context, plan *RemnaPlan, username string, uUID string) (*remapi.UserResponse, error) {
 	userDto := remapi.UpdateUserRequestDto{
-		ExpireAt:        remapi.NewOptDateTime(time.Now().AddDate(0, 0, plan.DayLimit)),
 		HwidDeviceLimit: remapi.NewOptNilInt(plan.DeviceLimit),
 	}
-	if username != nil {
-		userDto.Username = remapi.NewOptString(*username)
+	var currentExp time.Time
+	if username != "" {
+		userDto.Username = remapi.NewOptString(username)
+		userResp, err := c.api.Users().GetUserByUsername(ctx, username)
+		if err != nil {
+			return nil, err
+		}
+		user := userResp.(*remapi.UserResponse)
+		currentExp = user.Response.ExpireAt
 	}
-	if uuid != nil {
-		userDto.UUID = remapi.NewOptUUID(*uuid)
+	if uUID != "" {
+		uuidObj, err := uuid.Parse(uUID)
+		if err != nil {
+			return nil, err
+		}
+		userDto.UUID = remapi.NewOptUUID(uuidObj)
+		userResp, err := c.api.Users().GetUserByUuid(ctx, uUID)
+		if err != nil {
+			return nil, err
+		}
+		user := userResp.(*remapi.UserResponse)
+		currentExp = user.Response.ExpireAt
 	}
+
+	if time.Now().Compare(currentExp) > 1 {
+		currentExp = time.Now()
+	}
+	userDto.ExpireAt = remapi.NewOptDateTime(currentExp.AddDate(0, 0, plan.DayLimit))
 	resp, err := c.api.Users().UpdateUser(ctx, &userDto)
 	if err != nil {
 		return nil, err
@@ -138,8 +159,9 @@ func (c *Client) GetUsersByEmail(ctx context.Context, email string) (*remapi.Use
 }
 
 func (c *Client) GetAllUsers(ctx context.Context) (*remapi.GetAllUsersResponseDto, error) {
-	resp, err := c.api.Users().GetAllUsers(ctx, 0, 0)
+	resp, err := c.api.Users().GetAllUsers(ctx, 1000, 0)
 	if err != nil {
+		log.Println(err)
 		return nil, err
 	}
 	res, ok := resp.(*remapi.GetAllUsersResponseDto)
@@ -147,4 +169,58 @@ func (c *Client) GetAllUsers(ctx context.Context) (*remapi.GetAllUsersResponseDt
 		return nil, errors.New("undefined response")
 	}
 	return res, nil
+}
+
+func (c *Client) DisableUser(ctx context.Context, userUuid string) (*remapi.UserResponse, error) {
+	resp, err := c.api.Users().DisableUser(ctx, userUuid)
+	log.Println("disable", resp)
+	if err != nil {
+		log.Println(err, "here")
+		return nil, err
+	}
+	res, ok := resp.(*remapi.UserResponse)
+	if !ok {
+		return nil, errors.New("undefined response")
+	}
+	return res, nil
+}
+
+func (c *Client) EnableUser(ctx context.Context, userUuid string) (*remapi.UserResponse, error) {
+	resp, err := c.api.Users().EnableUser(ctx, userUuid)
+	log.Println("enable", resp)
+	if err != nil {
+		log.Println(err, "here")
+		return nil, err
+	}
+	res, ok := resp.(*remapi.UserResponse)
+	if !ok {
+		return nil, errors.New("undefined response")
+	}
+	return res, nil
+}
+
+func (c *Client) GetUserHwidDevices(ctx context.Context, userUuid string) (*remapi.HwidDevicesResponse, error) {
+	resp, err := c.api.HwidUserDevices().GetUserHwidDevices(ctx, userUuid)
+	if err != nil {
+		log.Println(err)
+		return nil, err
+	}
+	res, ok := resp.(*remapi.HwidDevicesResponse)
+	if !ok {
+		return nil, errors.New("undefined response")
+	}
+	return res, nil
+}
+
+func (c *Client) GetSRHHistory(ctx context.Context) (*remapi.UserSubscriptionHistory, error) {
+	resp, err := c.api.UserSubscriptionRequestHistory().GetSubscriptionRequestHistory(ctx, 1000, 0)
+	if err != nil {
+		log.Println(err)
+		return nil, err
+	}
+	res, ok := resp.(*remapi.GetSubscriptionRequestHistoryResponseDto)
+	if !ok {
+		return nil, errors.New("undefined response")
+	}
+	return &res.Response, nil
 }

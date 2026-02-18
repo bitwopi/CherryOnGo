@@ -26,6 +26,10 @@ const (
 	RemnaService_GetUsersByTgID_FullMethodName       = "/remna.RemnaService/GetUsersByTgID"
 	RemnaService_GetUsersByEmail_FullMethodName      = "/remna.RemnaService/GetUsersByEmail"
 	RemnaService_GetAllUsers_FullMethodName          = "/remna.RemnaService/GetAllUsers"
+	RemnaService_GetUserHwidDevices_FullMethodName   = "/remna.RemnaService/GetUserHwidDevices"
+	RemnaService_GetSRHHistory_FullMethodName        = "/remna.RemnaService/GetSRHHistory"
+	RemnaService_DisableUser_FullMethodName          = "/remna.RemnaService/DisableUser"
+	RemnaService_EnableUser_FullMethodName           = "/remna.RemnaService/EnableUser"
 )
 
 // RemnaServiceClient is the client API for RemnaService service.
@@ -39,6 +43,10 @@ type RemnaServiceClient interface {
 	GetUsersByTgID(ctx context.Context, in *GetUserByTgIDRequest, opts ...grpc.CallOption) (*MultipleUsersResponse, error)
 	GetUsersByEmail(ctx context.Context, in *GetUserByEmailRequest, opts ...grpc.CallOption) (*MultipleUsersResponse, error)
 	GetAllUsers(ctx context.Context, in *EmptyRequest, opts ...grpc.CallOption) (*MultipleUsersResponse, error)
+	GetUserHwidDevices(ctx context.Context, in *GetUserUUIDRequest, opts ...grpc.CallOption) (*MultipleHwidResponse, error)
+	GetSRHHistory(ctx context.Context, in *EmptyRequest, opts ...grpc.CallOption) (*SRHHistoryResponse, error)
+	DisableUser(ctx context.Context, in *GetUserUUIDRequest, opts ...grpc.CallOption) (*UserResponse, error)
+	EnableUser(ctx context.Context, in *GetUserUUIDRequest, opts ...grpc.CallOption) (*UserResponse, error)
 }
 
 type remnaServiceClient struct {
@@ -119,6 +127,46 @@ func (c *remnaServiceClient) GetAllUsers(ctx context.Context, in *EmptyRequest, 
 	return out, nil
 }
 
+func (c *remnaServiceClient) GetUserHwidDevices(ctx context.Context, in *GetUserUUIDRequest, opts ...grpc.CallOption) (*MultipleHwidResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(MultipleHwidResponse)
+	err := c.cc.Invoke(ctx, RemnaService_GetUserHwidDevices_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *remnaServiceClient) GetSRHHistory(ctx context.Context, in *EmptyRequest, opts ...grpc.CallOption) (*SRHHistoryResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SRHHistoryResponse)
+	err := c.cc.Invoke(ctx, RemnaService_GetSRHHistory_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *remnaServiceClient) DisableUser(ctx context.Context, in *GetUserUUIDRequest, opts ...grpc.CallOption) (*UserResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(UserResponse)
+	err := c.cc.Invoke(ctx, RemnaService_DisableUser_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *remnaServiceClient) EnableUser(ctx context.Context, in *GetUserUUIDRequest, opts ...grpc.CallOption) (*UserResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(UserResponse)
+	err := c.cc.Invoke(ctx, RemnaService_EnableUser_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // RemnaServiceServer is the server API for RemnaService service.
 // All implementations must embed UnimplementedRemnaServiceServer
 // for forward compatibility.
@@ -130,6 +178,10 @@ type RemnaServiceServer interface {
 	GetUsersByTgID(context.Context, *GetUserByTgIDRequest) (*MultipleUsersResponse, error)
 	GetUsersByEmail(context.Context, *GetUserByEmailRequest) (*MultipleUsersResponse, error)
 	GetAllUsers(context.Context, *EmptyRequest) (*MultipleUsersResponse, error)
+	GetUserHwidDevices(context.Context, *GetUserUUIDRequest) (*MultipleHwidResponse, error)
+	GetSRHHistory(context.Context, *EmptyRequest) (*SRHHistoryResponse, error)
+	DisableUser(context.Context, *GetUserUUIDRequest) (*UserResponse, error)
+	EnableUser(context.Context, *GetUserUUIDRequest) (*UserResponse, error)
 	mustEmbedUnimplementedRemnaServiceServer()
 }
 
@@ -160,6 +212,18 @@ func (UnimplementedRemnaServiceServer) GetUsersByEmail(context.Context, *GetUser
 }
 func (UnimplementedRemnaServiceServer) GetAllUsers(context.Context, *EmptyRequest) (*MultipleUsersResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetAllUsers not implemented")
+}
+func (UnimplementedRemnaServiceServer) GetUserHwidDevices(context.Context, *GetUserUUIDRequest) (*MultipleHwidResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetUserHwidDevices not implemented")
+}
+func (UnimplementedRemnaServiceServer) GetSRHHistory(context.Context, *EmptyRequest) (*SRHHistoryResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetSRHHistory not implemented")
+}
+func (UnimplementedRemnaServiceServer) DisableUser(context.Context, *GetUserUUIDRequest) (*UserResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method DisableUser not implemented")
+}
+func (UnimplementedRemnaServiceServer) EnableUser(context.Context, *GetUserUUIDRequest) (*UserResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method EnableUser not implemented")
 }
 func (UnimplementedRemnaServiceServer) mustEmbedUnimplementedRemnaServiceServer() {}
 func (UnimplementedRemnaServiceServer) testEmbeddedByValue()                      {}
@@ -308,6 +372,78 @@ func _RemnaService_GetAllUsers_Handler(srv interface{}, ctx context.Context, dec
 	return interceptor(ctx, in, info, handler)
 }
 
+func _RemnaService_GetUserHwidDevices_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUserUUIDRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RemnaServiceServer).GetUserHwidDevices(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: RemnaService_GetUserHwidDevices_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RemnaServiceServer).GetUserHwidDevices(ctx, req.(*GetUserUUIDRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _RemnaService_GetSRHHistory_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(EmptyRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RemnaServiceServer).GetSRHHistory(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: RemnaService_GetSRHHistory_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RemnaServiceServer).GetSRHHistory(ctx, req.(*EmptyRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _RemnaService_DisableUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUserUUIDRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RemnaServiceServer).DisableUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: RemnaService_DisableUser_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RemnaServiceServer).DisableUser(ctx, req.(*GetUserUUIDRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _RemnaService_EnableUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUserUUIDRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RemnaServiceServer).EnableUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: RemnaService_EnableUser_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RemnaServiceServer).EnableUser(ctx, req.(*GetUserUUIDRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // RemnaService_ServiceDesc is the grpc.ServiceDesc for RemnaService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -342,6 +478,22 @@ var RemnaService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetAllUsers",
 			Handler:    _RemnaService_GetAllUsers_Handler,
+		},
+		{
+			MethodName: "GetUserHwidDevices",
+			Handler:    _RemnaService_GetUserHwidDevices_Handler,
+		},
+		{
+			MethodName: "GetSRHHistory",
+			Handler:    _RemnaService_GetSRHHistory_Handler,
+		},
+		{
+			MethodName: "DisableUser",
+			Handler:    _RemnaService_DisableUser_Handler,
+		},
+		{
+			MethodName: "EnableUser",
+			Handler:    _RemnaService_EnableUser_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

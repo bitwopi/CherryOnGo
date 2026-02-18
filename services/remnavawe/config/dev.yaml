@@ -1,7 +1,7 @@
 env: "dev"
 grpc:
   host: "${HOST}"
-  port: ":${REMNA_SERVICE_PORT}"
+  port: "${REMNA_SERVICE_PORT}"
   timeout: ${REMNA_SERVICE_TIMEOUT}
 remna:
   url: "${REMNA_SERVICE_URL}"

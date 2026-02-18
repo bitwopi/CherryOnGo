@@ -4,8 +4,10 @@ import (
 	"flag"
 	"log"
 	"os"
+	"os/signal"
 	"remnawave/config"
 	gs "remnawave/server/api/grpc"
+	"syscall"
 )
 
 func main() {
@@ -18,5 +20,14 @@ func main() {
 	flag.Parse()
 	cfg := config.MustLoad(rootPath + *cfgPath)
 	gserver := gs.NewRemnaGRPCServer(cfg)
-	gserver.Start(cfg.GRPC.Host + ":" + cfg.GRPC.Port)
+	done := make(chan os.Signal, 1)
+	signal.Notify(done, os.Interrupt, syscall.SIGINT, syscall.SIGTERM)
+	go func() {
+		if err := gserver.Start(cfg.GRPC.Host + ":" + cfg.GRPC.Port); err != nil {
+			panic(err)
+		}
+	}()
+	<-done
+	gserver.Stop()
+
 }
