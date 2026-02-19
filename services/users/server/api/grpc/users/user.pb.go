@@ -285,7 +285,7 @@ type UserResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Email         string                 `protobuf:"bytes,1,opt,name=email,proto3" json:"email,omitempty"`
 	Active        bool                   `protobuf:"varint,2,opt,name=active,proto3" json:"active,omitempty"`
-	HasReferral   bool                   `protobuf:"varint,3,opt,name=has_referral,json=hasReferral,proto3" json:"has_referral,omitempty"`
+	ReferralUuid  string                 `protobuf:"bytes,3,opt,name=referral_uuid,json=referralUuid,proto3" json:"referral_uuid,omitempty"`
 	Trial         bool                   `protobuf:"varint,4,opt,name=trial,proto3" json:"trial,omitempty"`
 	UserUuid      string                 `protobuf:"bytes,5,opt,name=user_uuid,json=userUuid,proto3" json:"user_uuid,omitempty"`
 	TgId          int64                  `protobuf:"varint,6,opt,name=tg_id,json=tgId,proto3" json:"tg_id,omitempty"`
@@ -341,11 +341,11 @@ func (x *UserResponse) GetActive() bool {
 	return false
 }
 
-func (x *UserResponse) GetHasReferral() bool {
+func (x *UserResponse) GetReferralUuid() string {
 	if x != nil {
-		return x.HasReferral
+		return x.ReferralUuid
 	}
-	return false
+	return ""
 }
 
 func (x *UserResponse) GetTrial() bool {
@@ -418,11 +418,11 @@ const file_user_proto_rawDesc = "" +
 	"\n" +
 	"first_name\x18\x02 \x01(\tR\tfirstName\x12\x1b\n" +
 	"\tphoto_url\x18\x03 \x01(\tR\bphotoUrl\x12\x1a\n" +
-	"\busername\x18\x04 \x01(\tR\busername\"\x9a\x02\n" +
+	"\busername\x18\x04 \x01(\tR\busername\"\x9c\x02\n" +
 	"\fUserResponse\x12\x14\n" +
 	"\x05email\x18\x01 \x01(\tR\x05email\x12\x16\n" +
-	"\x06active\x18\x02 \x01(\bR\x06active\x12!\n" +
-	"\fhas_referral\x18\x03 \x01(\bR\vhasReferral\x12\x14\n" +
+	"\x06active\x18\x02 \x01(\bR\x06active\x12#\n" +
+	"\rreferral_uuid\x18\x03 \x01(\tR\freferralUuid\x12\x14\n" +
 	"\x05trial\x18\x04 \x01(\bR\x05trial\x12\x1b\n" +
 	"\tuser_uuid\x18\x05 \x01(\tR\buserUuid\x12\x13\n" +
 	"\x05tg_id\x18\x06 \x01(\x03R\x04tgId\x12\x1d\n" +

@@ -152,7 +152,27 @@ func (s *Server) RefreshJWT(ctx context.Context, req *pb.RefreshRequest) (*pb.JW
 }
 
 func (s *Server) GetUserData(ctx context.Context, req *pb.GetUserRequest) (*pb.UserResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method GetUserData not implemented")
+	if len(req.UserUuid) != 36 {
+		return nil, status.Errorf(codes.InvalidArgument, "invalid user uuid")
+	}
+	user, err := s.dbManager.GetUserByUUID(req.UserUuid)
+	if err != nil {
+		return nil, status.Errorf(codes.NotFound, "failed to get user")
+	}
+	response := pb.UserResponse{
+		Email:        *user.Email,
+		Active:       user.Active,
+		UserUuid:     user.UUID,
+		TgId:         *user.TgID,
+		Username:     *user.Username,
+		FirstName:    *user.FirstName,
+		PhotoUrl:     *user.PhotoURL,
+		Trial:        user.Trial,
+		IsAdmin:      user.IsAdmin,
+		ReferralUuid: *user.ReferralUUID,
+	}
+
+	return &response, nil
 }
 
 func (s *Server) TgOAuth(ctx context.Context, req *pb.UserRequest) (*pb.JWTResponse, error) {

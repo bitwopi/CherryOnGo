@@ -7,6 +7,10 @@ order_service:
   addr: "${ORDER_DB_NAME}:${ORDER_SERVICE_PORT}"
   timeout: ${ORDER_SERVICE_TIMEOUT}
   max_retries: ${ORDER_SERVICE_MAX_RETRIES}
+remna_service:
+  addr: "${REMNA_SERVICE_HOST}:${REMNA_SERVICE_PORT}"
+  timeout: ${REMNA_SERVICE_TIMEOUT}
+  max_retries: ${REMNA_SERVICE_MAX_RETRIES}
 rest:
   addr: ":${REST_PORT}"
   request_timeout: ${REST_REQUEST_TIMEOUT}

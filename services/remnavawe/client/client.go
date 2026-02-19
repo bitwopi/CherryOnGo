@@ -127,7 +127,7 @@ func (c *Client) UpdateUserExpiryTime(ctx context.Context, plan *RemnaPlan, user
 }
 
 func (c *Client) Ping(ctx context.Context) error {
-	_, err := c.api.Users().GetAllUsers(ctx, 0, 0)
+	_, err := c.api.Users().GetAllUsers(ctx, 1, 0)
 	return err
 }
 

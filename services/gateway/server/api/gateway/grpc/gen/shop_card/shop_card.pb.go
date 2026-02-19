@@ -9,6 +9,7 @@ package shop_card
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
 	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
 	reflect "reflect"
 	sync "sync"
@@ -346,7 +347,7 @@ var File_shop_card_proto protoreflect.FileDescriptor
 
 const file_shop_card_proto_rawDesc = "" +
 	"\n" +
-	"\x0fshop_card.proto\x12\tshop_card\x1a\x1fgoogle/protobuf/timestamp.proto\"\xb0\x01\n" +
+	"\x0fshop_card.proto\x12\tshop_card\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1bgoogle/protobuf/empty.proto\"\xb0\x01\n" +
 	"\x0fShopCardRequest\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12 \n" +
 	"\vdescription\x18\x02 \x01(\tR\vdescription\x12\x1a\n" +
@@ -373,12 +374,12 @@ const file_shop_card_proto_rawDesc = "" +
 	"\avisible\x18\x06 \x01(\bR\avisible\x12\x1b\n" +
 	"\tcover_url\x18\a \x01(\tR\bcoverUrl\x129\n" +
 	"\n" +
-	"created_at\x18\b \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt2\xc8\x02\n" +
+	"created_at\x18\b \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt2\xc3\x02\n" +
 	"\x0fShopCardService\x12I\n" +
 	"\x0eCreateShopCard\x12\x1a.shop_card.ShopCardRequest\x1a\x1b.shop_card.ShopCardResponse\x12O\n" +
 	"\x0eUpdateShopCard\x12 .shop_card.UpdateShopCardRequest\x1a\x1b.shop_card.ShopCardResponse\x12J\n" +
-	"\vGetShopCard\x12\x1e.shop_card.ShopCardUUIDRequest\x1a\x1b.shop_card.ShopCardResponse\x12M\n" +
-	"\x0eDeleteShopCard\x12\x1e.shop_card.ShopCardUUIDRequest\x1a\x1b.shop_card.ShopCardResponseB\fZ\n" +
+	"\vGetShopCard\x12\x1e.shop_card.ShopCardUUIDRequest\x1a\x1b.shop_card.ShopCardResponse\x12H\n" +
+	"\x0eDeleteShopCard\x12\x1e.shop_card.ShopCardUUIDRequest\x1a\x16.google.protobuf.EmptyB\fZ\n" +
 	"/shop_cardb\x06proto3"
 
 var (
@@ -400,6 +401,7 @@ var file_shop_card_proto_goTypes = []any{
 	(*ShopCardUUIDRequest)(nil),   // 2: shop_card.ShopCardUUIDRequest
 	(*ShopCardResponse)(nil),      // 3: shop_card.ShopCardResponse
 	(*timestamppb.Timestamp)(nil), // 4: google.protobuf.Timestamp
+	(*emptypb.Empty)(nil),         // 5: google.protobuf.Empty
 }
 var file_shop_card_proto_depIdxs = []int32{
 	4, // 0: shop_card.ShopCardResponse.created_at:type_name -> google.protobuf.Timestamp
@@ -410,7 +412,7 @@ var file_shop_card_proto_depIdxs = []int32{
 	3, // 5: shop_card.ShopCardService.CreateShopCard:output_type -> shop_card.ShopCardResponse
 	3, // 6: shop_card.ShopCardService.UpdateShopCard:output_type -> shop_card.ShopCardResponse
 	3, // 7: shop_card.ShopCardService.GetShopCard:output_type -> shop_card.ShopCardResponse
-	3, // 8: shop_card.ShopCardService.DeleteShopCard:output_type -> shop_card.ShopCardResponse
+	5, // 8: shop_card.ShopCardService.DeleteShopCard:output_type -> google.protobuf.Empty
 	5, // [5:9] is the sub-list for method output_type
 	1, // [1:5] is the sub-list for method input_type
 	1, // [1:1] is the sub-list for extension type_name

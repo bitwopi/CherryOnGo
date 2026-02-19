@@ -2,6 +2,7 @@ package sdk
 
 import (
 	"fmt"
+	"payment/server/sdk"
 	"strconv"
 
 	"github.com/rvinnie/yookassa-sdk-go/yookassa"
@@ -11,7 +12,7 @@ import (
 )
 
 type Yookassa struct {
-	PaymentService
+	sdk.PaymentService
 	client *yookassa.Client
 }
 
@@ -21,7 +22,7 @@ func NewYookassa(shopID string, secretKey string) *Yookassa {
 	}
 }
 
-func (y *Yookassa) CreatePayment(req CreatePaymentRequest) (*Payment, error) {
+func (y *Yookassa) CreatePayment(req sdk.CreatePaymentRequest) (*sdk.Payment, error) {
 	handler := yookassa.NewPaymentHandler(y.client)
 
 	payment, err := handler.CreatePayment(
@@ -44,7 +45,7 @@ func (y *Yookassa) CreatePayment(req CreatePaymentRequest) (*Payment, error) {
 
 	return convertPayment(payment)
 }
-func (y *Yookassa) ConfirmPayment(paymentID string) (*Payment, error) {
+func (y *Yookassa) ConfirmPayment(paymentID string) (*sdk.Payment, error) {
 	handler := yookassa.NewPaymentHandler(y.client)
 
 	payment, err := handler.FindPayment(paymentID)
@@ -60,7 +61,7 @@ func (y *Yookassa) ConfirmPayment(paymentID string) (*Payment, error) {
 	return convertPayment(updPayment)
 }
 
-func (y *Yookassa) CancelPayment(paymentID string) (*Payment, error) {
+func (y *Yookassa) CancelPayment(paymentID string) (*sdk.Payment, error) {
 	handler := yookassa.NewPaymentHandler(y.client)
 
 	updPayment, err := handler.CancelPayment(paymentID)
@@ -71,7 +72,7 @@ func (y *Yookassa) CancelPayment(paymentID string) (*Payment, error) {
 	return convertPayment(updPayment)
 }
 
-func (y *Yookassa) GetPayment(paymentID string) (*Payment, error) {
+func (y *Yookassa) GetPayment(paymentID string) (*sdk.Payment, error) {
 	handler := yookassa.NewPaymentHandler(y.client)
 
 	payment, err := handler.FindPayment(paymentID)
@@ -82,7 +83,7 @@ func (y *Yookassa) GetPayment(paymentID string) (*Payment, error) {
 	return convertPayment(payment)
 }
 
-func (y *Yookassa) Refund(req RefundRequest) (*Refund, error) {
+func (y *Yookassa) Refund(req sdk.RefundRequest) (*sdk.Refund, error) {
 	handler := yookassa.NewRefundHandler(y.client)
 
 	refund, err := handler.CreateRefund(&yoorefund.Refund{
@@ -102,10 +103,10 @@ func (y *Yookassa) Refund(req RefundRequest) (*Refund, error) {
 		return nil, err
 	}
 
-	return &Refund{
+	return &sdk.Refund{
 		ID:        refund.Id,
 		PaymentID: refund.PaymentId,
-		Amount: Amount{
+		Amount: sdk.Amount{
 			Value:    value,
 			Currency: refund.Amount.Currency,
 		},
@@ -115,7 +116,7 @@ func (y *Yookassa) Refund(req RefundRequest) (*Refund, error) {
 	}, nil
 }
 
-func convertPayment(payment *yoopayment.Payment) (*Payment, error) {
+func convertPayment(payment *yoopayment.Payment) (*sdk.Payment, error) {
 	value, err := strconv.ParseFloat(payment.Amount.Value, 64)
 	if err != nil {
 		return nil, err
@@ -128,13 +129,13 @@ func convertPayment(payment *yoopayment.Payment) (*Payment, error) {
 	if !ok {
 		md = nil
 	}
-	return &Payment{
+	return &sdk.Payment{
 		ID: payment.ID,
-		Amount: Amount{
+		Amount: sdk.Amount{
 			Value:    value,
 			Currency: payment.Amount.Currency,
 		},
-		Income: Amount{
+		Income: sdk.Amount{
 			Value:    incValue,
 			Currency: payment.IncomeAmount.Currency,
 		},

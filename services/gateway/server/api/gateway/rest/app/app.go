@@ -4,8 +4,11 @@ import (
 	"context"
 	"gateway/config"
 	orderclient "gateway/server/api/gateway/grpc/order_client"
+	remnaclient "gateway/server/api/gateway/grpc/remna_client"
 	userclient "gateway/server/api/gateway/grpc/user_client"
 	handlers "gateway/server/api/gateway/rest/handers/orders"
+	"gateway/server/api/gateway/rest/handers/remna"
+	"gateway/server/api/gateway/rest/handers/users/data"
 	"gateway/server/api/gateway/rest/handers/users/refresh"
 	"gateway/server/api/gateway/rest/handers/users/sign"
 	tgauth "gateway/server/api/gateway/rest/handers/users/tg_auth"
@@ -22,6 +25,7 @@ import (
 type App struct {
 	userClient  *userclient.UserGRPCClient
 	orderClient *orderclient.OrderGRPCClient
+	remnaClient *remnaclient.RemnaGRPCClient
 	jm          *jwtmanager.JWTManager
 	logger      *zap.Logger
 	router      *chi.Mux
@@ -46,6 +50,12 @@ func NewApp(cfg config.Config, logger *zap.Logger) *App {
 		logger.Fatal("failed to create order gRPC client", zap.Error(err))
 	}
 
+	rClient, err := remnaclient.NewRemnaGRPCClient(
+		cfg.RemnaService.Addr,
+		cfg.RemnaService.Timeout,
+		cfg.RemnaService.MaxRetries,
+	)
+
 	jm, err := jwtmanager.NewJWTManager(cfg.JWTSecret)
 	if err != nil {
 		logger.Fatal("failed to create JWT manager", zap.Error(err))
@@ -61,6 +71,7 @@ func NewApp(cfg config.Config, logger *zap.Logger) *App {
 	return &App{
 		userClient:  uClient,
 		orderClient: oClient,
+		remnaClient: rClient,
 		jm:          jm,
 		logger:      logger,
 		router:      router,
@@ -100,13 +111,20 @@ func (a *App) SetupRouter() {
 		r.Use(checktgauth.New(a.botToken))
 		r.Post("/", tgauth.New(a.logger, a.userClient))
 	})
+	a.router.Route("/api/users", func(r chi.Router) {
+		r.Use(jwtcheck.New(*a.jm))
+		r.Post("/{uuid}", data.GetUser(a.logger, a.userClient))
+	})
 	a.router.Route("/api/order", func(r chi.Router) {
 		r.Use(jwtcheck.New(*a.jm))
 		r.Post("/create", handlers.CreateOrder(a.logger, a.orderClient))
 		r.Post("/update/status", handlers.UpdateOrderStatus(a.logger, a.orderClient))
 		r.Get("/get", handlers.GetOrder(a.logger, a.orderClient))
 	})
-
+	a.router.Route("/api/remna}", func(r chi.Router) {
+		r.Use(jwtcheck.New(*a.jm))
+		r.Post("/users/by-email/{email}", remna.GetUsersByEmail(a.logger, a.remnaClient))
+	})
 }
 
 func (a *App) Stop(ctx context.Context) error {

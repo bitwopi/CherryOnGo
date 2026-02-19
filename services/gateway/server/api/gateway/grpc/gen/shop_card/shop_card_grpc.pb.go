@@ -11,6 +11,7 @@ import (
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -32,7 +33,7 @@ type ShopCardServiceClient interface {
 	CreateShopCard(ctx context.Context, in *ShopCardRequest, opts ...grpc.CallOption) (*ShopCardResponse, error)
 	UpdateShopCard(ctx context.Context, in *UpdateShopCardRequest, opts ...grpc.CallOption) (*ShopCardResponse, error)
 	GetShopCard(ctx context.Context, in *ShopCardUUIDRequest, opts ...grpc.CallOption) (*ShopCardResponse, error)
-	DeleteShopCard(ctx context.Context, in *ShopCardUUIDRequest, opts ...grpc.CallOption) (*ShopCardResponse, error)
+	DeleteShopCard(ctx context.Context, in *ShopCardUUIDRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type shopCardServiceClient struct {
@@ -73,9 +74,9 @@ func (c *shopCardServiceClient) GetShopCard(ctx context.Context, in *ShopCardUUI
 	return out, nil
 }
 
-func (c *shopCardServiceClient) DeleteShopCard(ctx context.Context, in *ShopCardUUIDRequest, opts ...grpc.CallOption) (*ShopCardResponse, error) {
+func (c *shopCardServiceClient) DeleteShopCard(ctx context.Context, in *ShopCardUUIDRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ShopCardResponse)
+	out := new(emptypb.Empty)
 	err := c.cc.Invoke(ctx, ShopCardService_DeleteShopCard_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -90,7 +91,7 @@ type ShopCardServiceServer interface {
 	CreateShopCard(context.Context, *ShopCardRequest) (*ShopCardResponse, error)
 	UpdateShopCard(context.Context, *UpdateShopCardRequest) (*ShopCardResponse, error)
 	GetShopCard(context.Context, *ShopCardUUIDRequest) (*ShopCardResponse, error)
-	DeleteShopCard(context.Context, *ShopCardUUIDRequest) (*ShopCardResponse, error)
+	DeleteShopCard(context.Context, *ShopCardUUIDRequest) (*emptypb.Empty, error)
 	mustEmbedUnimplementedShopCardServiceServer()
 }
 
@@ -110,7 +111,7 @@ func (UnimplementedShopCardServiceServer) UpdateShopCard(context.Context, *Updat
 func (UnimplementedShopCardServiceServer) GetShopCard(context.Context, *ShopCardUUIDRequest) (*ShopCardResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetShopCard not implemented")
 }
-func (UnimplementedShopCardServiceServer) DeleteShopCard(context.Context, *ShopCardUUIDRequest) (*ShopCardResponse, error) {
+func (UnimplementedShopCardServiceServer) DeleteShopCard(context.Context, *ShopCardUUIDRequest) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method DeleteShopCard not implemented")
 }
 func (UnimplementedShopCardServiceServer) mustEmbedUnimplementedShopCardServiceServer() {}

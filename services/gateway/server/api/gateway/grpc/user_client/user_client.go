@@ -106,3 +106,17 @@ func (c *UserGRPCClient) TgOAuth(tgID int64, firstName string, photoURL string, 
 
 	return resp, nil
 }
+
+func (c *UserGRPCClient) GetUser(userUuid string) (*pb.UserResponse, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), c.timeout)
+	defer cancel()
+	req := &pb.GetUserRequest{
+		UserUuid: userUuid,
+	}
+	resp, err := c.client.GetUserData(ctx, req)
+	if err != nil {
+		return nil, err
+	}
+
+	return resp, nil
+}

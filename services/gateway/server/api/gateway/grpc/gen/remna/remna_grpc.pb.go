@@ -19,18 +19,34 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	RemnaService_PingRemna_FullMethodName  = "/remna.RemnaService/PingRemna"
-	RemnaService_GetUser_FullMethodName    = "/remna.RemnaService/GetUser"
-	RemnaService_CreateUser_FullMethodName = "/remna.RemnaService/CreateUser"
+	RemnaService_PingRemna_FullMethodName            = "/remna.RemnaService/PingRemna"
+	RemnaService_GetUser_FullMethodName              = "/remna.RemnaService/GetUser"
+	RemnaService_CreateUser_FullMethodName           = "/remna.RemnaService/CreateUser"
+	RemnaService_UpdateUserExpiryTime_FullMethodName = "/remna.RemnaService/UpdateUserExpiryTime"
+	RemnaService_GetUsersByTgID_FullMethodName       = "/remna.RemnaService/GetUsersByTgID"
+	RemnaService_GetUsersByEmail_FullMethodName      = "/remna.RemnaService/GetUsersByEmail"
+	RemnaService_GetAllUsers_FullMethodName          = "/remna.RemnaService/GetAllUsers"
+	RemnaService_GetUserHwidDevices_FullMethodName   = "/remna.RemnaService/GetUserHwidDevices"
+	RemnaService_GetSRHHistory_FullMethodName        = "/remna.RemnaService/GetSRHHistory"
+	RemnaService_DisableUser_FullMethodName          = "/remna.RemnaService/DisableUser"
+	RemnaService_EnableUser_FullMethodName           = "/remna.RemnaService/EnableUser"
 )
 
 // RemnaServiceClient is the client API for RemnaService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type RemnaServiceClient interface {
-	PingRemna(ctx context.Context, in *PingRequest, opts ...grpc.CallOption) (*PingResponse, error)
-	GetUser(ctx context.Context, in *GetUserRequest, opts ...grpc.CallOption) (*UserResponse, error)
+	PingRemna(ctx context.Context, in *EmptyRequest, opts ...grpc.CallOption) (*PingResponse, error)
+	GetUser(ctx context.Context, in *GetUserByUsernameRequest, opts ...grpc.CallOption) (*UserResponse, error)
 	CreateUser(ctx context.Context, in *CreateUserRequest, opts ...grpc.CallOption) (*UserResponse, error)
+	UpdateUserExpiryTime(ctx context.Context, in *UpdateUserRequest, opts ...grpc.CallOption) (*UserResponse, error)
+	GetUsersByTgID(ctx context.Context, in *GetUserByTgIDRequest, opts ...grpc.CallOption) (*MultipleUsersResponse, error)
+	GetUsersByEmail(ctx context.Context, in *GetUserByEmailRequest, opts ...grpc.CallOption) (*MultipleUsersResponse, error)
+	GetAllUsers(ctx context.Context, in *EmptyRequest, opts ...grpc.CallOption) (*MultipleUsersResponse, error)
+	GetUserHwidDevices(ctx context.Context, in *GetUserUUIDRequest, opts ...grpc.CallOption) (*MultipleHwidResponse, error)
+	GetSRHHistory(ctx context.Context, in *EmptyRequest, opts ...grpc.CallOption) (*SRHHistoryResponse, error)
+	DisableUser(ctx context.Context, in *GetUserUUIDRequest, opts ...grpc.CallOption) (*UserResponse, error)
+	EnableUser(ctx context.Context, in *GetUserUUIDRequest, opts ...grpc.CallOption) (*UserResponse, error)
 }
 
 type remnaServiceClient struct {
@@ -41,7 +57,7 @@ func NewRemnaServiceClient(cc grpc.ClientConnInterface) RemnaServiceClient {
 	return &remnaServiceClient{cc}
 }
 
-func (c *remnaServiceClient) PingRemna(ctx context.Context, in *PingRequest, opts ...grpc.CallOption) (*PingResponse, error) {
+func (c *remnaServiceClient) PingRemna(ctx context.Context, in *EmptyRequest, opts ...grpc.CallOption) (*PingResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(PingResponse)
 	err := c.cc.Invoke(ctx, RemnaService_PingRemna_FullMethodName, in, out, cOpts...)
@@ -51,7 +67,7 @@ func (c *remnaServiceClient) PingRemna(ctx context.Context, in *PingRequest, opt
 	return out, nil
 }
 
-func (c *remnaServiceClient) GetUser(ctx context.Context, in *GetUserRequest, opts ...grpc.CallOption) (*UserResponse, error) {
+func (c *remnaServiceClient) GetUser(ctx context.Context, in *GetUserByUsernameRequest, opts ...grpc.CallOption) (*UserResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(UserResponse)
 	err := c.cc.Invoke(ctx, RemnaService_GetUser_FullMethodName, in, out, cOpts...)
@@ -71,13 +87,101 @@ func (c *remnaServiceClient) CreateUser(ctx context.Context, in *CreateUserReque
 	return out, nil
 }
 
+func (c *remnaServiceClient) UpdateUserExpiryTime(ctx context.Context, in *UpdateUserRequest, opts ...grpc.CallOption) (*UserResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(UserResponse)
+	err := c.cc.Invoke(ctx, RemnaService_UpdateUserExpiryTime_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *remnaServiceClient) GetUsersByTgID(ctx context.Context, in *GetUserByTgIDRequest, opts ...grpc.CallOption) (*MultipleUsersResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(MultipleUsersResponse)
+	err := c.cc.Invoke(ctx, RemnaService_GetUsersByTgID_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *remnaServiceClient) GetUsersByEmail(ctx context.Context, in *GetUserByEmailRequest, opts ...grpc.CallOption) (*MultipleUsersResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(MultipleUsersResponse)
+	err := c.cc.Invoke(ctx, RemnaService_GetUsersByEmail_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *remnaServiceClient) GetAllUsers(ctx context.Context, in *EmptyRequest, opts ...grpc.CallOption) (*MultipleUsersResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(MultipleUsersResponse)
+	err := c.cc.Invoke(ctx, RemnaService_GetAllUsers_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *remnaServiceClient) GetUserHwidDevices(ctx context.Context, in *GetUserUUIDRequest, opts ...grpc.CallOption) (*MultipleHwidResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(MultipleHwidResponse)
+	err := c.cc.Invoke(ctx, RemnaService_GetUserHwidDevices_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *remnaServiceClient) GetSRHHistory(ctx context.Context, in *EmptyRequest, opts ...grpc.CallOption) (*SRHHistoryResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SRHHistoryResponse)
+	err := c.cc.Invoke(ctx, RemnaService_GetSRHHistory_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *remnaServiceClient) DisableUser(ctx context.Context, in *GetUserUUIDRequest, opts ...grpc.CallOption) (*UserResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(UserResponse)
+	err := c.cc.Invoke(ctx, RemnaService_DisableUser_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *remnaServiceClient) EnableUser(ctx context.Context, in *GetUserUUIDRequest, opts ...grpc.CallOption) (*UserResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(UserResponse)
+	err := c.cc.Invoke(ctx, RemnaService_EnableUser_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // RemnaServiceServer is the server API for RemnaService service.
 // All implementations must embed UnimplementedRemnaServiceServer
 // for forward compatibility.
 type RemnaServiceServer interface {
-	PingRemna(context.Context, *PingRequest) (*PingResponse, error)
-	GetUser(context.Context, *GetUserRequest) (*UserResponse, error)
+	PingRemna(context.Context, *EmptyRequest) (*PingResponse, error)
+	GetUser(context.Context, *GetUserByUsernameRequest) (*UserResponse, error)
 	CreateUser(context.Context, *CreateUserRequest) (*UserResponse, error)
+	UpdateUserExpiryTime(context.Context, *UpdateUserRequest) (*UserResponse, error)
+	GetUsersByTgID(context.Context, *GetUserByTgIDRequest) (*MultipleUsersResponse, error)
+	GetUsersByEmail(context.Context, *GetUserByEmailRequest) (*MultipleUsersResponse, error)
+	GetAllUsers(context.Context, *EmptyRequest) (*MultipleUsersResponse, error)
+	GetUserHwidDevices(context.Context, *GetUserUUIDRequest) (*MultipleHwidResponse, error)
+	GetSRHHistory(context.Context, *EmptyRequest) (*SRHHistoryResponse, error)
+	DisableUser(context.Context, *GetUserUUIDRequest) (*UserResponse, error)
+	EnableUser(context.Context, *GetUserUUIDRequest) (*UserResponse, error)
 	mustEmbedUnimplementedRemnaServiceServer()
 }
 
@@ -88,14 +192,38 @@ type RemnaServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedRemnaServiceServer struct{}
 
-func (UnimplementedRemnaServiceServer) PingRemna(context.Context, *PingRequest) (*PingResponse, error) {
+func (UnimplementedRemnaServiceServer) PingRemna(context.Context, *EmptyRequest) (*PingResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method PingRemna not implemented")
 }
-func (UnimplementedRemnaServiceServer) GetUser(context.Context, *GetUserRequest) (*UserResponse, error) {
+func (UnimplementedRemnaServiceServer) GetUser(context.Context, *GetUserByUsernameRequest) (*UserResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetUser not implemented")
 }
 func (UnimplementedRemnaServiceServer) CreateUser(context.Context, *CreateUserRequest) (*UserResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method CreateUser not implemented")
+}
+func (UnimplementedRemnaServiceServer) UpdateUserExpiryTime(context.Context, *UpdateUserRequest) (*UserResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method UpdateUserExpiryTime not implemented")
+}
+func (UnimplementedRemnaServiceServer) GetUsersByTgID(context.Context, *GetUserByTgIDRequest) (*MultipleUsersResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetUsersByTgID not implemented")
+}
+func (UnimplementedRemnaServiceServer) GetUsersByEmail(context.Context, *GetUserByEmailRequest) (*MultipleUsersResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetUsersByEmail not implemented")
+}
+func (UnimplementedRemnaServiceServer) GetAllUsers(context.Context, *EmptyRequest) (*MultipleUsersResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetAllUsers not implemented")
+}
+func (UnimplementedRemnaServiceServer) GetUserHwidDevices(context.Context, *GetUserUUIDRequest) (*MultipleHwidResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetUserHwidDevices not implemented")
+}
+func (UnimplementedRemnaServiceServer) GetSRHHistory(context.Context, *EmptyRequest) (*SRHHistoryResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetSRHHistory not implemented")
+}
+func (UnimplementedRemnaServiceServer) DisableUser(context.Context, *GetUserUUIDRequest) (*UserResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method DisableUser not implemented")
+}
+func (UnimplementedRemnaServiceServer) EnableUser(context.Context, *GetUserUUIDRequest) (*UserResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method EnableUser not implemented")
 }
 func (UnimplementedRemnaServiceServer) mustEmbedUnimplementedRemnaServiceServer() {}
 func (UnimplementedRemnaServiceServer) testEmbeddedByValue()                      {}
@@ -119,7 +247,7 @@ func RegisterRemnaServiceServer(s grpc.ServiceRegistrar, srv RemnaServiceServer)
 }
 
 func _RemnaService_PingRemna_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(PingRequest)
+	in := new(EmptyRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -131,13 +259,13 @@ func _RemnaService_PingRemna_Handler(srv interface{}, ctx context.Context, dec f
 		FullMethod: RemnaService_PingRemna_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(RemnaServiceServer).PingRemna(ctx, req.(*PingRequest))
+		return srv.(RemnaServiceServer).PingRemna(ctx, req.(*EmptyRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _RemnaService_GetUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetUserRequest)
+	in := new(GetUserByUsernameRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -149,7 +277,7 @@ func _RemnaService_GetUser_Handler(srv interface{}, ctx context.Context, dec fun
 		FullMethod: RemnaService_GetUser_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(RemnaServiceServer).GetUser(ctx, req.(*GetUserRequest))
+		return srv.(RemnaServiceServer).GetUser(ctx, req.(*GetUserByUsernameRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -172,6 +300,150 @@ func _RemnaService_CreateUser_Handler(srv interface{}, ctx context.Context, dec 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _RemnaService_UpdateUserExpiryTime_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateUserRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RemnaServiceServer).UpdateUserExpiryTime(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: RemnaService_UpdateUserExpiryTime_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RemnaServiceServer).UpdateUserExpiryTime(ctx, req.(*UpdateUserRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _RemnaService_GetUsersByTgID_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUserByTgIDRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RemnaServiceServer).GetUsersByTgID(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: RemnaService_GetUsersByTgID_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RemnaServiceServer).GetUsersByTgID(ctx, req.(*GetUserByTgIDRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _RemnaService_GetUsersByEmail_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUserByEmailRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RemnaServiceServer).GetUsersByEmail(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: RemnaService_GetUsersByEmail_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RemnaServiceServer).GetUsersByEmail(ctx, req.(*GetUserByEmailRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _RemnaService_GetAllUsers_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(EmptyRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RemnaServiceServer).GetAllUsers(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: RemnaService_GetAllUsers_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RemnaServiceServer).GetAllUsers(ctx, req.(*EmptyRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _RemnaService_GetUserHwidDevices_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUserUUIDRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RemnaServiceServer).GetUserHwidDevices(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: RemnaService_GetUserHwidDevices_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RemnaServiceServer).GetUserHwidDevices(ctx, req.(*GetUserUUIDRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _RemnaService_GetSRHHistory_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(EmptyRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RemnaServiceServer).GetSRHHistory(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: RemnaService_GetSRHHistory_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RemnaServiceServer).GetSRHHistory(ctx, req.(*EmptyRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _RemnaService_DisableUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUserUUIDRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RemnaServiceServer).DisableUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: RemnaService_DisableUser_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RemnaServiceServer).DisableUser(ctx, req.(*GetUserUUIDRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _RemnaService_EnableUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUserUUIDRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RemnaServiceServer).EnableUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: RemnaService_EnableUser_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RemnaServiceServer).EnableUser(ctx, req.(*GetUserUUIDRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // RemnaService_ServiceDesc is the grpc.ServiceDesc for RemnaService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -190,6 +462,38 @@ var RemnaService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CreateUser",
 			Handler:    _RemnaService_CreateUser_Handler,
+		},
+		{
+			MethodName: "UpdateUserExpiryTime",
+			Handler:    _RemnaService_UpdateUserExpiryTime_Handler,
+		},
+		{
+			MethodName: "GetUsersByTgID",
+			Handler:    _RemnaService_GetUsersByTgID_Handler,
+		},
+		{
+			MethodName: "GetUsersByEmail",
+			Handler:    _RemnaService_GetUsersByEmail_Handler,
+		},
+		{
+			MethodName: "GetAllUsers",
+			Handler:    _RemnaService_GetAllUsers_Handler,
+		},
+		{
+			MethodName: "GetUserHwidDevices",
+			Handler:    _RemnaService_GetUserHwidDevices_Handler,
+		},
+		{
+			MethodName: "GetSRHHistory",
+			Handler:    _RemnaService_GetSRHHistory_Handler,
+		},
+		{
+			MethodName: "DisableUser",
+			Handler:    _RemnaService_DisableUser_Handler,
+		},
+		{
+			MethodName: "EnableUser",
+			Handler:    _RemnaService_EnableUser_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

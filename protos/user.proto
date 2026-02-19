@@ -30,7 +30,7 @@ message UserRequest{
 message UserResponse {
     string email = 1;
     bool active = 2;
-    bool has_referral = 3;
+    string referral_uuid = 3;
     bool trial = 4; 
     string user_uuid = 5;
     int64 tg_id = 6;
