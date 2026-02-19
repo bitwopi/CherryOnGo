@@ -113,7 +113,7 @@ func (a *App) SetupRouter() {
 	})
 	a.router.Route("/api/users", func(r chi.Router) {
 		r.Use(jwtcheck.New(*a.jm))
-		r.Post("/{uuid}", data.GetUser(a.logger, a.userClient))
+		r.Get("/{uuid}", data.GetUser(a.logger, a.userClient))
 	})
 	a.router.Route("/api/order", func(r chi.Router) {
 		r.Use(jwtcheck.New(*a.jm))
@@ -123,7 +123,7 @@ func (a *App) SetupRouter() {
 	})
 	a.router.Route("/api/remna}", func(r chi.Router) {
 		r.Use(jwtcheck.New(*a.jm))
-		r.Post("/users/by-email/{email}", remna.GetUsersByEmail(a.logger, a.remnaClient))
+		r.Get("/users/by-email/{email}", remna.GetUsersByEmail(a.logger, a.remnaClient))
 	})
 }
 
