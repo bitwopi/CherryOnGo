@@ -46,6 +46,18 @@ func (c *Client) GetUserByUsername(ctx context.Context, username string) (*remap
 	return result, nil
 }
 
+func (c *Client) GetInternalSquads(ctx context.Context) (*remapi.InternalSquadsResponse, error) {
+	resp, err := c.api.InternalSquad().GetInternalSquads(ctx)
+	if err != nil {
+		return nil, err
+	}
+	result, ok := resp.(*remapi.InternalSquadsResponse)
+	if !ok {
+		return nil, errors.New("undefined response")
+	}
+	return result, nil
+}
+
 func (c *Client) CreateUser(ctx context.Context, plan *RemnaPlan, username string, tgID string, email string) (*remapi.UserResponse, error) {
 	if len(username) == 0 {
 		username = uuid.New().String()

@@ -19,7 +19,7 @@ type Request struct {
 }
 
 type Response struct {
-	JWTToken string
+	JWT string
 }
 
 func New(log *zap.Logger, client *userclient.UserGRPCClient) http.HandlerFunc {
@@ -36,7 +36,20 @@ func New(log *zap.Logger, client *userclient.UserGRPCClient) http.HandlerFunc {
 			http.Error(w, "failed to authorize user", http.StatusBadRequest)
 			return
 		}
-		render.JSON(w, r, resp)
+
+		http.SetCookie(w, &http.Cookie{
+			Name:     "refresh_token",
+			Value:    resp.RefreshToken,
+			Path:     "/",
+			HttpOnly: true,
+			//TODO: set to true in production
+			Secure:   false,
+			SameSite: http.SameSiteLaxMode,
+		})
+
+		render.JSON(w, r, Response{
+			JWT: resp.AccessToken,
+		})
 
 	}
 }

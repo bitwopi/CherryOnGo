@@ -66,6 +66,7 @@ func (s *Server) SignUpUser(ctx context.Context, req *pb.AuthRequest) (*pb.JWTRe
 	if req.Login == "" || req.Password == "" {
 		return nil, status.Error(codes.InvalidArgument, "empty login or password")
 	}
+	roles := []db.Role{db.UserRole}
 	userUUID, err := s.dbManager.CreateUser(
 		&req.Login,
 		&req.Password,
@@ -74,6 +75,7 @@ func (s *Server) SignUpUser(ctx context.Context, req *pb.AuthRequest) (*pb.JWTRe
 		nil,
 		nil,
 		nil,
+		roles,
 	)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "failed to create user: %v", err)
@@ -159,6 +161,8 @@ func (s *Server) GetUserData(ctx context.Context, req *pb.GetUserRequest) (*pb.U
 	if err != nil {
 		return nil, status.Errorf(codes.NotFound, "failed to get user")
 	}
+	stringRoles := db.RolesToStrings(*user.Roles)
+
 	response := pb.UserResponse{
 		Email:        *user.Email,
 		Active:       user.Active,
@@ -168,7 +172,7 @@ func (s *Server) GetUserData(ctx context.Context, req *pb.GetUserRequest) (*pb.U
 		FirstName:    *user.FirstName,
 		PhotoUrl:     *user.PhotoURL,
 		Trial:        user.Trial,
-		IsAdmin:      user.IsAdmin,
+		Roles:        stringRoles,
 		ReferralUuid: *user.ReferralUUID,
 	}
 
@@ -179,6 +183,7 @@ func (s *Server) TgOAuth(ctx context.Context, req *pb.UserRequest) (*pb.JWTRespo
 	user, err := s.dbManager.GetUserByTgID(req.TgId)
 	var userUUID string
 	if err != nil {
+		roles := []db.Role{db.UserRole}
 		userUUID, err = s.dbManager.CreateUser(
 			nil,
 			nil,
@@ -187,6 +192,7 @@ func (s *Server) TgOAuth(ctx context.Context, req *pb.UserRequest) (*pb.JWTRespo
 			&req.Username,
 			&req.FirstName,
 			&req.PhotoUrl,
+			roles,
 		)
 		if err != nil {
 			return nil, status.Errorf(codes.Internal, "failed to create user: %v", err)

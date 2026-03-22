@@ -24,10 +24,15 @@ func TestGetUsersWithParameters(t *testing.T) {
 
 	email := gofakeit.Email()
 	tg := strconv.FormatInt(gofakeit.Int64(), 10)
+	plan := pb.Plan{
+		DeviceLimit: 3,
+		DayLimit:    30,
+		Squad:       "basic",
+	}
 	req := pb.CreateUserRequest{
 		Username: gofakeit.Username(),
 		Email:    email,
-		Plan:     "3:30",
+		Plan:     &plan,
 		Tgid:     tg,
 	}
 

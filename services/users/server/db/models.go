@@ -16,5 +16,24 @@ type User struct {
 	Active       bool      `gorm:"default:true"`
 	ReferralUUID *string   `gorm:"type:varchar(36)"`
 	Trial        bool      `gorm:"default:false"`
-	IsAdmin      bool      `gorm:"default:false"`
+	Roles        *[]Role   `gorm:"type:jsonb;serializer:json" json:"roles"`
+}
+
+type Role string
+
+const (
+	UserRole Role = "USER"
+	Admin    Role = "ADMIN"
+	Vless    Role = "VLESS"
+	Anime    Role = "ANIME"
+	Tables   Role = "TABLES"
+	Cloud    Role = "REFUNDED"
+)
+
+func RolesToStrings(roles []Role) []string {
+	result := make([]string, len(roles))
+	for i, r := range roles {
+		result[i] = string(r)
+	}
+	return result
 }

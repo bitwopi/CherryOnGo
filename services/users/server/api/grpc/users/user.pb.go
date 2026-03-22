@@ -292,7 +292,7 @@ type UserResponse struct {
 	FirstName     string                 `protobuf:"bytes,7,opt,name=first_name,json=firstName,proto3" json:"first_name,omitempty"`
 	Username      string                 `protobuf:"bytes,8,opt,name=username,proto3" json:"username,omitempty"`
 	PhotoUrl      string                 `protobuf:"bytes,9,opt,name=photo_url,json=photoUrl,proto3" json:"photo_url,omitempty"`
-	IsAdmin       bool                   `protobuf:"varint,10,opt,name=is_admin,json=isAdmin,proto3" json:"is_admin,omitempty"`
+	Roles         []string               `protobuf:"bytes,10,rep,name=roles,proto3" json:"roles,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -390,11 +390,11 @@ func (x *UserResponse) GetPhotoUrl() string {
 	return ""
 }
 
-func (x *UserResponse) GetIsAdmin() bool {
+func (x *UserResponse) GetRoles() []string {
 	if x != nil {
-		return x.IsAdmin
+		return x.Roles
 	}
-	return false
+	return nil
 }
 
 var File_user_proto protoreflect.FileDescriptor
@@ -418,7 +418,7 @@ const file_user_proto_rawDesc = "" +
 	"\n" +
 	"first_name\x18\x02 \x01(\tR\tfirstName\x12\x1b\n" +
 	"\tphoto_url\x18\x03 \x01(\tR\bphotoUrl\x12\x1a\n" +
-	"\busername\x18\x04 \x01(\tR\busername\"\x9c\x02\n" +
+	"\busername\x18\x04 \x01(\tR\busername\"\x97\x02\n" +
 	"\fUserResponse\x12\x14\n" +
 	"\x05email\x18\x01 \x01(\tR\x05email\x12\x16\n" +
 	"\x06active\x18\x02 \x01(\bR\x06active\x12#\n" +
@@ -429,9 +429,9 @@ const file_user_proto_rawDesc = "" +
 	"\n" +
 	"first_name\x18\a \x01(\tR\tfirstName\x12\x1a\n" +
 	"\busername\x18\b \x01(\tR\busername\x12\x1b\n" +
-	"\tphoto_url\x18\t \x01(\tR\bphotoUrl\x12\x19\n" +
-	"\bis_admin\x18\n" +
-	" \x01(\bR\aisAdmin2\x9e\x02\n" +
+	"\tphoto_url\x18\t \x01(\tR\bphotoUrl\x12\x14\n" +
+	"\x05roles\x18\n" +
+	" \x03(\tR\x05roles2\x9e\x02\n" +
 	"\vUserService\x124\n" +
 	"\n" +
 	"SignUpUser\x12\x12.users.AuthRequest\x1a\x12.users.JWTResponse\x122\n" +

@@ -10,6 +10,7 @@ import (
 	"strconv"
 
 	"github.com/Jolymmiles/remnawave-api-go/v2/api"
+	"github.com/google/uuid"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -68,10 +69,15 @@ func (r *RemnaGRPCServer) GetUser(ctx context.Context, req *pb.GetUserByUsername
 	return result, nil
 
 }
+
 func (r *RemnaGRPCServer) CreateUser(ctx context.Context, req *pb.CreateUserRequest) (*pb.UserResponse, error) {
 	log.Println("CreateUser called", "req", req)
 	defer log.Println("CreateUser finished")
-	resp, err := r.remnaClient.CreateUser(ctx, client.Plans[req.Plan], req.Username, req.Tgid, req.Email)
+	plan, err := r.getPlan(ctx, req.Plan)
+	if err != nil {
+		return nil, err
+	}
+	resp, err := r.remnaClient.CreateUser(ctx, plan, req.Username, req.Tgid, req.Email)
 	if err != nil {
 		log.Println(err)
 		return nil, status.Error(codes.Internal, err.Error())
@@ -82,9 +88,9 @@ func (r *RemnaGRPCServer) CreateUser(ctx context.Context, req *pb.CreateUserRequ
 
 func (r *RemnaGRPCServer) UpdateUserExpiryTime(ctx context.Context, req *pb.UpdateUserRequest) (*pb.UserResponse, error) {
 	log.Println("UpdateUserExpiryTime called", "req", req)
-	plan := client.Plans[req.Plan]
-	if plan == nil {
-		return nil, status.Error(codes.InvalidArgument, "invalid plan")
+	plan, err := r.getPlan(ctx, req.Plan)
+	if err != nil {
+		return nil, err
 	}
 	resp, err := r.remnaClient.UpdateUserExpiryTime(ctx, plan, req.Username, req.Uuid)
 	if err != nil {
@@ -226,6 +232,35 @@ func convertUserResponse(resp api.User) *pb.UserResponse {
 	return &result
 }
 
+func (r *RemnaGRPCServer) getPlan(ctx context.Context, reqPlan *pb.Plan) (*client.RemnaPlan, error) {
+	result, err := uuid.Parse(reqPlan.Squad)
+	if err != nil {
+		squadResp, err := r.remnaClient.GetInternalSquads(ctx)
+		if err != nil {
+			return nil, status.Error(codes.InvalidArgument, err.Error())
+		}
+		for _, sq := range squadResp.Response.InternalSquads {
+			if sq.Name == reqPlan.Squad {
+				result = sq.UUID
+			}
+		}
+	}
+	if result == uuid.Nil {
+		return nil, status.Error(codes.InvalidArgument, err.Error())
+	}
+	plan := client.RemnaPlan{
+		DeviceLimit: int(reqPlan.DeviceLimit),
+		DayLimit:    int(reqPlan.DayLimit),
+		Squad:       result,
+	}
+
+	return &plan, nil
+}
+
+func (r *RemnaGRPCServer) Stop() {
+	r.grpcServer.GracefulStop()
+}
+
 func convertMultipleUsersResponse(resp api.UsersResponse) *pb.MultipleUsersResponse {
 	ur := resp.Response
 	var users []*pb.UserResponse
@@ -235,8 +270,4 @@ func convertMultipleUsersResponse(resp api.UsersResponse) *pb.MultipleUsersRespo
 	return &pb.MultipleUsersResponse{
 		Users: users,
 	}
-}
-
-func (r *RemnaGRPCServer) Stop() {
-	r.grpcServer.GracefulStop()
 }

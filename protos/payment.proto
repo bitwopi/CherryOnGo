@@ -13,6 +13,9 @@ message PaymentStatusChanged{
     string status = 3;
 }
 
+message PaymentMessage{}
+message CreatePaymentMessage{}
+
 service PaymentService{
     rpc CreatePayment(CreatePaymentMessage) returns (PaymentMessage);
 }

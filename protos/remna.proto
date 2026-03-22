@@ -26,11 +26,17 @@ message GetUserUUIDRequest{
     string uuid = 1;
 }
 
+message Plan{
+    int64 device_limit = 1;
+    int64 day_limit = 2;
+    string squad = 3;
+}
+
 message CreateUserRequest{
     string username = 1;
     string email = 2;
     string tgid = 3;
-    string plan = 4;
+    Plan plan = 4;
 }
 
 message UserResponse{
@@ -47,7 +53,7 @@ message UserResponse{
 message UpdateUserRequest{
     string username = 1;
     string uuid = 2;
-    string plan = 3;
+    Plan plan = 3;
 }
 
 message MultipleUsersResponse{

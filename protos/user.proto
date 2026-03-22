@@ -37,7 +37,7 @@ message UserResponse {
     string first_name = 7;
     string username = 8;
     string photo_url = 9;
-    bool is_admin =10;
+    repeated string roles = 10;
 }
 
 service UserService{

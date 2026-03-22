@@ -18,7 +18,8 @@ type DBManager interface {
 		referral *string,
 		username *string,
 		firstName *string,
-		photoURL *string) (string, error)
+		photoURL *string,
+		roles []Role) (string, error)
 	GetUserByEmail(email string) (*User, error)
 	GetUserByUUID(uuid string) (*User, error)
 	GetUserByTgID(tgID int64) (*User, error)
@@ -53,7 +54,8 @@ func (m *PgManager) CreateUser(
 	referral *string,
 	username *string,
 	firsName *string,
-	photoURL *string) (string, error) {
+	photoURL *string,
+	roles []Role) (string, error) {
 	user := User{
 		UUID:         uuid.NewString(),
 		Email:        email,

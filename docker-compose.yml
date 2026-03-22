@@ -2,6 +2,7 @@ services:
   shop_cards:
     env_file:
     - .env
+    restart: always
     build:
       context: ./services/shop_cards
       dockerfile: Dockerfile.shopcards
@@ -14,6 +15,7 @@ services:
   users:
     env_file:
     - .env
+    restart: always
     build:
       context: ./services/users
       dockerfile: Dockerfile.users
@@ -28,6 +30,7 @@ services:
   remna:
     env_file:
     - .env
+    restart: always
     build:
       context: ./services/remnavawe
       dockerfile: Dockerfile.remna
@@ -37,6 +40,7 @@ services:
   orders:
     env_file:
     - .env
+    restart: always
     build:
       context: ./services/orders
       dockerfile: Dockerfile.orders
@@ -53,6 +57,7 @@ services:
   gateway:
     env_file:
     - .env
+    restart: always
     build:
       context: ./services/gateway
       dockerfile: Dockerfile.gateway

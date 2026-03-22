@@ -19,6 +19,7 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
+	cors "github.com/go-chi/cors"
 	"go.uber.org/zap"
 )
 
@@ -99,6 +100,12 @@ func (a *App) SetupMiddleware() {
 }
 
 func (a *App) SetupRouter() {
+	a.router.Use(cors.Handler(cors.Options{
+		AllowedOrigins:   []string{"https://main.cherryon.art"},
+		AllowedMethods:   []string{"GET", "POST", "OPTIONS"},
+		AllowedHeaders:   []string{"Authorization", "Content-Type"},
+		AllowCredentials: true,
+	}))
 	a.router.Get("/", func(w http.ResponseWriter, r *http.Request) {
 		http.ServeFile(w, r, "index.html")
 	})
