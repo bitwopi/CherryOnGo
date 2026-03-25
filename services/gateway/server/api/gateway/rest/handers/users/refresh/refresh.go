@@ -16,6 +16,14 @@ type Response struct {
 	JWT string `json:"jwt"`
 }
 
+// @Summary Обновление jwt токена
+// @Description Возвращает jwt token
+// @Tags auth
+// @Accept json
+// @Produce json
+// @Param X-Refresh-Token header string true "Refresh token"
+// @Success 200 {object} Response
+// @Router /api/auth/refresh [post]
 func RefreshJWT(log *zap.Logger, client *userclient.UserGRPCClient) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		rToken, err := r.Cookie("refresh_token")

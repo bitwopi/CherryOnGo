@@ -1,6 +1,7 @@
 package data
 
 import (
+	pb "gateway/server/api/gateway/grpc/gen/users"
 	userclient "gateway/server/api/gateway/grpc/user_client"
 	"net/http"
 
@@ -10,6 +11,19 @@ import (
 	"go.uber.org/zap"
 )
 
+type UserResponseDTO struct {
+	pb.UserResponse
+}
+
+// @Summary Обновление статуса заказа
+// @Description Возвращает объект заказа
+// @Tags users
+// @Accept json
+// @Produce json
+// @Param uuid path string true "uuid пользователя"
+// @Param Authorization header string true "Bearer token"
+// @Success 200 {object} UserResponseDTO
+// @Router /api/users/{uuid} [get]
 func GetUser(log *zap.Logger, client *userclient.UserGRPCClient) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		userUuid := chi.URLParam(r, "uuid")

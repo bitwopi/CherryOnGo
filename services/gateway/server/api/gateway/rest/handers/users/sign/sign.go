@@ -17,6 +17,14 @@ type Response struct {
 	JWT string `json:"jwt"`
 }
 
+// @Summary Аутентификация пользователя
+// @Description Возвращает jwt token
+// @Tags auth
+// @Accept json
+// @Produce json
+// @Param request body Request true "Логин, пароль"
+// @Success 200 {object} Response
+// @Router /api/auth/login [post]
 func Auth(log *zap.Logger, client *userclient.UserGRPCClient) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var req Request
@@ -48,6 +56,14 @@ func Auth(log *zap.Logger, client *userclient.UserGRPCClient) http.HandlerFunc {
 	}
 }
 
+// @Summary Регистрация пользователя
+// @Description Возвращает jwt token
+// @Tags auth
+// @Accept json
+// @Produce json
+// @Param request body Request true "Логин, пароль"
+// @Success 200 {object} Response
+// @Router /api/auth/register [post]
 func SignUp(log *zap.Logger, client *userclient.UserGRPCClient) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var req Request

@@ -1,0 +1,390 @@
+basePath: /
+definitions:
+  gateway_server_api_gateway_grpc_gen_order.CreateOrderRequest:
+    properties:
+      customer_uuid:
+        type: string
+      price:
+        type: number
+      shop_card:
+        $ref: '#/definitions/gateway_server_api_gateway_grpc_gen_order.ShopCard'
+      status:
+        type: string
+    type: object
+  gateway_server_api_gateway_grpc_gen_order.OrderResponse:
+    properties:
+      created_at:
+        $ref: '#/definitions/timestamppb.Timestamp'
+      customer_uuid:
+        type: string
+      price:
+        type: number
+      shop_card:
+        $ref: '#/definitions/gateway_server_api_gateway_grpc_gen_order.ShopCard'
+      status:
+        type: string
+      updated_at:
+        $ref: '#/definitions/timestamppb.Timestamp'
+      uuid:
+        type: string
+    type: object
+  gateway_server_api_gateway_grpc_gen_order.OrderStatusRequest:
+    properties:
+      order_uuid:
+        type: string
+      status:
+        type: string
+    type: object
+  gateway_server_api_gateway_grpc_gen_order.ShopCard:
+    properties:
+      category:
+        type: string
+      cover_url:
+        type: string
+      created_at:
+        $ref: '#/definitions/timestamppb.Timestamp'
+      description:
+        type: string
+      name:
+        type: string
+      price:
+        type: number
+      uuid:
+        type: string
+      visible:
+        type: boolean
+    type: object
+  gateway_server_api_gateway_grpc_gen_remna.UserResponse:
+    properties:
+      device_limit:
+        type: integer
+      email:
+        type: string
+      expiry_time:
+        $ref: '#/definitions/timestamppb.Timestamp'
+      internal_squads:
+        items:
+          type: string
+        type: array
+      sub_url:
+        type: string
+      tgid:
+        type: string
+      username:
+        type: string
+      uuid:
+        type: string
+    type: object
+  server_api_gateway_rest_handers_remna.MultipleUsersResponseDTO:
+    properties:
+      users:
+        items:
+          $ref: '#/definitions/gateway_server_api_gateway_grpc_gen_remna.UserResponse'
+        type: array
+    type: object
+  server_api_gateway_rest_handers_users_data.UserResponseDTO:
+    properties:
+      active:
+        type: boolean
+      email:
+        type: string
+      first_name:
+        type: string
+      photo_url:
+        type: string
+      referral_uuid:
+        type: string
+      roles:
+        items:
+          type: string
+        type: array
+      tg_id:
+        type: integer
+      trial:
+        type: boolean
+      user_uuid:
+        type: string
+      username:
+        type: string
+    type: object
+  server_api_gateway_rest_handers_users_refresh.Response:
+    properties:
+      jwt:
+        type: string
+    type: object
+  server_api_gateway_rest_handers_users_sign.Request:
+    properties:
+      login:
+        type: string
+      password:
+        type: string
+    type: object
+  server_api_gateway_rest_handers_users_sign.Response:
+    properties:
+      jwt:
+        type: string
+    type: object
+  server_api_gateway_rest_handers_users_tg_auth.Request:
+    properties:
+      authDate:
+        type: string
+      firstName:
+        type: string
+      hash:
+        type: string
+      id:
+        format: int64
+        type: integer
+      photoURL:
+        type: string
+      username:
+        type: string
+    type: object
+  server_api_gateway_rest_handers_users_tg_auth.Response:
+    properties:
+      jwt:
+        type: string
+    type: object
+  timestamppb.Timestamp:
+    properties:
+      nanos:
+        description: |-
+          Non-negative fractions of a second at nanosecond resolution. This field is
+          the nanosecond portion of the duration, not an alternative to seconds.
+          Negative second values with fractions must still have non-negative nanos
+          values that count forward in time. Must be between 0 and 999,999,999
+          inclusive.
+        type: integer
+      seconds:
+        description: |-
+          Represents seconds of UTC time since Unix epoch 1970-01-01T00:00:00Z. Must
+          be between -315576000000 and 315576000000 inclusive (which corresponds to
+          0001-01-01T00:00:00Z to 9999-12-31T23:59:59Z).
+        type: integer
+    type: object
+info:
+  contact: {}
+  description: API Gateway для CherryOnGo
+  title: CherryOnGo API
+  version: "1.0"
+paths:
+  /api/auth/login:
+    post:
+      consumes:
+      - application/json
+      description: Возвращает jwt token
+      parameters:
+      - description: Логин, пароль
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/server_api_gateway_rest_handers_users_sign.Request'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/server_api_gateway_rest_handers_users_sign.Response'
+      summary: Аутентификация пользователя
+      tags:
+      - auth
+  /api/auth/refresh:
+    post:
+      consumes:
+      - application/json
+      description: Возвращает jwt token
+      parameters:
+      - description: Refresh token
+        in: header
+        name: X-Refresh-Token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/server_api_gateway_rest_handers_users_refresh.Response'
+      summary: Обновление jwt токена
+      tags:
+      - auth
+  /api/auth/register:
+    post:
+      consumes:
+      - application/json
+      description: Возвращает jwt token
+      parameters:
+      - description: Логин, пароль
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/server_api_gateway_rest_handers_users_sign.Request'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/server_api_gateway_rest_handers_users_sign.Response'
+      summary: Регистрация пользователя
+      tags:
+      - auth
+  /api/auth/telegram:
+    post:
+      consumes:
+      - application/json
+      description: Возвращает jwt token
+      parameters:
+      - description: Данные тг
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/server_api_gateway_rest_handers_users_tg_auth.Request'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/server_api_gateway_rest_handers_users_tg_auth.Response'
+      summary: Аутентификация пользователя черещ тг
+      tags:
+      - auth
+  /api/order/create:
+    post:
+      consumes:
+      - application/json
+      description: Возвращает объект заказа
+      parameters:
+      - description: Данные заказа
+        in: body
+        name: order
+        required: true
+        schema:
+          $ref: '#/definitions/gateway_server_api_gateway_grpc_gen_order.CreateOrderRequest'
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/gateway_server_api_gateway_grpc_gen_order.OrderResponse'
+      summary: Создание заказа
+      tags:
+      - order
+  /api/order/get/{order_uuid}:
+    get:
+      consumes:
+      - application/json
+      description: Возвращает объект заказа
+      parameters:
+      - description: uuid заказа
+        in: path
+        name: order_uuid
+        required: true
+        type: string
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/gateway_server_api_gateway_grpc_gen_order.OrderResponse'
+      summary: Обновление статуса заказа
+      tags:
+      - order
+  /api/order/update/status:
+    post:
+      consumes:
+      - application/json
+      description: Возвращает объект заказа
+      parameters:
+      - description: Запрос на изменение статуса
+        in: body
+        name: order
+        required: true
+        schema:
+          $ref: '#/definitions/gateway_server_api_gateway_grpc_gen_order.OrderStatusRequest'
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/gateway_server_api_gateway_grpc_gen_order.OrderResponse'
+      summary: Обновление статуса заказа
+      tags:
+      - order
+  /api/remna/users/by-email/{email}:
+    get:
+      consumes:
+      - application/json
+      description: Возвращает объект заказа
+      parameters:
+      - description: email пользователя
+        in: path
+        name: email
+        required: true
+        type: string
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/server_api_gateway_rest_handers_remna.MultipleUsersResponseDTO'
+      summary: Обновление статуса заказа
+      tags:
+      - remna
+  /api/users/{uuid}:
+    get:
+      consumes:
+      - application/json
+      description: Возвращает объект заказа
+      parameters:
+      - description: uuid пользователя
+        in: path
+        name: uuid
+        required: true
+        type: string
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/server_api_gateway_rest_handers_users_data.UserResponseDTO'
+      summary: Обновление статуса заказа
+      tags:
+      - users
+swagger: "2.0"

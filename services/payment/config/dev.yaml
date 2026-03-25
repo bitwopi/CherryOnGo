@@ -1,0 +1,9 @@
+env: "dev"
+dsn: "host=${PAYMENT_DB_HOST} user=${DB_USER} password=${DB_PASS} dbname=${PAYMENT_DB_NAME} port=${DB_PORT} sslmode=disable"
+grpc:
+  host: "${HOST}"
+  port: "${PAYMENT_SERVICE_PORT}"
+  timeout: ${PAYMENT_SERVICE_TIMEOUT}
+yk:
+  shop_id: "${YK_SHOP_ID}"
+  secret: "${YK_SECRET}"

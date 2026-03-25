@@ -1,0 +1,583 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "API Gateway для CherryOnGo",
+        "title": "CherryOnGo API",
+        "contact": {},
+        "version": "1.0"
+    },
+    "basePath": "/",
+    "paths": {
+        "/api/auth/login": {
+            "post": {
+                "description": "Возвращает jwt token",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Аутентификация пользователя",
+                "parameters": [
+                    {
+                        "description": "Логин, пароль",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/server_api_gateway_rest_handers_users_sign.Request"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/server_api_gateway_rest_handers_users_sign.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/auth/refresh": {
+            "post": {
+                "description": "Возвращает jwt token",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Обновление jwt токена",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Refresh token",
+                        "name": "X-Refresh-Token",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/server_api_gateway_rest_handers_users_refresh.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/auth/register": {
+            "post": {
+                "description": "Возвращает jwt token",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Регистрация пользователя",
+                "parameters": [
+                    {
+                        "description": "Логин, пароль",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/server_api_gateway_rest_handers_users_sign.Request"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/server_api_gateway_rest_handers_users_sign.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/auth/telegram": {
+            "post": {
+                "description": "Возвращает jwt token",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Аутентификация пользователя черещ тг",
+                "parameters": [
+                    {
+                        "description": "Данные тг",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/server_api_gateway_rest_handers_users_tg_auth.Request"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/server_api_gateway_rest_handers_users_tg_auth.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/order/create": {
+            "post": {
+                "description": "Возвращает объект заказа",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "order"
+                ],
+                "summary": "Создание заказа",
+                "parameters": [
+                    {
+                        "description": "Данные заказа",
+                        "name": "order",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/gateway_server_api_gateway_grpc_gen_order.CreateOrderRequest"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "Bearer token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/gateway_server_api_gateway_grpc_gen_order.OrderResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/order/get/{order_uuid}": {
+            "get": {
+                "description": "Возвращает объект заказа",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "order"
+                ],
+                "summary": "Обновление статуса заказа",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "uuid заказа",
+                        "name": "order_uuid",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Bearer token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/gateway_server_api_gateway_grpc_gen_order.OrderResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/order/update/status": {
+            "post": {
+                "description": "Возвращает объект заказа",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "order"
+                ],
+                "summary": "Обновление статуса заказа",
+                "parameters": [
+                    {
+                        "description": "Запрос на изменение статуса",
+                        "name": "order",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/gateway_server_api_gateway_grpc_gen_order.OrderStatusRequest"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "Bearer token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/gateway_server_api_gateway_grpc_gen_order.OrderResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/remna/users/by-email/{email}": {
+            "get": {
+                "description": "Возвращает объект заказа",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "remna"
+                ],
+                "summary": "Обновление статуса заказа",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "email пользователя",
+                        "name": "email",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Bearer token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/server_api_gateway_rest_handers_remna.MultipleUsersResponseDTO"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/users/{uuid}": {
+            "get": {
+                "description": "Возвращает объект заказа",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "users"
+                ],
+                "summary": "Обновление статуса заказа",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "uuid пользователя",
+                        "name": "uuid",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Bearer token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/server_api_gateway_rest_handers_users_data.UserResponseDTO"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "gateway_server_api_gateway_grpc_gen_order.CreateOrderRequest": {
+            "type": "object",
+            "properties": {
+                "customer_uuid": {
+                    "type": "string"
+                },
+                "price": {
+                    "type": "number"
+                },
+                "shop_card": {
+                    "$ref": "#/definitions/gateway_server_api_gateway_grpc_gen_order.ShopCard"
+                },
+                "status": {
+                    "type": "string"
+                }
+            }
+        },
+        "gateway_server_api_gateway_grpc_gen_order.OrderResponse": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "$ref": "#/definitions/timestamppb.Timestamp"
+                },
+                "customer_uuid": {
+                    "type": "string"
+                },
+                "price": {
+                    "type": "number"
+                },
+                "shop_card": {
+                    "$ref": "#/definitions/gateway_server_api_gateway_grpc_gen_order.ShopCard"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "$ref": "#/definitions/timestamppb.Timestamp"
+                },
+                "uuid": {
+                    "type": "string"
+                }
+            }
+        },
+        "gateway_server_api_gateway_grpc_gen_order.OrderStatusRequest": {
+            "type": "object",
+            "properties": {
+                "order_uuid": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                }
+            }
+        },
+        "gateway_server_api_gateway_grpc_gen_order.ShopCard": {
+            "type": "object",
+            "properties": {
+                "category": {
+                    "type": "string"
+                },
+                "cover_url": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "$ref": "#/definitions/timestamppb.Timestamp"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "price": {
+                    "type": "number"
+                },
+                "uuid": {
+                    "type": "string"
+                },
+                "visible": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "gateway_server_api_gateway_grpc_gen_remna.UserResponse": {
+            "type": "object",
+            "properties": {
+                "device_limit": {
+                    "type": "integer"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "expiry_time": {
+                    "$ref": "#/definitions/timestamppb.Timestamp"
+                },
+                "internal_squads": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "sub_url": {
+                    "type": "string"
+                },
+                "tgid": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                },
+                "uuid": {
+                    "type": "string"
+                }
+            }
+        },
+        "server_api_gateway_rest_handers_remna.MultipleUsersResponseDTO": {
+            "type": "object",
+            "properties": {
+                "users": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/gateway_server_api_gateway_grpc_gen_remna.UserResponse"
+                    }
+                }
+            }
+        },
+        "server_api_gateway_rest_handers_users_data.UserResponseDTO": {
+            "type": "object",
+            "properties": {
+                "active": {
+                    "type": "boolean"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "first_name": {
+                    "type": "string"
+                },
+                "photo_url": {
+                    "type": "string"
+                },
+                "referral_uuid": {
+                    "type": "string"
+                },
+                "roles": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "tg_id": {
+                    "type": "integer"
+                },
+                "trial": {
+                    "type": "boolean"
+                },
+                "user_uuid": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "server_api_gateway_rest_handers_users_refresh.Response": {
+            "type": "object",
+            "properties": {
+                "jwt": {
+                    "type": "string"
+                }
+            }
+        },
+        "server_api_gateway_rest_handers_users_sign.Request": {
+            "type": "object",
+            "properties": {
+                "login": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                }
+            }
+        },
+        "server_api_gateway_rest_handers_users_sign.Response": {
+            "type": "object",
+            "properties": {
+                "jwt": {
+                    "type": "string"
+                }
+            }
+        },
+        "server_api_gateway_rest_handers_users_tg_auth.Request": {
+            "type": "object",
+            "properties": {
+                "authDate": {
+                    "type": "string"
+                },
+                "firstName": {
+                    "type": "string"
+                },
+                "hash": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "photoURL": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "server_api_gateway_rest_handers_users_tg_auth.Response": {
+            "type": "object",
+            "properties": {
+                "jwt": {
+                    "type": "string"
+                }
+            }
+        },
+        "timestamppb.Timestamp": {
+            "type": "object",
+            "properties": {
+                "nanos": {
+                    "description": "Non-negative fractions of a second at nanosecond resolution. This field is\nthe nanosecond portion of the duration, not an alternative to seconds.\nNegative second values with fractions must still have non-negative nanos\nvalues that count forward in time. Must be between 0 and 999,999,999\ninclusive.",
+                    "type": "integer"
+                },
+                "seconds": {
+                    "description": "Represents seconds of UTC time since Unix epoch 1970-01-01T00:00:00Z. Must\nbe between -315576000000 and 315576000000 inclusive (which corresponds to\n0001-01-01T00:00:00Z to 9999-12-31T23:59:59Z).",
+                    "type": "integer"
+                }
+            }
+        }
+    }
+}

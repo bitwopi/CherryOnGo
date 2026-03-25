@@ -17,9 +17,12 @@ import (
 	jwtmanager "gateway/server/jwt_manager"
 	"net/http"
 
+	_ "gateway/docs"
+
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	cors "github.com/go-chi/cors"
+	httpSwagger "github.com/swaggo/http-swagger"
 	"go.uber.org/zap"
 )
 
@@ -126,12 +129,13 @@ func (a *App) SetupRouter() {
 		r.Use(jwtcheck.New(*a.jm))
 		r.Post("/create", handlers.CreateOrder(a.logger, a.orderClient))
 		r.Post("/update/status", handlers.UpdateOrderStatus(a.logger, a.orderClient))
-		r.Get("/get", handlers.GetOrder(a.logger, a.orderClient))
+		r.Get("/get/{order_uuid}", handlers.GetOrder(a.logger, a.orderClient))
 	})
 	a.router.Route("/api/remna}", func(r chi.Router) {
 		r.Use(jwtcheck.New(*a.jm))
 		r.Get("/users/by-email/{email}", remna.GetUsersByEmail(a.logger, a.remnaClient))
 	})
+	a.router.Get("/swagger/*", httpSwagger.WrapHandler)
 }
 
 func (a *App) Stop(ctx context.Context) error {

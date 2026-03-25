@@ -22,6 +22,14 @@ type Response struct {
 	JWT string
 }
 
+// @Summary Аутентификация пользователя черещ тг
+// @Description Возвращает jwt token
+// @Tags auth
+// @Accept json
+// @Produce json
+// @Param request body Request true "Данные тг"
+// @Success 200 {object} Response
+// @Router /api/auth/telegram [post]
 func New(log *zap.Logger, client *userclient.UserGRPCClient) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var req Request

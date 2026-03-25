@@ -1,3 +1,7 @@
+// @title CherryOnGo API
+// @version 1.0
+// @description API Gateway для CherryOnGo
+// @BasePath /
 package main
 
 import (

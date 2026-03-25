@@ -1,21 +1,56 @@
 syntax = "proto3";
 package payment;
 option go_package = "/payment";
+import "google/protobuf/struct.proto";
+import "google/protobuf/timestamp.proto";
 
-message PaymentCreated{
+
+message CreatePaymentRequest{
+    Amount amount = 1;
+    string method = 2;
+    string description = 3;
+    string return_url = 4;
+    google.protobuf.Struct metadata = 5;
+}
+
+message Amount{
+    float64 value = 1;
+    string currency = 2;
+}
+
+message GetPaymentRequest{
     string payment_uuid = 1;
-    string order_uuid = 2;
-    string payment_url = 3;
 }
 
-message PaymentStatusChanged{
-    string order_uuid = 2;
+message PaymentResponse{
+    string uuid = 1;
+    string status = 2;
+    Amount amount = 3;
+    Amount income = 4;
+    google.protobuf.Timestamp created_at = 5;
+    string provider = 6;
+    google.protobuf.Struct metadata = 7;
+}
+
+
+message RefundRequest{
+    string payment_uuid = 1;
+    Amount amount = 2;
+    string description = 3;
+}
+
+message RefundResponse{
+    string id = 1;
+    string payment_uuid = 2;
     string status = 3;
+    Amount amount = 4;
+    google.protobuf.Timestamp created_at = 5;
+    string provider = 6;
+    google.protobuf.Struct metadata = 7;
 }
-
-message PaymentMessage{}
-message CreatePaymentMessage{}
 
 service PaymentService{
-    rpc CreatePayment(CreatePaymentMessage) returns (PaymentMessage);
+    rpc CreatePayment(CreatePaymentRequest) returns (PaymentResponse);
+    rpc GetPayment(GetPaymentRequest) returns (PaymentResponse);
+    
 }

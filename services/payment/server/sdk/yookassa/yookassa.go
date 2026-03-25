@@ -45,6 +45,7 @@ func (y *Yookassa) CreatePayment(req sdk.CreatePaymentRequest) (*sdk.Payment, er
 
 	return convertPayment(payment)
 }
+
 func (y *Yookassa) ConfirmPayment(paymentID string) (*sdk.Payment, error) {
 	handler := yookassa.NewPaymentHandler(y.client)
 

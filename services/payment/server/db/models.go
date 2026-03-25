@@ -11,6 +11,7 @@ type Payment struct {
 	OrderUUID    string        `gorm:"type:varchar(36)"`
 	Amount       float64       `gorm:"type:decimal"`
 	Income       float64       `gorm:"type:decimal"`
+	Currency     string        `gorm:"type:varchar(10)"`
 	Provider     string        `gorm:"type:varchar(18)"`
 	Status       PaymentStatus `gorm:"type:varchar(18)"`
 }
