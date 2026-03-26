@@ -14,7 +14,7 @@ message CreatePaymentRequest{
 }
 
 message Amount{
-    float64 value = 1;
+    float value = 1;
     string currency = 2;
 }
 

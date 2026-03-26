@@ -10,6 +10,7 @@ import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	emptypb "google.golang.org/protobuf/types/known/emptypb"
+	structpb "google.golang.org/protobuf/types/known/structpb"
 	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
 	reflect "reflect"
 	sync "sync"
@@ -31,6 +32,7 @@ type ShopCardRequest struct {
 	Price         float32                `protobuf:"fixed32,4,opt,name=price,proto3" json:"price,omitempty"`
 	Visible       bool                   `protobuf:"varint,5,opt,name=visible,proto3" json:"visible,omitempty"`
 	CoverUrl      string                 `protobuf:"bytes,6,opt,name=cover_url,json=coverUrl,proto3" json:"cover_url,omitempty"`
+	Metadata      *structpb.Struct       `protobuf:"bytes,7,opt,name=metadata,proto3" json:"metadata,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -107,6 +109,13 @@ func (x *ShopCardRequest) GetCoverUrl() string {
 	return ""
 }
 
+func (x *ShopCardRequest) GetMetadata() *structpb.Struct {
+	if x != nil {
+		return x.Metadata
+	}
+	return nil
+}
+
 type UpdateShopCardRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Uuid          string                 `protobuf:"bytes,1,opt,name=uuid,proto3" json:"uuid,omitempty"`
@@ -116,6 +125,7 @@ type UpdateShopCardRequest struct {
 	Price         float32                `protobuf:"fixed32,5,opt,name=price,proto3" json:"price,omitempty"`
 	Visible       bool                   `protobuf:"varint,6,opt,name=visible,proto3" json:"visible,omitempty"`
 	CoverUrl      string                 `protobuf:"bytes,7,opt,name=cover_url,json=coverUrl,proto3" json:"cover_url,omitempty"`
+	Metadata      *structpb.Struct       `protobuf:"bytes,8,opt,name=metadata,proto3" json:"metadata,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -199,6 +209,13 @@ func (x *UpdateShopCardRequest) GetCoverUrl() string {
 	return ""
 }
 
+func (x *UpdateShopCardRequest) GetMetadata() *structpb.Struct {
+	if x != nil {
+		return x.Metadata
+	}
+	return nil
+}
+
 type ShopCardUUIDRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	ShopCardUuid  string                 `protobuf:"bytes,1,opt,name=shop_card_uuid,json=shopCardUuid,proto3" json:"shop_card_uuid,omitempty"`
@@ -253,6 +270,7 @@ type ShopCardResponse struct {
 	Visible       bool                   `protobuf:"varint,6,opt,name=visible,proto3" json:"visible,omitempty"`
 	CoverUrl      string                 `protobuf:"bytes,7,opt,name=cover_url,json=coverUrl,proto3" json:"cover_url,omitempty"`
 	CreatedAt     *timestamppb.Timestamp `protobuf:"bytes,8,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
+	Metadata      *structpb.Struct       `protobuf:"bytes,9,opt,name=metadata,proto3" json:"metadata,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -343,18 +361,70 @@ func (x *ShopCardResponse) GetCreatedAt() *timestamppb.Timestamp {
 	return nil
 }
 
+func (x *ShopCardResponse) GetMetadata() *structpb.Struct {
+	if x != nil {
+		return x.Metadata
+	}
+	return nil
+}
+
+type MultipleResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	ShopCards     []*ShopCardResponse    `protobuf:"bytes,1,rep,name=shop_cards,json=shopCards,proto3" json:"shop_cards,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *MultipleResponse) Reset() {
+	*x = MultipleResponse{}
+	mi := &file_shop_card_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *MultipleResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*MultipleResponse) ProtoMessage() {}
+
+func (x *MultipleResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_shop_card_proto_msgTypes[4]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use MultipleResponse.ProtoReflect.Descriptor instead.
+func (*MultipleResponse) Descriptor() ([]byte, []int) {
+	return file_shop_card_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *MultipleResponse) GetShopCards() []*ShopCardResponse {
+	if x != nil {
+		return x.ShopCards
+	}
+	return nil
+}
+
 var File_shop_card_proto protoreflect.FileDescriptor
 
 const file_shop_card_proto_rawDesc = "" +
 	"\n" +
-	"\x0fshop_card.proto\x12\tshop_card\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1bgoogle/protobuf/empty.proto\"\xb0\x01\n" +
+	"\x0fshop_card.proto\x12\tshop_card\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1cgoogle/protobuf/struct.proto\"\xe5\x01\n" +
 	"\x0fShopCardRequest\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12 \n" +
 	"\vdescription\x18\x02 \x01(\tR\vdescription\x12\x1a\n" +
 	"\bcategory\x18\x03 \x01(\tR\bcategory\x12\x14\n" +
 	"\x05price\x18\x04 \x01(\x02R\x05price\x12\x18\n" +
 	"\avisible\x18\x05 \x01(\bR\avisible\x12\x1b\n" +
-	"\tcover_url\x18\x06 \x01(\tR\bcoverUrl\"\xca\x01\n" +
+	"\tcover_url\x18\x06 \x01(\tR\bcoverUrl\x123\n" +
+	"\bmetadata\x18\a \x01(\v2\x17.google.protobuf.StructR\bmetadata\"\xff\x01\n" +
 	"\x15UpdateShopCardRequest\x12\x12\n" +
 	"\x04uuid\x18\x01 \x01(\tR\x04uuid\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12 \n" +
@@ -362,9 +432,10 @@ const file_shop_card_proto_rawDesc = "" +
 	"\bcategory\x18\x04 \x01(\tR\bcategory\x12\x14\n" +
 	"\x05price\x18\x05 \x01(\x02R\x05price\x12\x18\n" +
 	"\avisible\x18\x06 \x01(\bR\avisible\x12\x1b\n" +
-	"\tcover_url\x18\a \x01(\tR\bcoverUrl\";\n" +
+	"\tcover_url\x18\a \x01(\tR\bcoverUrl\x123\n" +
+	"\bmetadata\x18\b \x01(\v2\x17.google.protobuf.StructR\bmetadata\";\n" +
 	"\x13ShopCardUUIDRequest\x12$\n" +
-	"\x0eshop_card_uuid\x18\x01 \x01(\tR\fshopCardUuid\"\x80\x02\n" +
+	"\x0eshop_card_uuid\x18\x01 \x01(\tR\fshopCardUuid\"\xb5\x02\n" +
 	"\x10ShopCardResponse\x12\x12\n" +
 	"\x04uuid\x18\x01 \x01(\tR\x04uuid\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12 \n" +
@@ -374,11 +445,16 @@ const file_shop_card_proto_rawDesc = "" +
 	"\avisible\x18\x06 \x01(\bR\avisible\x12\x1b\n" +
 	"\tcover_url\x18\a \x01(\tR\bcoverUrl\x129\n" +
 	"\n" +
-	"created_at\x18\b \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt2\xc3\x02\n" +
+	"created_at\x18\b \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x123\n" +
+	"\bmetadata\x18\t \x01(\v2\x17.google.protobuf.StructR\bmetadata\"N\n" +
+	"\x10MultipleResponse\x12:\n" +
+	"\n" +
+	"shop_cards\x18\x01 \x03(\v2\x1b.shop_card.ShopCardResponseR\tshopCards2\x8b\x03\n" +
 	"\x0fShopCardService\x12I\n" +
 	"\x0eCreateShopCard\x12\x1a.shop_card.ShopCardRequest\x1a\x1b.shop_card.ShopCardResponse\x12O\n" +
 	"\x0eUpdateShopCard\x12 .shop_card.UpdateShopCardRequest\x1a\x1b.shop_card.ShopCardResponse\x12J\n" +
-	"\vGetShopCard\x12\x1e.shop_card.ShopCardUUIDRequest\x1a\x1b.shop_card.ShopCardResponse\x12H\n" +
+	"\vGetShopCard\x12\x1e.shop_card.ShopCardUUIDRequest\x1a\x1b.shop_card.ShopCardResponse\x12F\n" +
+	"\x0fGetAllShopCards\x12\x16.google.protobuf.Empty\x1a\x1b.shop_card.MultipleResponse\x12H\n" +
 	"\x0eDeleteShopCard\x12\x1e.shop_card.ShopCardUUIDRequest\x1a\x16.google.protobuf.EmptyB\fZ\n" +
 	"/shop_cardb\x06proto3"
 
@@ -394,30 +470,38 @@ func file_shop_card_proto_rawDescGZIP() []byte {
 	return file_shop_card_proto_rawDescData
 }
 
-var file_shop_card_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
+var file_shop_card_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
 var file_shop_card_proto_goTypes = []any{
 	(*ShopCardRequest)(nil),       // 0: shop_card.ShopCardRequest
 	(*UpdateShopCardRequest)(nil), // 1: shop_card.UpdateShopCardRequest
 	(*ShopCardUUIDRequest)(nil),   // 2: shop_card.ShopCardUUIDRequest
 	(*ShopCardResponse)(nil),      // 3: shop_card.ShopCardResponse
-	(*timestamppb.Timestamp)(nil), // 4: google.protobuf.Timestamp
-	(*emptypb.Empty)(nil),         // 5: google.protobuf.Empty
+	(*MultipleResponse)(nil),      // 4: shop_card.MultipleResponse
+	(*structpb.Struct)(nil),       // 5: google.protobuf.Struct
+	(*timestamppb.Timestamp)(nil), // 6: google.protobuf.Timestamp
+	(*emptypb.Empty)(nil),         // 7: google.protobuf.Empty
 }
 var file_shop_card_proto_depIdxs = []int32{
-	4, // 0: shop_card.ShopCardResponse.created_at:type_name -> google.protobuf.Timestamp
-	0, // 1: shop_card.ShopCardService.CreateShopCard:input_type -> shop_card.ShopCardRequest
-	1, // 2: shop_card.ShopCardService.UpdateShopCard:input_type -> shop_card.UpdateShopCardRequest
-	2, // 3: shop_card.ShopCardService.GetShopCard:input_type -> shop_card.ShopCardUUIDRequest
-	2, // 4: shop_card.ShopCardService.DeleteShopCard:input_type -> shop_card.ShopCardUUIDRequest
-	3, // 5: shop_card.ShopCardService.CreateShopCard:output_type -> shop_card.ShopCardResponse
-	3, // 6: shop_card.ShopCardService.UpdateShopCard:output_type -> shop_card.ShopCardResponse
-	3, // 7: shop_card.ShopCardService.GetShopCard:output_type -> shop_card.ShopCardResponse
-	5, // 8: shop_card.ShopCardService.DeleteShopCard:output_type -> google.protobuf.Empty
-	5, // [5:9] is the sub-list for method output_type
-	1, // [1:5] is the sub-list for method input_type
-	1, // [1:1] is the sub-list for extension type_name
-	1, // [1:1] is the sub-list for extension extendee
-	0, // [0:1] is the sub-list for field type_name
+	5,  // 0: shop_card.ShopCardRequest.metadata:type_name -> google.protobuf.Struct
+	5,  // 1: shop_card.UpdateShopCardRequest.metadata:type_name -> google.protobuf.Struct
+	6,  // 2: shop_card.ShopCardResponse.created_at:type_name -> google.protobuf.Timestamp
+	5,  // 3: shop_card.ShopCardResponse.metadata:type_name -> google.protobuf.Struct
+	3,  // 4: shop_card.MultipleResponse.shop_cards:type_name -> shop_card.ShopCardResponse
+	0,  // 5: shop_card.ShopCardService.CreateShopCard:input_type -> shop_card.ShopCardRequest
+	1,  // 6: shop_card.ShopCardService.UpdateShopCard:input_type -> shop_card.UpdateShopCardRequest
+	2,  // 7: shop_card.ShopCardService.GetShopCard:input_type -> shop_card.ShopCardUUIDRequest
+	7,  // 8: shop_card.ShopCardService.GetAllShopCards:input_type -> google.protobuf.Empty
+	2,  // 9: shop_card.ShopCardService.DeleteShopCard:input_type -> shop_card.ShopCardUUIDRequest
+	3,  // 10: shop_card.ShopCardService.CreateShopCard:output_type -> shop_card.ShopCardResponse
+	3,  // 11: shop_card.ShopCardService.UpdateShopCard:output_type -> shop_card.ShopCardResponse
+	3,  // 12: shop_card.ShopCardService.GetShopCard:output_type -> shop_card.ShopCardResponse
+	4,  // 13: shop_card.ShopCardService.GetAllShopCards:output_type -> shop_card.MultipleResponse
+	7,  // 14: shop_card.ShopCardService.DeleteShopCard:output_type -> google.protobuf.Empty
+	10, // [10:15] is the sub-list for method output_type
+	5,  // [5:10] is the sub-list for method input_type
+	5,  // [5:5] is the sub-list for extension type_name
+	5,  // [5:5] is the sub-list for extension extendee
+	0,  // [0:5] is the sub-list for field type_name
 }
 
 func init() { file_shop_card_proto_init() }
@@ -431,7 +515,7 @@ func file_shop_card_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_shop_card_proto_rawDesc), len(file_shop_card_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   4,
+			NumMessages:   5,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

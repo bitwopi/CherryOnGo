@@ -43,7 +43,15 @@ func (s *Server) Start(bindURL string) error {
 }
 
 func (s *Server) CreateShopCard(ctx context.Context, req *pb.ShopCardRequest) (*pb.ShopCardResponse, error) {
-	card, err := s.db.CreateShopCard(req.Name, req.Description, req.Category, &req.Price, req.Visible, &req.CoverUrl)
+
+	card, err := s.db.CreateShopCard(
+		req.Name,
+		req.Description,
+		req.Category,
+		&req.Price,
+		req.Visible,
+		&req.CoverUrl,
+		req.Metadata.AsMap())
 	if err != nil {
 		if errors.Is(err, gorm.ErrDuplicatedKey) {
 			return nil, status.Error(codes.AlreadyExists, "card is already exists")
@@ -63,7 +71,15 @@ func (s *Server) CreateShopCard(ctx context.Context, req *pb.ShopCardRequest) (*
 }
 
 func (s *Server) UpdateShopCard(ctx context.Context, req *pb.UpdateShopCardRequest) (*pb.ShopCardResponse, error) {
-	card, err := s.db.UpdateShopCard(req.Uuid, req.Name, req.Description, req.Category, &req.Price, req.Visible, &req.CoverUrl)
+	card, err := s.db.UpdateShopCard(
+		req.Uuid,
+		req.Name,
+		req.Description,
+		req.Category,
+		&req.Price,
+		req.Visible,
+		&req.CoverUrl,
+		req.Metadata.AsMap())
 	if err != nil {
 		return nil, status.Error(codes.Internal, "failed to update card")
 	}
@@ -94,6 +110,28 @@ func (s *Server) GetShopCard(ctx context.Context, req *pb.ShopCardUUIDRequest) (
 		CoverUrl:    *card.CoverURL,
 		CreatedAt:   timestamppb.New(card.CreatedAt),
 	}, nil
+}
+
+func (s *Server) GetAllShopCards(ctx context.Context, req *emptypb.Empty) (*pb.MultipleResponse, error) {
+	cards, err := s.db.GetAllShopCards()
+	if err != nil {
+		return nil, status.Error(codes.Internal, "failed to get shop cards")
+	}
+	result := make([]*pb.ShopCardResponse, len(cards))
+	for _, card := range cards {
+		result = append(result, &pb.ShopCardResponse{
+			Uuid:        card.UUID,
+			Name:        card.Name,
+			Description: card.Description,
+			Category:    card.Category,
+			Price:       *card.Price,
+			Visible:     card.Visible,
+			CoverUrl:    *card.CoverURL,
+			CreatedAt:   timestamppb.New(card.CreatedAt),
+		})
+	}
+
+	return &pb.MultipleResponse{ShopCards: result}, nil
 }
 
 func (s *Server) DeleteShopCard(ctx context.Context, req *pb.ShopCardUUIDRequest) (*emptypb.Empty, error) {

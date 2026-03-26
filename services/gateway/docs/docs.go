@@ -309,6 +309,140 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/shop_card/create": {
+            "post": {
+                "description": "Возвращает объект карточки товара",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "shop_card"
+                ],
+                "summary": "Создание карточки товара",
+                "parameters": [
+                    {
+                        "description": "Данные карточки товара",
+                        "name": "shop_card",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/server_api_gateway_rest_handers_shop_cards.Request"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "Bearer token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/server_api_gateway_rest_handers_shop_cards.ShopCardDTO"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/shop_card/get": {
+            "get": {
+                "description": "Возвращает список всех карточек товаров",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "shop_card"
+                ],
+                "summary": "Получение всех карточек товаров",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/server_api_gateway_rest_handers_shop_cards.MultipleResponseDTO"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/shop_card/get/{uuid}": {
+            "get": {
+                "description": "Возвращает объект карточки товара",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "shop_card"
+                ],
+                "summary": "Получение карточки товара",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "uuid карточки товара",
+                        "name": "uuid",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/server_api_gateway_rest_handers_shop_cards.ShopCardDTO"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/shop_card/update": {
+            "post": {
+                "description": "Возвращает объект карточки товара",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "shop_card"
+                ],
+                "summary": "Обновление карточки товара",
+                "parameters": [
+                    {
+                        "description": "Данные карточки товара",
+                        "name": "shop_card",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/server_api_gateway_rest_handers_shop_cards.Request"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "Bearer token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/server_api_gateway_rest_handers_shop_cards.ShopCardDTO"
+                        }
+                    }
+                }
+            }
+        },
         "/api/users/{uuid}": {
             "get": {
                 "description": "Возвращает объект заказа",
@@ -465,6 +599,38 @@ const docTemplate = `{
                 }
             }
         },
+        "gateway_server_api_gateway_grpc_gen_shop_card.ShopCardResponse": {
+            "type": "object",
+            "properties": {
+                "category": {
+                    "type": "string"
+                },
+                "cover_url": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "$ref": "#/definitions/timestamppb.Timestamp"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "metadata": {
+                    "$ref": "#/definitions/structpb.Struct"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "price": {
+                    "type": "number"
+                },
+                "uuid": {
+                    "type": "string"
+                },
+                "visible": {
+                    "type": "boolean"
+                }
+            }
+        },
         "server_api_gateway_rest_handers_remna.MultipleUsersResponseDTO": {
             "type": "object",
             "properties": {
@@ -473,6 +639,79 @@ const docTemplate = `{
                     "items": {
                         "$ref": "#/definitions/gateway_server_api_gateway_grpc_gen_remna.UserResponse"
                     }
+                }
+            }
+        },
+        "server_api_gateway_rest_handers_shop_cards.MultipleResponseDTO": {
+            "type": "object",
+            "properties": {
+                "shop_cards": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/gateway_server_api_gateway_grpc_gen_shop_card.ShopCardResponse"
+                    }
+                }
+            }
+        },
+        "server_api_gateway_rest_handers_shop_cards.Request": {
+            "type": "object",
+            "properties": {
+                "category": {
+                    "type": "string"
+                },
+                "coverUrl": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "metadata": {
+                    "type": "object",
+                    "additionalProperties": true
+                },
+                "name": {
+                    "type": "string"
+                },
+                "price": {
+                    "type": "number"
+                },
+                "uuid": {
+                    "type": "string"
+                },
+                "visible": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "server_api_gateway_rest_handers_shop_cards.ShopCardDTO": {
+            "type": "object",
+            "properties": {
+                "category": {
+                    "type": "string"
+                },
+                "cover_url": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "$ref": "#/definitions/timestamppb.Timestamp"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "metadata": {
+                    "$ref": "#/definitions/structpb.Struct"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "price": {
+                    "type": "number"
+                },
+                "uuid": {
+                    "type": "string"
+                },
+                "visible": {
+                    "type": "boolean"
                 }
             }
         },
@@ -570,6 +809,26 @@ const docTemplate = `{
             "properties": {
                 "jwt": {
                     "type": "string"
+                }
+            }
+        },
+        "structpb.Struct": {
+            "type": "object",
+            "properties": {
+                "fields": {
+                    "description": "Unordered map of dynamically typed values.",
+                    "type": "object",
+                    "additionalProperties": {
+                        "$ref": "#/definitions/structpb.Value"
+                    }
+                }
+            }
+        },
+        "structpb.Value": {
+            "type": "object",
+            "properties": {
+                "kind": {
+                    "description": "The kind of value.\n\nTypes that are valid to be assigned to Kind:\n\n\t*Value_NullValue\n\t*Value_NumberValue\n\t*Value_StringValue\n\t*Value_BoolValue\n\t*Value_StructValue\n\t*Value_ListValue"
                 }
             }
         },

@@ -75,12 +75,81 @@ definitions:
       uuid:
         type: string
     type: object
+  gateway_server_api_gateway_grpc_gen_shop_card.ShopCardResponse:
+    properties:
+      category:
+        type: string
+      cover_url:
+        type: string
+      created_at:
+        $ref: '#/definitions/timestamppb.Timestamp'
+      description:
+        type: string
+      metadata:
+        $ref: '#/definitions/structpb.Struct'
+      name:
+        type: string
+      price:
+        type: number
+      uuid:
+        type: string
+      visible:
+        type: boolean
+    type: object
   server_api_gateway_rest_handers_remna.MultipleUsersResponseDTO:
     properties:
       users:
         items:
           $ref: '#/definitions/gateway_server_api_gateway_grpc_gen_remna.UserResponse'
         type: array
+    type: object
+  server_api_gateway_rest_handers_shop_cards.MultipleResponseDTO:
+    properties:
+      shop_cards:
+        items:
+          $ref: '#/definitions/gateway_server_api_gateway_grpc_gen_shop_card.ShopCardResponse'
+        type: array
+    type: object
+  server_api_gateway_rest_handers_shop_cards.Request:
+    properties:
+      category:
+        type: string
+      coverUrl:
+        type: string
+      description:
+        type: string
+      metadata:
+        additionalProperties: true
+        type: object
+      name:
+        type: string
+      price:
+        type: number
+      uuid:
+        type: string
+      visible:
+        type: boolean
+    type: object
+  server_api_gateway_rest_handers_shop_cards.ShopCardDTO:
+    properties:
+      category:
+        type: string
+      cover_url:
+        type: string
+      created_at:
+        $ref: '#/definitions/timestamppb.Timestamp'
+      description:
+        type: string
+      metadata:
+        $ref: '#/definitions/structpb.Struct'
+      name:
+        type: string
+      price:
+        type: number
+      uuid:
+        type: string
+      visible:
+        type: boolean
     type: object
   server_api_gateway_rest_handers_users_data.UserResponseDTO:
     properties:
@@ -144,6 +213,20 @@ definitions:
     properties:
       jwt:
         type: string
+    type: object
+  structpb.Struct:
+    properties:
+      fields:
+        additionalProperties:
+          $ref: '#/definitions/structpb.Value'
+        description: Unordered map of dynamically typed values.
+        type: object
+    type: object
+  structpb.Value:
+    properties:
+      kind:
+        description: "The kind of value.\n\nTypes that are valid to be assigned to
+          Kind:\n\n\t*Value_NullValue\n\t*Value_NumberValue\n\t*Value_StringValue\n\t*Value_BoolValue\n\t*Value_StructValue\n\t*Value_ListValue"
     type: object
   timestamppb.Timestamp:
     properties:
@@ -361,6 +444,94 @@ paths:
       summary: Обновление статуса заказа
       tags:
       - remna
+  /api/shop_card/create:
+    post:
+      consumes:
+      - application/json
+      description: Возвращает объект карточки товара
+      parameters:
+      - description: Данные карточки товара
+        in: body
+        name: shop_card
+        required: true
+        schema:
+          $ref: '#/definitions/server_api_gateway_rest_handers_shop_cards.Request'
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/server_api_gateway_rest_handers_shop_cards.ShopCardDTO'
+      summary: Создание карточки товара
+      tags:
+      - shop_card
+  /api/shop_card/get:
+    get:
+      description: Возвращает список всех карточек товаров
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/server_api_gateway_rest_handers_shop_cards.MultipleResponseDTO'
+      summary: Получение всех карточек товаров
+      tags:
+      - shop_card
+  /api/shop_card/get/{uuid}:
+    get:
+      consumes:
+      - application/json
+      description: Возвращает объект карточки товара
+      parameters:
+      - description: uuid карточки товара
+        in: path
+        name: uuid
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/server_api_gateway_rest_handers_shop_cards.ShopCardDTO'
+      summary: Получение карточки товара
+      tags:
+      - shop_card
+  /api/shop_card/update:
+    post:
+      consumes:
+      - application/json
+      description: Возвращает объект карточки товара
+      parameters:
+      - description: Данные карточки товара
+        in: body
+        name: shop_card
+        required: true
+        schema:
+          $ref: '#/definitions/server_api_gateway_rest_handers_shop_cards.Request'
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/server_api_gateway_rest_handers_shop_cards.ShopCardDTO'
+      summary: Обновление карточки товара
+      tags:
+      - shop_card
   /api/users/{uuid}:
     get:
       consumes:

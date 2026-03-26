@@ -4,6 +4,7 @@ option go_package = "/shop_card";
 
 import "google/protobuf/timestamp.proto";
 import "google/protobuf/empty.proto";
+import "google/protobuf/struct.proto";
 
 message ShopCardRequest{
     string name = 1;
@@ -12,6 +13,7 @@ message ShopCardRequest{
     float price = 4;
     bool visible = 5;
     string cover_url = 6; 
+    google.protobuf.Struct metadata = 7;
 }
 
 message UpdateShopCardRequest{
@@ -22,6 +24,7 @@ message UpdateShopCardRequest{
     float price = 5;
     bool visible = 6;
     string cover_url = 7; 
+    google.protobuf.Struct metadata = 8;
 }
 
 message ShopCardUUIDRequest{
@@ -37,11 +40,17 @@ message ShopCardResponse{
     bool visible = 6;
     string cover_url = 7; 
     google.protobuf.Timestamp created_at = 8;
+    google.protobuf.Struct metadata = 9;
+}
+
+message MultipleResponse{
+    repeated ShopCardResponse shop_cards = 1;
 }
 
 service ShopCardService{
     rpc CreateShopCard(ShopCardRequest) returns (ShopCardResponse);
     rpc UpdateShopCard(UpdateShopCardRequest) returns (ShopCardResponse);
     rpc GetShopCard(ShopCardUUIDRequest) returns (ShopCardResponse);
+    rpc GetAllShopCards(google.protobuf.Empty) returns (MultipleResponse);
     rpc DeleteShopCard(ShopCardUUIDRequest) returns (google.protobuf.Empty);
 }

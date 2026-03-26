@@ -5,9 +5,11 @@ import (
 	"gateway/config"
 	orderclient "gateway/server/api/gateway/grpc/order_client"
 	remnaclient "gateway/server/api/gateway/grpc/remna_client"
+	shopcardclient "gateway/server/api/gateway/grpc/shopcard_client"
 	userclient "gateway/server/api/gateway/grpc/user_client"
 	handlers "gateway/server/api/gateway/rest/handers/orders"
 	"gateway/server/api/gateway/rest/handers/remna"
+	shopcards "gateway/server/api/gateway/rest/handers/shop_cards"
 	"gateway/server/api/gateway/rest/handers/users/data"
 	"gateway/server/api/gateway/rest/handers/users/refresh"
 	"gateway/server/api/gateway/rest/handers/users/sign"
@@ -30,6 +32,7 @@ type App struct {
 	userClient  *userclient.UserGRPCClient
 	orderClient *orderclient.OrderGRPCClient
 	remnaClient *remnaclient.RemnaGRPCClient
+	scClient    *shopcardclient.ShopCardGRPCClient
 	jm          *jwtmanager.JWTManager
 	logger      *zap.Logger
 	router      *chi.Mux
@@ -131,11 +134,20 @@ func (a *App) SetupRouter() {
 		r.Post("/update/status", handlers.UpdateOrderStatus(a.logger, a.orderClient))
 		r.Get("/get/{order_uuid}", handlers.GetOrder(a.logger, a.orderClient))
 	})
+	a.router.Route("/api/shop_card/get", func(r chi.Router) {
+		r.Get("/", shopcards.GetAllShopCards(a.logger, a.scClient))
+		r.Get("/{uuid}", shopcards.GetShopCard(a.logger, a.scClient))
+	})
+	a.router.Route("/api/shop_card/", func(r chi.Router) {
+		r.Use(jwtcheck.New(*a.jm))
+		r.Post("/create", shopcards.CreateShopCard(a.logger, a.scClient))
+		r.Post("/update", shopcards.UpdateShopCard(a.logger, a.scClient))
+	})
 	a.router.Route("/api/remna}", func(r chi.Router) {
 		r.Use(jwtcheck.New(*a.jm))
 		r.Get("/users/by-email/{email}", remna.GetUsersByEmail(a.logger, a.remnaClient))
 	})
-	a.router.Get("/swagger/*", httpSwagger.WrapHandler)
+	a.router.Get("/swagger/beleberda/*", httpSwagger.WrapHandler)
 }
 
 func (a *App) Stop(ctx context.Context) error {

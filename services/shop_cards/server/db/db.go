@@ -11,9 +11,10 @@ import (
 )
 
 type DBManager interface {
-	CreateShopCard(name string, description string, category string, price *float32, visible bool, coverURL *string) (*ShopCard, error)
-	UpdateShopCard(uuid string, name string, description string, category string, price *float32, visible bool, coverURL *string) (*ShopCard, error)
+	CreateShopCard(name string, description string, category string, price *float32, visible bool, coverURL *string, metadata map[string]interface{}) (*ShopCard, error)
+	UpdateShopCard(uuid string, name string, description string, category string, price *float32, visible bool, coverURL *string, metadata map[string]interface{}) (*ShopCard, error)
 	GetShopCard(uuid string) (*ShopCard, error)
+	GetAllShopCards() ([]ShopCard, error)
 	DeleteShopCard(uuid string) error
 	Migrate()
 }
@@ -44,7 +45,8 @@ func (m *PgManager) CreateShopCard(
 	category string,
 	price *float32,
 	visible bool,
-	coverURL *string) (*ShopCard, error) {
+	coverURL *string,
+	metadata map[string]interface{}) (*ShopCard, error) {
 	card := ShopCard{
 		UUID:        uuid.NewString(),
 		Name:        name,
@@ -52,6 +54,7 @@ func (m *PgManager) CreateShopCard(
 		Price:       price,
 		Visible:     visible,
 		CoverURL:    coverURL,
+		Metadata:    &metadata,
 	}
 	if !contains(Categories, category) {
 		return nil, errors.New("invalid category name")
@@ -70,7 +73,8 @@ func (m *PgManager) UpdateShopCard(
 	category string,
 	price *float32,
 	visible bool,
-	coverURL *string) (*ShopCard, error) {
+	coverURL *string,
+	metadata map[string]interface{}) (*ShopCard, error) {
 	card := ShopCard{
 		UUID:        uuid,
 		Name:        name,
@@ -78,12 +82,13 @@ func (m *PgManager) UpdateShopCard(
 		Price:       price,
 		Visible:     visible,
 		CoverURL:    coverURL,
+		Metadata:    &metadata,
 	}
 	if !contains(Categories, category) {
 		return nil, errors.New("invalid category name")
 	}
 	if err := m.db.Model(&card).Updates(card).Error; err != nil {
-		return nil, fmt.Errorf("failed to create card: %v", err)
+		return nil, fmt.Errorf("failed to update card: %v", err)
 	}
 	return &card, nil
 }
@@ -94,6 +99,14 @@ func (m *PgManager) GetShopCard(uuid string) (*ShopCard, error) {
 		return nil, err
 	}
 	return &card, nil
+}
+
+func (m *PgManager) GetAllShopCards() ([]ShopCard, error) {
+	var cards []ShopCard
+	if err := m.db.Model(&ShopCard{}).Find(&cards).Error; err != nil {
+		return nil, err
+	}
+	return cards, nil
 }
 
 func (m *PgManager) DeleteShopCard(uuid string) error {

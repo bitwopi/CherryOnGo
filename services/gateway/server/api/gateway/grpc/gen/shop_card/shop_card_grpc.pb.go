@@ -20,10 +20,11 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	ShopCardService_CreateShopCard_FullMethodName = "/shop_card.ShopCardService/CreateShopCard"
-	ShopCardService_UpdateShopCard_FullMethodName = "/shop_card.ShopCardService/UpdateShopCard"
-	ShopCardService_GetShopCard_FullMethodName    = "/shop_card.ShopCardService/GetShopCard"
-	ShopCardService_DeleteShopCard_FullMethodName = "/shop_card.ShopCardService/DeleteShopCard"
+	ShopCardService_CreateShopCard_FullMethodName  = "/shop_card.ShopCardService/CreateShopCard"
+	ShopCardService_UpdateShopCard_FullMethodName  = "/shop_card.ShopCardService/UpdateShopCard"
+	ShopCardService_GetShopCard_FullMethodName     = "/shop_card.ShopCardService/GetShopCard"
+	ShopCardService_GetAllShopCards_FullMethodName = "/shop_card.ShopCardService/GetAllShopCards"
+	ShopCardService_DeleteShopCard_FullMethodName  = "/shop_card.ShopCardService/DeleteShopCard"
 )
 
 // ShopCardServiceClient is the client API for ShopCardService service.
@@ -33,6 +34,7 @@ type ShopCardServiceClient interface {
 	CreateShopCard(ctx context.Context, in *ShopCardRequest, opts ...grpc.CallOption) (*ShopCardResponse, error)
 	UpdateShopCard(ctx context.Context, in *UpdateShopCardRequest, opts ...grpc.CallOption) (*ShopCardResponse, error)
 	GetShopCard(ctx context.Context, in *ShopCardUUIDRequest, opts ...grpc.CallOption) (*ShopCardResponse, error)
+	GetAllShopCards(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*MultipleResponse, error)
 	DeleteShopCard(ctx context.Context, in *ShopCardUUIDRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
@@ -74,6 +76,16 @@ func (c *shopCardServiceClient) GetShopCard(ctx context.Context, in *ShopCardUUI
 	return out, nil
 }
 
+func (c *shopCardServiceClient) GetAllShopCards(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*MultipleResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(MultipleResponse)
+	err := c.cc.Invoke(ctx, ShopCardService_GetAllShopCards_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *shopCardServiceClient) DeleteShopCard(ctx context.Context, in *ShopCardUUIDRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
@@ -91,6 +103,7 @@ type ShopCardServiceServer interface {
 	CreateShopCard(context.Context, *ShopCardRequest) (*ShopCardResponse, error)
 	UpdateShopCard(context.Context, *UpdateShopCardRequest) (*ShopCardResponse, error)
 	GetShopCard(context.Context, *ShopCardUUIDRequest) (*ShopCardResponse, error)
+	GetAllShopCards(context.Context, *emptypb.Empty) (*MultipleResponse, error)
 	DeleteShopCard(context.Context, *ShopCardUUIDRequest) (*emptypb.Empty, error)
 	mustEmbedUnimplementedShopCardServiceServer()
 }
@@ -110,6 +123,9 @@ func (UnimplementedShopCardServiceServer) UpdateShopCard(context.Context, *Updat
 }
 func (UnimplementedShopCardServiceServer) GetShopCard(context.Context, *ShopCardUUIDRequest) (*ShopCardResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetShopCard not implemented")
+}
+func (UnimplementedShopCardServiceServer) GetAllShopCards(context.Context, *emptypb.Empty) (*MultipleResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetAllShopCards not implemented")
 }
 func (UnimplementedShopCardServiceServer) DeleteShopCard(context.Context, *ShopCardUUIDRequest) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method DeleteShopCard not implemented")
@@ -189,6 +205,24 @@ func _ShopCardService_GetShopCard_Handler(srv interface{}, ctx context.Context, 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ShopCardService_GetAllShopCards_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ShopCardServiceServer).GetAllShopCards(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ShopCardService_GetAllShopCards_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ShopCardServiceServer).GetAllShopCards(ctx, req.(*emptypb.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _ShopCardService_DeleteShopCard_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ShopCardUUIDRequest)
 	if err := dec(in); err != nil {
@@ -225,6 +259,10 @@ var ShopCardService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetShopCard",
 			Handler:    _ShopCardService_GetShopCard_Handler,
+		},
+		{
+			MethodName: "GetAllShopCards",
+			Handler:    _ShopCardService_GetAllShopCards_Handler,
 		},
 		{
 			MethodName: "DeleteShopCard",
