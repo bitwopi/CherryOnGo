@@ -12,6 +12,7 @@ type Config struct {
 	UserService     GRPCConfig    `yaml:"user_service" env-required:"true"`
 	OrderService    GRPCConfig    `yaml:"order_service" env-required:"true"`
 	RemnaService    GRPCConfig    `yaml:"remna_service" env-required:"true"`
+	ShopCardService GRPCConfig    `yaml:"shopcard_service" env-required:"true"`
 	REST            RESTConfig    `yaml:"rest" env-required:"true"`
 	RefreshTokenTTL time.Duration `yaml:"refresh_token_ttl" env-deafault:"730h"`
 	JWTSecret       string        `yaml:"jwt_secret" env-required:"true"`

@@ -127,7 +127,7 @@ const docTemplate = `{
                 "tags": [
                     "auth"
                 ],
-                "summary": "Аутентификация пользователя черещ тг",
+                "summary": "Аутентификация пользователя через тг",
                 "parameters": [
                     {
                         "description": "Данные тг",
@@ -272,7 +272,7 @@ const docTemplate = `{
         },
         "/api/remna/users/by-email/{email}": {
             "get": {
-                "description": "Возвращает объект заказа",
+                "description": "Возвращает объект подписки",
                 "consumes": [
                     "application/json"
                 ],
@@ -282,7 +282,7 @@ const docTemplate = `{
                 "tags": [
                     "remna"
                 ],
-                "summary": "Обновление статуса заказа",
+                "summary": "Получение впн подписки",
                 "parameters": [
                     {
                         "type": "string",
@@ -445,7 +445,7 @@ const docTemplate = `{
         },
         "/api/users/{uuid}": {
             "get": {
-                "description": "Возвращает объект заказа",
+                "description": "Возвращает объект пользователя",
                 "consumes": [
                     "application/json"
                 ],
@@ -455,7 +455,7 @@ const docTemplate = `{
                 "tags": [
                     "users"
                 ],
-                "summary": "Обновление статуса заказа",
+                "summary": "Получение информации о пользователе",
                 "parameters": [
                     {
                         "type": "string",

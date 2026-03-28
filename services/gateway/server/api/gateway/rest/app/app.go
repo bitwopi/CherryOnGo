@@ -23,21 +23,20 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
-	cors "github.com/go-chi/cors"
 	httpSwagger "github.com/swaggo/http-swagger"
 	"go.uber.org/zap"
 )
 
 type App struct {
-	userClient  *userclient.UserGRPCClient
-	orderClient *orderclient.OrderGRPCClient
-	remnaClient *remnaclient.RemnaGRPCClient
-	scClient    *shopcardclient.ShopCardGRPCClient
-	jm          *jwtmanager.JWTManager
-	logger      *zap.Logger
-	router      *chi.Mux
-	server      *http.Server
-	botToken    string
+	userClient     *userclient.UserGRPCClient
+	orderClient    *orderclient.OrderGRPCClient
+	remnaClient    *remnaclient.RemnaGRPCClient
+	shopCardClient *shopcardclient.ShopCardGRPCClient
+	jm             *jwtmanager.JWTManager
+	logger         *zap.Logger
+	router         *chi.Mux
+	server         *http.Server
+	botToken       string
 }
 
 func NewApp(cfg config.Config, logger *zap.Logger) *App {
@@ -62,6 +61,18 @@ func NewApp(cfg config.Config, logger *zap.Logger) *App {
 		cfg.RemnaService.Timeout,
 		cfg.RemnaService.MaxRetries,
 	)
+	if err != nil {
+		logger.Fatal("failed to create remna gRPC client", zap.Error(err))
+	}
+
+	scClient, err := shopcardclient.NewShopCardGRPCClient(
+		cfg.ShopCardService.Addr,
+		cfg.ShopCardService.Timeout,
+		cfg.ShopCardService.MaxRetries,
+	)
+	if err != nil {
+		logger.Fatal("failed to create shopcard gRPC client", zap.Error(err))
+	}
 
 	jm, err := jwtmanager.NewJWTManager(cfg.JWTSecret)
 	if err != nil {
@@ -76,14 +87,15 @@ func NewApp(cfg config.Config, logger *zap.Logger) *App {
 		IdleTimeout:  cfg.REST.IdleTimeout,
 	}
 	return &App{
-		userClient:  uClient,
-		orderClient: oClient,
-		remnaClient: rClient,
-		jm:          jm,
-		logger:      logger,
-		router:      router,
-		server:      server,
-		botToken:    cfg.BotToken,
+		userClient:     uClient,
+		orderClient:    oClient,
+		remnaClient:    rClient,
+		shopCardClient: scClient,
+		jm:             jm,
+		logger:         logger,
+		router:         router,
+		server:         server,
+		botToken:       cfg.BotToken,
 	}
 }
 
@@ -106,12 +118,6 @@ func (a *App) SetupMiddleware() {
 }
 
 func (a *App) SetupRouter() {
-	a.router.Use(cors.Handler(cors.Options{
-		AllowedOrigins:   []string{"https://main.cherryon.art"},
-		AllowedMethods:   []string{"GET", "POST", "OPTIONS"},
-		AllowedHeaders:   []string{"Authorization", "Content-Type"},
-		AllowCredentials: true,
-	}))
 	a.router.Get("/", func(w http.ResponseWriter, r *http.Request) {
 		http.ServeFile(w, r, "index.html")
 	})
@@ -135,13 +141,13 @@ func (a *App) SetupRouter() {
 		r.Get("/get/{order_uuid}", handlers.GetOrder(a.logger, a.orderClient))
 	})
 	a.router.Route("/api/shop_card/get", func(r chi.Router) {
-		r.Get("/", shopcards.GetAllShopCards(a.logger, a.scClient))
-		r.Get("/{uuid}", shopcards.GetShopCard(a.logger, a.scClient))
+		r.Get("/", shopcards.GetAllShopCards(a.logger, a.shopCardClient))
+		r.Get("/{uuid}", shopcards.GetShopCard(a.logger, a.shopCardClient))
 	})
 	a.router.Route("/api/shop_card/", func(r chi.Router) {
 		r.Use(jwtcheck.New(*a.jm))
-		r.Post("/create", shopcards.CreateShopCard(a.logger, a.scClient))
-		r.Post("/update", shopcards.UpdateShopCard(a.logger, a.scClient))
+		r.Post("/create", shopcards.CreateShopCard(a.logger, a.shopCardClient))
+		r.Post("/update", shopcards.UpdateShopCard(a.logger, a.shopCardClient))
 	})
 	a.router.Route("/api/remna}", func(r chi.Router) {
 		r.Use(jwtcheck.New(*a.jm))

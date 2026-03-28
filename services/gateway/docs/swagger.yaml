@@ -335,7 +335,7 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/server_api_gateway_rest_handers_users_tg_auth.Response'
-      summary: Аутентификация пользователя черещ тг
+      summary: Аутентификация пользователя через тг
       tags:
       - auth
   /api/order/create:
@@ -422,7 +422,7 @@ paths:
     get:
       consumes:
       - application/json
-      description: Возвращает объект заказа
+      description: Возвращает объект подписки
       parameters:
       - description: email пользователя
         in: path
@@ -441,7 +441,7 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/server_api_gateway_rest_handers_remna.MultipleUsersResponseDTO'
-      summary: Обновление статуса заказа
+      summary: Получение впн подписки
       tags:
       - remna
   /api/shop_card/create:
@@ -536,7 +536,7 @@ paths:
     get:
       consumes:
       - application/json
-      description: Возвращает объект заказа
+      description: Возвращает объект пользователя
       parameters:
       - description: uuid пользователя
         in: path
@@ -555,7 +555,7 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/server_api_gateway_rest_handers_users_data.UserResponseDTO'
-      summary: Обновление статуса заказа
+      summary: Получение информации о пользователе
       tags:
       - users
 swagger: "2.0"

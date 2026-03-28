@@ -61,6 +61,7 @@ func (m *PgManager) CreateUser(
 		Email:        email,
 		TgID:         tgID,
 		ReferralUUID: referral,
+		Roles:        &roles,
 	}
 	if password != nil {
 		passwordHash, err := bcrypt.GenerateFromPassword(

@@ -16,7 +16,7 @@ type User struct {
 	Active       bool      `gorm:"default:true"`
 	ReferralUUID *string   `gorm:"type:varchar(36)"`
 	Trial        bool      `gorm:"default:false"`
-	Roles        *[]Role   `gorm:"type:jsonb;serializer:json" json:"roles"`
+	Roles        *[]Role   `gorm:"type:jsonb;serializer:json;not null" json:"roles"`
 }
 
 type Role string
@@ -27,7 +27,7 @@ const (
 	Vless    Role = "VLESS"
 	Anime    Role = "ANIME"
 	Tables   Role = "TABLES"
-	Cloud    Role = "REFUNDED"
+	Cloud    Role = "CLOUD"
 )
 
 func RolesToStrings(roles []Role) []string {

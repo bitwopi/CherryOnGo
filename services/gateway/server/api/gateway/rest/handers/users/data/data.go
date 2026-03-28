@@ -15,8 +15,8 @@ type UserResponseDTO struct {
 	pb.UserResponse
 }
 
-// @Summary Обновление статуса заказа
-// @Description Возвращает объект заказа
+// @Summary Получение информации о пользователе
+// @Description Возвращает объект пользователя
 // @Tags users
 // @Accept json
 // @Produce json

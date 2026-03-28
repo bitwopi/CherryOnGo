@@ -164,16 +164,28 @@ func (s *Server) GetUserData(ctx context.Context, req *pb.GetUserRequest) (*pb.U
 	stringRoles := db.RolesToStrings(*user.Roles)
 
 	response := pb.UserResponse{
-		Email:        *user.Email,
-		Active:       user.Active,
-		UserUuid:     user.UUID,
-		TgId:         *user.TgID,
-		Username:     *user.Username,
-		FirstName:    *user.FirstName,
-		PhotoUrl:     *user.PhotoURL,
-		Trial:        user.Trial,
-		Roles:        stringRoles,
-		ReferralUuid: *user.ReferralUUID,
+		Active:   user.Active,
+		UserUuid: user.UUID,
+		Trial:    user.Trial,
+		Roles:    stringRoles,
+	}
+	if user.Email != nil {
+		response.Email = *user.Email
+	}
+	if user.TgID != nil {
+		response.TgId = *user.TgID
+	}
+	if user.Username != nil {
+		response.Username = *user.Username
+	}
+	if user.FirstName != nil {
+		response.FirstName = *user.FirstName
+	}
+	if user.PhotoURL != nil {
+		response.PhotoUrl = *user.PhotoURL
+	}
+	if user.ReferralUUID != nil {
+		response.ReferralUuid = *user.ReferralUUID
 	}
 
 	return &response, nil

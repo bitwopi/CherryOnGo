@@ -22,7 +22,7 @@ type Response struct {
 	JWT string
 }
 
-// @Summary Аутентификация пользователя черещ тг
+// @Summary Аутентификация пользователя через тг
 // @Description Возвращает jwt token
 // @Tags auth
 // @Accept json

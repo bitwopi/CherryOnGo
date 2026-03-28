@@ -15,8 +15,8 @@ type MultipleUsersResponseDTO struct {
 	pb.MultipleUsersResponse
 }
 
-// @Summary Обновление статуса заказа
-// @Description Возвращает объект заказа
+// @Summary Получение впн подписки
+// @Description Возвращает объект подписки
 // @Tags remna
 // @Accept json
 // @Produce json
