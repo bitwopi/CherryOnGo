@@ -23,6 +23,7 @@ type DBManager interface {
 	GetUserByEmail(email string) (*User, error)
 	GetUserByUUID(uuid string) (*User, error)
 	GetUserByTgID(tgID int64) (*User, error)
+	GetUserRefferalStats(uuid string) (int, float64, error)
 	CheckPassword(email string, password string) error
 	Migrate()
 }
@@ -122,3 +123,11 @@ func (m *PgManager) GetUserByTgID(tgID int64) (*User, error) {
 	}
 	return &user, nil
 }
+
+// func (m *PgManager) GetUserRefferalStats(uuid string) (int, float64, error) {
+// 	var count int64
+// 	if err := m.db.Model(&User{}).Where("refferal_uuid = ?", uuid).Count(&count).Error; err != nil {
+// 		return 0, 0, err
+// 	}
+
+// }

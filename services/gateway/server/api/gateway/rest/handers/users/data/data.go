@@ -1,6 +1,7 @@
 package data
 
 import (
+	"fmt"
 	pb "gateway/server/api/gateway/grpc/gen/users"
 	userclient "gateway/server/api/gateway/grpc/user_client"
 	"net/http"
@@ -32,6 +33,19 @@ func GetUser(log *zap.Logger, client *userclient.UserGRPCClient) http.HandlerFun
 			http.Error(w, "invalid uuid", http.StatusBadRequest)
 		}
 		resp, err := client.GetUser(userUuid)
+		msg := fmt.Sprintf(
+			"%v, %v, %v, %v, %v, %v, %v, %v, %v",
+			resp.UserUuid,
+			resp.Email,
+			resp.FirstName,
+			resp.PhotoUrl,
+			resp.Active,
+			resp.ReferralUuid,
+			resp.Roles,
+			resp.TgId,
+			resp.Trial,
+		)
+		log.Debug(msg)
 		if err != nil {
 			http.Error(w, "failed to get users", http.StatusInternalServerError)
 			log.Error(err.Error())

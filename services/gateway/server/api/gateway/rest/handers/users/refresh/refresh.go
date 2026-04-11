@@ -45,8 +45,8 @@ func RefreshJWT(log *zap.Logger, client *userclient.UserGRPCClient) http.Handler
 			Path:     "/",
 			HttpOnly: true,
 			//TODO: set to true in production
-			Secure:   false,
-			SameSite: http.SameSiteLaxMode,
+			Secure:   true,
+			SameSite: http.SameSiteNoneMode,
 		})
 		render.JSON(w, r, Response{
 			JWT: resp.AccessToken,

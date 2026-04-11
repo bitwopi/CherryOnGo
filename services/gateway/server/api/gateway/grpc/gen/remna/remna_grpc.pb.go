@@ -23,6 +23,7 @@ const (
 	RemnaService_GetUser_FullMethodName              = "/remna.RemnaService/GetUser"
 	RemnaService_CreateUser_FullMethodName           = "/remna.RemnaService/CreateUser"
 	RemnaService_UpdateUserExpiryTime_FullMethodName = "/remna.RemnaService/UpdateUserExpiryTime"
+	RemnaService_AddUserTraffic_FullMethodName       = "/remna.RemnaService/AddUserTraffic"
 	RemnaService_GetUsersByTgID_FullMethodName       = "/remna.RemnaService/GetUsersByTgID"
 	RemnaService_GetUsersByEmail_FullMethodName      = "/remna.RemnaService/GetUsersByEmail"
 	RemnaService_GetAllUsers_FullMethodName          = "/remna.RemnaService/GetAllUsers"
@@ -40,6 +41,7 @@ type RemnaServiceClient interface {
 	GetUser(ctx context.Context, in *GetUserByUsernameRequest, opts ...grpc.CallOption) (*UserResponse, error)
 	CreateUser(ctx context.Context, in *CreateUserRequest, opts ...grpc.CallOption) (*UserResponse, error)
 	UpdateUserExpiryTime(ctx context.Context, in *UpdateUserRequest, opts ...grpc.CallOption) (*UserResponse, error)
+	AddUserTraffic(ctx context.Context, in *UpdateUserRequest, opts ...grpc.CallOption) (*UserResponse, error)
 	GetUsersByTgID(ctx context.Context, in *GetUserByTgIDRequest, opts ...grpc.CallOption) (*MultipleUsersResponse, error)
 	GetUsersByEmail(ctx context.Context, in *GetUserByEmailRequest, opts ...grpc.CallOption) (*MultipleUsersResponse, error)
 	GetAllUsers(ctx context.Context, in *EmptyRequest, opts ...grpc.CallOption) (*MultipleUsersResponse, error)
@@ -91,6 +93,16 @@ func (c *remnaServiceClient) UpdateUserExpiryTime(ctx context.Context, in *Updat
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(UserResponse)
 	err := c.cc.Invoke(ctx, RemnaService_UpdateUserExpiryTime_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *remnaServiceClient) AddUserTraffic(ctx context.Context, in *UpdateUserRequest, opts ...grpc.CallOption) (*UserResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(UserResponse)
+	err := c.cc.Invoke(ctx, RemnaService_AddUserTraffic_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -175,6 +187,7 @@ type RemnaServiceServer interface {
 	GetUser(context.Context, *GetUserByUsernameRequest) (*UserResponse, error)
 	CreateUser(context.Context, *CreateUserRequest) (*UserResponse, error)
 	UpdateUserExpiryTime(context.Context, *UpdateUserRequest) (*UserResponse, error)
+	AddUserTraffic(context.Context, *UpdateUserRequest) (*UserResponse, error)
 	GetUsersByTgID(context.Context, *GetUserByTgIDRequest) (*MultipleUsersResponse, error)
 	GetUsersByEmail(context.Context, *GetUserByEmailRequest) (*MultipleUsersResponse, error)
 	GetAllUsers(context.Context, *EmptyRequest) (*MultipleUsersResponse, error)
@@ -203,6 +216,9 @@ func (UnimplementedRemnaServiceServer) CreateUser(context.Context, *CreateUserRe
 }
 func (UnimplementedRemnaServiceServer) UpdateUserExpiryTime(context.Context, *UpdateUserRequest) (*UserResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method UpdateUserExpiryTime not implemented")
+}
+func (UnimplementedRemnaServiceServer) AddUserTraffic(context.Context, *UpdateUserRequest) (*UserResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method AddUserTraffic not implemented")
 }
 func (UnimplementedRemnaServiceServer) GetUsersByTgID(context.Context, *GetUserByTgIDRequest) (*MultipleUsersResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetUsersByTgID not implemented")
@@ -314,6 +330,24 @@ func _RemnaService_UpdateUserExpiryTime_Handler(srv interface{}, ctx context.Con
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(RemnaServiceServer).UpdateUserExpiryTime(ctx, req.(*UpdateUserRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _RemnaService_AddUserTraffic_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateUserRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RemnaServiceServer).AddUserTraffic(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: RemnaService_AddUserTraffic_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RemnaServiceServer).AddUserTraffic(ctx, req.(*UpdateUserRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -466,6 +500,10 @@ var RemnaService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UpdateUserExpiryTime",
 			Handler:    _RemnaService_UpdateUserExpiryTime_Handler,
+		},
+		{
+			MethodName: "AddUserTraffic",
+			Handler:    _RemnaService_AddUserTraffic_Handler,
 		},
 		{
 			MethodName: "GetUsersByTgID",

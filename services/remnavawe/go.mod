@@ -3,7 +3,7 @@ module remnawave
 go 1.25.5
 
 require (
-	github.com/Jolymmiles/remnawave-api-go/v2 v2.3.2
+	github.com/Jolymmiles/remnawave-api-go/v2 v2.3.0-6
 	github.com/brianvoe/gofakeit/v7 v7.14.0
 	github.com/google/uuid v1.6.0
 	github.com/ilyakaznacheev/cleanenv v1.5.0
@@ -46,3 +46,5 @@ require (
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	olympos.io/encoding/edn v0.0.0-20201019073823-d3554ca0b0a3 // indirect
 )
+
+replace github.com/Jolymmiles/remnawave-api-go/v2 => github.com/Akiyamov/remnawave-api-go/v2 v2.0.0-20260331195734-0e763e303990

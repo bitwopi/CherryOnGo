@@ -3,7 +3,9 @@ package client
 import (
 	"context"
 	"errors"
+	"fmt"
 	"log"
+	"net/http"
 	"strconv"
 	"time"
 
@@ -16,16 +18,38 @@ type Client struct {
 }
 
 type RemnaPlan struct {
-	DayLimit    int
-	DeviceLimit int
-	Squad       uuid.UUID
+	DayLimit          int
+	DeviceLimit       int
+	TrafficLimitBytes int
+	Squad             uuid.UUID
+}
+
+type customTransport struct {
+	base http.RoundTripper
+}
+
+func (t *customTransport) RoundTrip(req *http.Request) (*http.Response, error) {
+	// добавляем свой header
+	req.Header.Set("X-Forwarded-Proto", "https")
+	req.Header.Set("X-Forwarded-For", "127.0.0.1")
+
+	if t.base == nil {
+		t.base = http.DefaultTransport
+	}
+
+	return t.base.RoundTrip(req)
 }
 
 // NewClient creates a new Remnawave API client wrapper.
 func NewClient(apiKey string, baseURL string) *Client {
+	httpClient := &http.Client{
+		Transport: &customTransport{base: http.DefaultTransport},
+	}
+
 	baseClient, err := remapi.NewClient(
 		baseURL,
 		remapi.StaticToken{Token: apiKey},
+		remapi.WithClient(httpClient),
 	)
 	if err != nil {
 		panic(err)
@@ -62,12 +86,13 @@ func (c *Client) CreateUser(ctx context.Context, plan *RemnaPlan, username strin
 	if len(username) == 0 {
 		username = uuid.New().String()
 	}
-	userDto := remapi.CreateUserRequestDto{
+	userDto := remapi.CreateUserRequest{
 		Username:             username,
 		CreatedAt:            remapi.NewOptDateTime(time.Now()),
 		ExpireAt:             time.Now().AddDate(0, 0, plan.DayLimit),
 		HwidDeviceLimit:      remapi.NewOptInt(plan.DeviceLimit),
 		ActiveInternalSquads: []uuid.UUID{plan.Squad},
+		TrafficLimitBytes:    remapi.NewOptInt(plan.TrafficLimitBytes),
 	}
 	if len(tgID) != 0 {
 		val, err := strconv.Atoi(tgID)
@@ -84,7 +109,7 @@ func (c *Client) CreateUser(ctx context.Context, plan *RemnaPlan, username strin
 	}
 	resp, err := c.api.Users().CreateUser(ctx, &userDto)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to create user :%v", err.Error())
 	}
 
 	res, ok := resp.(*remapi.UserResponse)
@@ -95,7 +120,7 @@ func (c *Client) CreateUser(ctx context.Context, plan *RemnaPlan, username strin
 }
 
 func (c *Client) UpdateUserExpiryTime(ctx context.Context, plan *RemnaPlan, username string, uUID string) (*remapi.UserResponse, error) {
-	userDto := remapi.UpdateUserRequestDto{
+	userDto := remapi.UpdateUserRequest{
 		HwidDeviceLimit: remapi.NewOptNilInt(plan.DeviceLimit),
 	}
 	var currentExp time.Time
@@ -126,6 +151,47 @@ func (c *Client) UpdateUserExpiryTime(ctx context.Context, plan *RemnaPlan, user
 		currentExp = time.Now()
 	}
 	userDto.ExpireAt = remapi.NewOptDateTime(currentExp.AddDate(0, 0, plan.DayLimit))
+	resp, err := c.api.Users().UpdateUser(ctx, &userDto)
+	if err != nil {
+		return nil, err
+	}
+
+	res, ok := resp.(*remapi.UserResponse)
+	if !ok {
+		return nil, errors.New("undefined response")
+	}
+	return res, nil
+}
+
+func (c *Client) AddUserTraffic(ctx context.Context, plan *RemnaPlan, username string, uUID string) (*remapi.UserResponse, error) {
+	userDto := remapi.UpdateUserRequest{
+		HwidDeviceLimit: remapi.NewOptNilInt(plan.DeviceLimit),
+	}
+	var currentTraffic int
+	if username != "" {
+		userDto.Username = remapi.NewOptString(username)
+		userResp, err := c.api.Users().GetUserByUsername(ctx, username)
+		if err != nil {
+			return nil, err
+		}
+		user := userResp.(*remapi.UserResponse)
+		currentTraffic = user.Response.TrafficLimitBytes.Value
+	}
+	if uUID != "" {
+		uuidObj, err := uuid.Parse(uUID)
+		if err != nil {
+			return nil, err
+		}
+		userDto.UUID = remapi.NewOptUUID(uuidObj)
+		userResp, err := c.api.Users().GetUserByUuid(ctx, uUID)
+		if err != nil {
+			return nil, err
+		}
+		user := userResp.(*remapi.UserResponse)
+		currentTraffic = user.Response.TrafficLimitBytes.Value
+	}
+
+	userDto.TrafficLimitBytes = remapi.NewOptInt(currentTraffic + plan.TrafficLimitBytes)
 	resp, err := c.api.Users().UpdateUser(ctx, &userDto)
 	if err != nil {
 		return nil, err
@@ -170,13 +236,13 @@ func (c *Client) GetUsersByEmail(ctx context.Context, email string) (*remapi.Use
 	return res, nil
 }
 
-func (c *Client) GetAllUsers(ctx context.Context) (*remapi.GetAllUsersResponseDto, error) {
+func (c *Client) GetAllUsers(ctx context.Context) (*remapi.GetAllUsersResponse, error) {
 	resp, err := c.api.Users().GetAllUsers(ctx, 1000, 0)
 	if err != nil {
 		log.Println(err)
 		return nil, err
 	}
-	res, ok := resp.(*remapi.GetAllUsersResponseDto)
+	res, ok := resp.(*remapi.GetAllUsersResponse)
 	if !ok {
 		return nil, errors.New("undefined response")
 	}
@@ -230,7 +296,7 @@ func (c *Client) GetSRHHistory(ctx context.Context) (*remapi.UserSubscriptionHis
 		log.Println(err)
 		return nil, err
 	}
-	res, ok := resp.(*remapi.GetSubscriptionRequestHistoryResponseDto)
+	res, ok := resp.(*remapi.GetSubscriptionRequestHistoryResponse)
 	if !ok {
 		return nil, errors.New("undefined response")
 	}

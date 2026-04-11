@@ -72,12 +72,14 @@ func (r *RemnaGRPCServer) GetUser(ctx context.Context, req *pb.GetUserByUsername
 
 func (r *RemnaGRPCServer) CreateUser(ctx context.Context, req *pb.CreateUserRequest) (*pb.UserResponse, error) {
 	log.Println("CreateUser called", "req", req)
-	defer log.Println("CreateUser finished")
+
 	plan, err := r.getPlan(ctx, req.Plan)
 	if err != nil {
+		log.Println(err)
 		return nil, err
 	}
 	resp, err := r.remnaClient.CreateUser(ctx, plan, req.Username, req.Tgid, req.Email)
+	defer log.Println("CreateUser finished", "resp", resp)
 	if err != nil {
 		log.Println(err)
 		return nil, status.Error(codes.Internal, err.Error())
@@ -93,6 +95,21 @@ func (r *RemnaGRPCServer) UpdateUserExpiryTime(ctx context.Context, req *pb.Upda
 		return nil, err
 	}
 	resp, err := r.remnaClient.UpdateUserExpiryTime(ctx, plan, req.Username, req.Uuid)
+	if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+	result := convertUserResponse(resp.Response)
+	log.Println(result)
+	return result, nil
+}
+
+func (r *RemnaGRPCServer) AddUserTraffic(ctx context.Context, req *pb.UpdateUserRequest) (*pb.UserResponse, error) {
+	log.Println("AddUserTraffic called", "req", req)
+	plan, err := r.getPlan(ctx, req.Plan)
+	if err != nil {
+		return nil, err
+	}
+	resp, err := r.remnaClient.AddUserTraffic(ctx, plan, req.Username, req.Uuid)
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}
@@ -155,7 +172,6 @@ func (r *RemnaGRPCServer) DisableUser(ctx context.Context, req *pb.GetUserUUIDRe
 	if err != nil {
 		return nil, status.Error(codes.Internal, "failed to disable user")
 	}
-
 	result := convertUserResponse(resp.Response)
 	log.Println(result)
 
@@ -214,20 +230,21 @@ func (r *RemnaGRPCServer) GetSRHHistory(ctx context.Context, req *pb.EmptyReques
 	}, nil
 }
 
-func convertUserResponse(resp api.User) *pb.UserResponse {
+func convertUserResponse(resp api.UserItemInfo) *pb.UserResponse {
 	var intSquad []string
 	for _, squad := range resp.ActiveInternalSquads {
 		intSquad = append(intSquad, squad.GetUUID().String())
 	}
 	result := pb.UserResponse{
-		Uuid:           resp.UUID.String(),
-		Username:       resp.Username,
-		Tgid:           strconv.Itoa(resp.TelegramId.Value),
-		Email:          resp.Email.Value,
-		InternalSquads: intSquad,
-		ExpiryTime:     timestamppb.New(resp.GetExpireAt()),
-		SubUrl:         resp.SubscriptionUrl,
-		DeviceLimit:    int64(resp.HwidDeviceLimit.Value),
+		Uuid:              resp.UUID.String(),
+		Username:          resp.Username,
+		Tgid:              strconv.Itoa(resp.TelegramId.Value),
+		Email:             resp.Email.Value,
+		InternalSquads:    intSquad,
+		ExpiryTime:        timestamppb.New(resp.GetExpireAt()),
+		SubUrl:            resp.SubscriptionUrl,
+		DeviceLimit:       int64(resp.HwidDeviceLimit.Value),
+		TrafficLimitBytes: int64(resp.TrafficLimitBytes.Value),
 	}
 	return &result
 }
@@ -249,9 +266,10 @@ func (r *RemnaGRPCServer) getPlan(ctx context.Context, reqPlan *pb.Plan) (*clien
 		return nil, status.Error(codes.InvalidArgument, err.Error())
 	}
 	plan := client.RemnaPlan{
-		DeviceLimit: int(reqPlan.DeviceLimit),
-		DayLimit:    int(reqPlan.DayLimit),
-		Squad:       result,
+		DeviceLimit:       int(reqPlan.DeviceLimit),
+		DayLimit:          int(reqPlan.DayLimit),
+		TrafficLimitBytes: int(reqPlan.TrafficLimitBytes),
+		Squad:             result,
 	}
 
 	return &plan, nil

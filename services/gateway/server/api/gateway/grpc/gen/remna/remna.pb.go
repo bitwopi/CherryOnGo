@@ -279,12 +279,13 @@ func (x *GetUserUUIDRequest) GetUuid() string {
 }
 
 type Plan struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	DeviceLimit   int64                  `protobuf:"varint,1,opt,name=device_limit,json=deviceLimit,proto3" json:"device_limit,omitempty"`
-	DayLimit      int64                  `protobuf:"varint,2,opt,name=day_limit,json=dayLimit,proto3" json:"day_limit,omitempty"`
-	Squad         string                 `protobuf:"bytes,3,opt,name=squad,proto3" json:"squad,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	state             protoimpl.MessageState `protogen:"open.v1"`
+	DeviceLimit       int64                  `protobuf:"varint,1,opt,name=device_limit,json=deviceLimit,proto3" json:"device_limit,omitempty"`
+	DayLimit          int64                  `protobuf:"varint,2,opt,name=day_limit,json=dayLimit,proto3" json:"day_limit,omitempty"`
+	Squad             string                 `protobuf:"bytes,3,opt,name=squad,proto3" json:"squad,omitempty"`
+	TrafficLimitBytes int64                  `protobuf:"varint,4,opt,name=traffic_limit_bytes,json=trafficLimitBytes,proto3" json:"traffic_limit_bytes,omitempty"`
+	unknownFields     protoimpl.UnknownFields
+	sizeCache         protoimpl.SizeCache
 }
 
 func (x *Plan) Reset() {
@@ -336,6 +337,13 @@ func (x *Plan) GetSquad() string {
 		return x.Squad
 	}
 	return ""
+}
+
+func (x *Plan) GetTrafficLimitBytes() int64 {
+	if x != nil {
+		return x.TrafficLimitBytes
+	}
+	return 0
 }
 
 type CreateUserRequest struct {
@@ -407,17 +415,18 @@ func (x *CreateUserRequest) GetPlan() *Plan {
 }
 
 type UserResponse struct {
-	state          protoimpl.MessageState `protogen:"open.v1"`
-	Uuid           string                 `protobuf:"bytes,1,opt,name=uuid,proto3" json:"uuid,omitempty"`
-	Username       string                 `protobuf:"bytes,2,opt,name=username,proto3" json:"username,omitempty"`
-	Tgid           string                 `protobuf:"bytes,3,opt,name=tgid,proto3" json:"tgid,omitempty"`
-	Email          string                 `protobuf:"bytes,4,opt,name=email,proto3" json:"email,omitempty"`
-	InternalSquads []string               `protobuf:"bytes,5,rep,name=internal_squads,json=internalSquads,proto3" json:"internal_squads,omitempty"`
-	ExpiryTime     *timestamppb.Timestamp `protobuf:"bytes,6,opt,name=expiry_time,json=expiryTime,proto3" json:"expiry_time,omitempty"`
-	SubUrl         string                 `protobuf:"bytes,7,opt,name=sub_url,json=subUrl,proto3" json:"sub_url,omitempty"`
-	DeviceLimit    int64                  `protobuf:"varint,8,opt,name=device_limit,json=deviceLimit,proto3" json:"device_limit,omitempty"`
-	unknownFields  protoimpl.UnknownFields
-	sizeCache      protoimpl.SizeCache
+	state             protoimpl.MessageState `protogen:"open.v1"`
+	Uuid              string                 `protobuf:"bytes,1,opt,name=uuid,proto3" json:"uuid,omitempty"`
+	Username          string                 `protobuf:"bytes,2,opt,name=username,proto3" json:"username,omitempty"`
+	Tgid              string                 `protobuf:"bytes,3,opt,name=tgid,proto3" json:"tgid,omitempty"`
+	Email             string                 `protobuf:"bytes,4,opt,name=email,proto3" json:"email,omitempty"`
+	InternalSquads    []string               `protobuf:"bytes,5,rep,name=internal_squads,json=internalSquads,proto3" json:"internal_squads,omitempty"`
+	ExpiryTime        *timestamppb.Timestamp `protobuf:"bytes,6,opt,name=expiry_time,json=expiryTime,proto3" json:"expiry_time,omitempty"`
+	SubUrl            string                 `protobuf:"bytes,7,opt,name=sub_url,json=subUrl,proto3" json:"sub_url,omitempty"`
+	DeviceLimit       int64                  `protobuf:"varint,8,opt,name=device_limit,json=deviceLimit,proto3" json:"device_limit,omitempty"`
+	TrafficLimitBytes int64                  `protobuf:"varint,9,opt,name=traffic_limit_bytes,json=trafficLimitBytes,proto3" json:"traffic_limit_bytes,omitempty"`
+	unknownFields     protoimpl.UnknownFields
+	sizeCache         protoimpl.SizeCache
 }
 
 func (x *UserResponse) Reset() {
@@ -502,6 +511,13 @@ func (x *UserResponse) GetSubUrl() string {
 func (x *UserResponse) GetDeviceLimit() int64 {
 	if x != nil {
 		return x.DeviceLimit
+	}
+	return 0
+}
+
+func (x *UserResponse) GetTrafficLimitBytes() int64 {
+	if x != nil {
+		return x.TrafficLimitBytes
 	}
 	return 0
 }
@@ -889,16 +905,17 @@ const file_remna_proto_rawDesc = "" +
 	"\x15GetUserByEmailRequest\x12\x14\n" +
 	"\x05email\x18\x01 \x01(\tR\x05email\"(\n" +
 	"\x12GetUserUUIDRequest\x12\x12\n" +
-	"\x04uuid\x18\x01 \x01(\tR\x04uuid\"\\\n" +
+	"\x04uuid\x18\x01 \x01(\tR\x04uuid\"\x8c\x01\n" +
 	"\x04Plan\x12!\n" +
 	"\fdevice_limit\x18\x01 \x01(\x03R\vdeviceLimit\x12\x1b\n" +
 	"\tday_limit\x18\x02 \x01(\x03R\bdayLimit\x12\x14\n" +
-	"\x05squad\x18\x03 \x01(\tR\x05squad\"z\n" +
+	"\x05squad\x18\x03 \x01(\tR\x05squad\x12.\n" +
+	"\x13traffic_limit_bytes\x18\x04 \x01(\x03R\x11trafficLimitBytes\"z\n" +
 	"\x11CreateUserRequest\x12\x1a\n" +
 	"\busername\x18\x01 \x01(\tR\busername\x12\x14\n" +
 	"\x05email\x18\x02 \x01(\tR\x05email\x12\x12\n" +
 	"\x04tgid\x18\x03 \x01(\tR\x04tgid\x12\x1f\n" +
-	"\x04plan\x18\x04 \x01(\v2\v.remna.PlanR\x04plan\"\x8a\x02\n" +
+	"\x04plan\x18\x04 \x01(\v2\v.remna.PlanR\x04plan\"\xba\x02\n" +
 	"\fUserResponse\x12\x12\n" +
 	"\x04uuid\x18\x01 \x01(\tR\x04uuid\x12\x1a\n" +
 	"\busername\x18\x02 \x01(\tR\busername\x12\x12\n" +
@@ -908,7 +925,8 @@ const file_remna_proto_rawDesc = "" +
 	"\vexpiry_time\x18\x06 \x01(\v2\x1a.google.protobuf.TimestampR\n" +
 	"expiryTime\x12\x17\n" +
 	"\asub_url\x18\a \x01(\tR\x06subUrl\x12!\n" +
-	"\fdevice_limit\x18\b \x01(\x03R\vdeviceLimit\"d\n" +
+	"\fdevice_limit\x18\b \x01(\x03R\vdeviceLimit\x12.\n" +
+	"\x13traffic_limit_bytes\x18\t \x01(\x03R\x11trafficLimitBytes\"d\n" +
 	"\x11UpdateUserRequest\x12\x1a\n" +
 	"\busername\x18\x01 \x01(\tR\busername\x12\x12\n" +
 	"\x04uuid\x18\x02 \x01(\tR\x04uuid\x12\x1f\n" +
@@ -939,13 +957,14 @@ const file_remna_proto_rawDesc = "" +
 	"user_agent\x18\x04 \x01(\tR\tuserAgent\x12=\n" +
 	"\frequested_at\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampR\vrequestedAt\"H\n" +
 	"\x12SRHHistoryResponse\x122\n" +
-	"\arecords\x18\x01 \x03(\v2\x18.remna.SRHRecordResponseR\arecords2\xf4\x05\n" +
+	"\arecords\x18\x01 \x03(\v2\x18.remna.SRHRecordResponseR\arecords2\xb5\x06\n" +
 	"\fRemnaService\x125\n" +
 	"\tPingRemna\x12\x13.remna.EmptyRequest\x1a\x13.remna.PingResponse\x12?\n" +
 	"\aGetUser\x12\x1f.remna.GetUserByUsernameRequest\x1a\x13.remna.UserResponse\x12;\n" +
 	"\n" +
 	"CreateUser\x12\x18.remna.CreateUserRequest\x1a\x13.remna.UserResponse\x12E\n" +
-	"\x14UpdateUserExpiryTime\x12\x18.remna.UpdateUserRequest\x1a\x13.remna.UserResponse\x12K\n" +
+	"\x14UpdateUserExpiryTime\x12\x18.remna.UpdateUserRequest\x1a\x13.remna.UserResponse\x12?\n" +
+	"\x0eAddUserTraffic\x12\x18.remna.UpdateUserRequest\x1a\x13.remna.UserResponse\x12K\n" +
 	"\x0eGetUsersByTgID\x12\x1b.remna.GetUserByTgIDRequest\x1a\x1c.remna.MultipleUsersResponse\x12M\n" +
 	"\x0fGetUsersByEmail\x12\x1c.remna.GetUserByEmailRequest\x1a\x1c.remna.MultipleUsersResponse\x12@\n" +
 	"\vGetAllUsers\x12\x13.remna.EmptyRequest\x1a\x1c.remna.MultipleUsersResponse\x12L\n" +
@@ -1000,26 +1019,28 @@ var file_remna_proto_depIdxs = []int32{
 	2,  // 10: remna.RemnaService.GetUser:input_type -> remna.GetUserByUsernameRequest
 	7,  // 11: remna.RemnaService.CreateUser:input_type -> remna.CreateUserRequest
 	9,  // 12: remna.RemnaService.UpdateUserExpiryTime:input_type -> remna.UpdateUserRequest
-	3,  // 13: remna.RemnaService.GetUsersByTgID:input_type -> remna.GetUserByTgIDRequest
-	4,  // 14: remna.RemnaService.GetUsersByEmail:input_type -> remna.GetUserByEmailRequest
-	0,  // 15: remna.RemnaService.GetAllUsers:input_type -> remna.EmptyRequest
-	5,  // 16: remna.RemnaService.GetUserHwidDevices:input_type -> remna.GetUserUUIDRequest
-	0,  // 17: remna.RemnaService.GetSRHHistory:input_type -> remna.EmptyRequest
-	5,  // 18: remna.RemnaService.DisableUser:input_type -> remna.GetUserUUIDRequest
-	5,  // 19: remna.RemnaService.EnableUser:input_type -> remna.GetUserUUIDRequest
-	1,  // 20: remna.RemnaService.PingRemna:output_type -> remna.PingResponse
-	8,  // 21: remna.RemnaService.GetUser:output_type -> remna.UserResponse
-	8,  // 22: remna.RemnaService.CreateUser:output_type -> remna.UserResponse
-	8,  // 23: remna.RemnaService.UpdateUserExpiryTime:output_type -> remna.UserResponse
-	10, // 24: remna.RemnaService.GetUsersByTgID:output_type -> remna.MultipleUsersResponse
-	10, // 25: remna.RemnaService.GetUsersByEmail:output_type -> remna.MultipleUsersResponse
-	10, // 26: remna.RemnaService.GetAllUsers:output_type -> remna.MultipleUsersResponse
-	12, // 27: remna.RemnaService.GetUserHwidDevices:output_type -> remna.MultipleHwidResponse
-	14, // 28: remna.RemnaService.GetSRHHistory:output_type -> remna.SRHHistoryResponse
-	8,  // 29: remna.RemnaService.DisableUser:output_type -> remna.UserResponse
-	8,  // 30: remna.RemnaService.EnableUser:output_type -> remna.UserResponse
-	20, // [20:31] is the sub-list for method output_type
-	9,  // [9:20] is the sub-list for method input_type
+	9,  // 13: remna.RemnaService.AddUserTraffic:input_type -> remna.UpdateUserRequest
+	3,  // 14: remna.RemnaService.GetUsersByTgID:input_type -> remna.GetUserByTgIDRequest
+	4,  // 15: remna.RemnaService.GetUsersByEmail:input_type -> remna.GetUserByEmailRequest
+	0,  // 16: remna.RemnaService.GetAllUsers:input_type -> remna.EmptyRequest
+	5,  // 17: remna.RemnaService.GetUserHwidDevices:input_type -> remna.GetUserUUIDRequest
+	0,  // 18: remna.RemnaService.GetSRHHistory:input_type -> remna.EmptyRequest
+	5,  // 19: remna.RemnaService.DisableUser:input_type -> remna.GetUserUUIDRequest
+	5,  // 20: remna.RemnaService.EnableUser:input_type -> remna.GetUserUUIDRequest
+	1,  // 21: remna.RemnaService.PingRemna:output_type -> remna.PingResponse
+	8,  // 22: remna.RemnaService.GetUser:output_type -> remna.UserResponse
+	8,  // 23: remna.RemnaService.CreateUser:output_type -> remna.UserResponse
+	8,  // 24: remna.RemnaService.UpdateUserExpiryTime:output_type -> remna.UserResponse
+	8,  // 25: remna.RemnaService.AddUserTraffic:output_type -> remna.UserResponse
+	10, // 26: remna.RemnaService.GetUsersByTgID:output_type -> remna.MultipleUsersResponse
+	10, // 27: remna.RemnaService.GetUsersByEmail:output_type -> remna.MultipleUsersResponse
+	10, // 28: remna.RemnaService.GetAllUsers:output_type -> remna.MultipleUsersResponse
+	12, // 29: remna.RemnaService.GetUserHwidDevices:output_type -> remna.MultipleHwidResponse
+	14, // 30: remna.RemnaService.GetSRHHistory:output_type -> remna.SRHHistoryResponse
+	8,  // 31: remna.RemnaService.DisableUser:output_type -> remna.UserResponse
+	8,  // 32: remna.RemnaService.EnableUser:output_type -> remna.UserResponse
+	21, // [21:33] is the sub-list for method output_type
+	9,  // [9:21] is the sub-list for method input_type
 	9,  // [9:9] is the sub-list for extension type_name
 	9,  // [9:9] is the sub-list for extension extendee
 	0,  // [0:9] is the sub-list for field type_name

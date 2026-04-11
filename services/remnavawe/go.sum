@@ -1,7 +1,7 @@
+github.com/Akiyamov/remnawave-api-go/v2 v2.0.0-20260331195734-0e763e303990 h1:4HqQvgS8M7e8t8Lh1H7NM1OO6r6QXW30XU5jTamu4CQ=
+github.com/Akiyamov/remnawave-api-go/v2 v2.0.0-20260331195734-0e763e303990/go.mod h1:ofMNAubYv04QJwgL6TdZd3U1l8wXELBaj+M0DDTNybI=
 github.com/BurntSushi/toml v1.2.1 h1:9F2/+DoOYIOksmaJFPw1tGFy1eDnIJXg+UHjuD8lTak=
 github.com/BurntSushi/toml v1.2.1/go.mod h1:CxXYINrC8qIiEnFrOxCa7Jy5BFHlXnUU2pbicEuybxQ=
-github.com/Jolymmiles/remnawave-api-go/v2 v2.3.2 h1:Ogz9HLigkTDPUg/1waorrWXRPooDMqlZx+mZ2v1ePEU=
-github.com/Jolymmiles/remnawave-api-go/v2 v2.3.2/go.mod h1:N4zXbZfHsAGK4Z/YsIxEK2I+wMVzGsjOMXEUxjRnxrg=
 github.com/brianvoe/gofakeit/v7 v7.14.0 h1:R8tmT/rTDJmD2ngpqBL9rAKydiL7Qr2u3CXPqRt59pk=
 github.com/brianvoe/gofakeit/v7 v7.14.0/go.mod h1:QXuPeBw164PJCzCUZVmgpgHJ3Llj49jSLVkKPMtxtxA=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=

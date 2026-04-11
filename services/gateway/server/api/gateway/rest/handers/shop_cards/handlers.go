@@ -60,7 +60,7 @@ func CreateShopCard(log *zap.Logger, client *shopcardclient.ShopCardGRPCClient) 
 			log.Error(err.Error())
 			return
 		}
-		r.Response.StatusCode = http.StatusCreated
+		w.WriteHeader(http.StatusCreated)
 		render.JSON(w, r, resp)
 	}
 }
@@ -96,7 +96,7 @@ func UpdateShopCard(log *zap.Logger, client *shopcardclient.ShopCardGRPCClient) 
 			log.Error(err.Error())
 			return
 		}
-		r.Response.StatusCode = http.StatusOK
+		w.WriteHeader(http.StatusOK)
 		render.JSON(w, r, resp)
 	}
 }
@@ -123,7 +123,7 @@ func GetShopCard(log *zap.Logger, client *shopcardclient.ShopCardGRPCClient) htt
 			log.Error(err.Error())
 			return
 		}
-		r.Response.StatusCode = http.StatusOK
+		w.WriteHeader(http.StatusOK)
 		render.JSON(w, r, resp)
 	}
 }
@@ -142,7 +142,7 @@ func GetAllShopCards(log *zap.Logger, client *shopcardclient.ShopCardGRPCClient)
 			log.Error(err.Error())
 			return
 		}
-		r.Response.StatusCode = http.StatusOK
+		w.WriteHeader(http.StatusOK)
 		render.JSON(w, r, resp)
 	}
 }

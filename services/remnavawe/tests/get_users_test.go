@@ -3,18 +3,18 @@ package tests
 import (
 	pb "remnawave/server/api/grpc/remna"
 	"remnawave/tests/suite"
-	"strconv"
 	"testing"
 
 	"github.com/brianvoe/gofakeit/v7"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestGetAllUsers(t *testing.T) {
 	ctx, st := suite.New(t)
 	req := pb.EmptyRequest{}
 	resp, err := st.RemnaClient.GetAllUsers(ctx, &req)
-	assert.NoError(t, err, "GetAllUsers failed")
+	require.NoError(t, err, "GetAllUsers failed")
 	assert.NotNil(t, resp, "GetAllUsers response is nil")
 	assert.Greater(t, len(resp.Users), 0, "No users returned")
 }
@@ -23,11 +23,11 @@ func TestGetUsersWithParameters(t *testing.T) {
 	ctx, st := suite.New(t)
 
 	email := gofakeit.Email()
-	tg := strconv.FormatInt(gofakeit.Int64(), 10)
+	tg := "123456789"
 	plan := pb.Plan{
 		DeviceLimit: 3,
 		DayLimit:    30,
-		Squad:       "basic",
+		Squad:       "f0bb8401-22ee-4b67-b256-d24cd64ee102",
 	}
 	req := pb.CreateUserRequest{
 		Username: gofakeit.Username(),

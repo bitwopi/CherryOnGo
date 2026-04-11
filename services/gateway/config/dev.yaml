@@ -1,4 +1,4 @@
-env: "dev"
+env: "development"
 user_service:
   addr: "${USER_DB_NAME}:${USER_SERVICE_PORT}"
   timeout: ${USER_SERVICE_TIMEOUT}
