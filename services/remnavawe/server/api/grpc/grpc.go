@@ -99,7 +99,7 @@ func (r *RemnaGRPCServer) UpdateUserExpiryTime(ctx context.Context, req *pb.Upda
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 	result := convertUserResponse(resp.Response)
-	log.Println(result)
+	log.Println("UpdateUser finished", "resp", result)
 	return result, nil
 }
 

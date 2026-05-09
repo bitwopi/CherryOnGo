@@ -11,7 +11,7 @@ import (
 
 func TestCRUDPositive(t *testing.T) {
 	ctx, st := suite.New(t)
-	username := "test_user_client3"
+	username := "test_user_client4"
 	plan := pb.Plan{
 		DeviceLimit:       3,
 		DayLimit:          30,

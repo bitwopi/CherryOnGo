@@ -86,6 +86,7 @@ func (c *Client) CreateUser(ctx context.Context, plan *RemnaPlan, username strin
 	if len(username) == 0 {
 		username = uuid.New().String()
 	}
+
 	userDto := remapi.CreateUserRequest{
 		Username:             username,
 		CreatedAt:            remapi.NewOptDateTime(time.Now()),
@@ -94,6 +95,10 @@ func (c *Client) CreateUser(ctx context.Context, plan *RemnaPlan, username strin
 		ActiveInternalSquads: []uuid.UUID{plan.Squad},
 		TrafficLimitBytes:    remapi.NewOptInt(plan.TrafficLimitBytes),
 	}
+	if plan.DayLimit == 0 && plan.TrafficLimitBytes > 0 {
+		userDto.ExpireAt = time.Now().AddDate(100, 0, 0)
+	}
+
 	if len(tgID) != 0 {
 		val, err := strconv.Atoi(tgID)
 		if err != nil {
@@ -147,7 +152,7 @@ func (c *Client) UpdateUserExpiryTime(ctx context.Context, plan *RemnaPlan, user
 		currentExp = user.Response.ExpireAt
 	}
 
-	if time.Now().Compare(currentExp) > 1 {
+	if time.Now().After(currentExp) {
 		currentExp = time.Now()
 	}
 	userDto.ExpireAt = remapi.NewOptDateTime(currentExp.AddDate(0, 0, plan.DayLimit))
